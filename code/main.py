@@ -5,6 +5,7 @@
 
 #module imports
 import pygame
+from random import randint
 from sys import exit
 
 # create functions
@@ -19,7 +20,25 @@ def display_score(end_time=None):
     pygame.draw.rect(screen,'#C4A968',score_rect)
     screen.blit(score_surface,score_rect)
 
+def obstacle_movement(obstacle_list):
+    if obstacle_list:
+        for obstacle_rect in obstacle_list:
+            obstacle_rect.x -= 2
+            if obstacle_rect.w == 11:
+                screen.blit(bunny_surface,obstacle_rect)
+            else:
+                screen.blit(monk_surface,obstacle_rect)
+        obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.x > -100]
+        return obstacle_list
+    else: return []
 
+def collisions(player,obstacles):
+    if obstacles:
+        for obstacle_rect in obstacles:
+            if player.colliderect(obstacle_rect): 
+                final_time = pygame.time.get_ticks()
+                return False, final_time
+    return True, 0
 # initializing pygame & setting up the screen
 pygame.init()
 screen_width = 480
@@ -36,8 +55,11 @@ start_time = 0
 bg_surface = pygame.image.load('graphics/bg_test.png').convert_alpha()
 text_surface = test_font.render('Ellie Kemper: 16-Bit Edition', False, '#DE4E2A')
 text_rect = text_surface.get_rect(midtop=(240, 25))
+
 monk_surface = pygame.image.load('graphics/spr_monkey_l.png').convert_alpha()
-monk_rect = monk_surface.get_rect(topleft=(400,200))
+bunny_surface = pygame.image.load('graphics/spr_bunny.png').convert_alpha()
+
+obstacle_rect_list = []
 
 # creating player surface
 player_surface = pygame.image.load('graphics/spr_link.png').convert_alpha()
@@ -50,6 +72,9 @@ player_scaled_rect = player_scaled.get_rect(center=(240,160))
 # creating press_start_text
 start_text_surface = test_font.render('Ellie Kemper: 16-Bit Edition', False, '#DE4E2A')
 start_text_rect = start_text_surface.get_rect(center=(240, 280))
+
+obstacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obstacle_timer,1500)
 
 # the game loop
 while True:
@@ -67,18 +92,18 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
-                monk_rect.left = 400
+                obstacle_rect_list.clear()
+                player_rect = player_surface.get_rect(topleft=(145,200))
                 start_time = pygame.time.get_ticks()
-
+        if event.type == obstacle_timer and game_active:
+            if randint(0,2):
+                obstacle_rect_list.append(monk_surface.get_rect(topleft=(randint(500,700),randint(100,300))))
+            else:
+                obstacle_rect_list.append(bunny_surface.get_rect(topleft=(randint(500,700),randint(100,300))))
 
     if game_active:
         # draw all our elements & update everything
         screen.blit(bg_surface,(0,0))
-
-        monk_rect.left -= 2 # decrement monkey position by 2
-        if monk_rect.left == -16:
-            monk_rect.left = 496
-        screen.blit(monk_surface,monk_rect)
 
         # moving the player
         keys = pygame.key.get_pressed()
@@ -94,11 +119,13 @@ while True:
         if player_rect.right >= 480: player_rect.right = 480
 
         screen.blit(player_surface,player_rect)
+
+        obstacle_rec_list = obstacle_movement(obstacle_rect_list)
     
         display_score()
-        if monk_rect.colliderect(player_rect):
-            game_active = False
-            final_time = pygame.time.get_ticks()
+
+        game_active, final_time = collisions(player_rect,obstacle_rect_list)
+
     else:
         screen.fill('#C4A968')
         screen.blit(player_scaled,player_scaled_rect)
