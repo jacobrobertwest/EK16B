@@ -39,6 +39,15 @@ def collisions(player,obstacles):
                 final_time = pygame.time.get_ticks()
                 return False, final_time
     return True, 0
+
+def player_animation(keys):
+    # play walking animation
+    global player_surface, player_index, player_walk
+    if keys[pygame.K_LEFT] is True or keys[pygame.K_RIGHT] is True or keys[pygame.K_DOWN] is True or keys[pygame.K_UP] is True:
+        player_index += 0.05
+        if player_index >= len(player_walk): player_index = 0
+        player_surface = player_walk[int(player_index)]
+
 # initializing pygame & setting up the screen
 pygame.init()
 screen_width = 480
@@ -56,18 +65,32 @@ bg_surface = pygame.image.load('graphics/bg_test.png').convert_alpha()
 text_surface = test_font.render('Ellie Kemper: 16-Bit Edition', False, '#DE4E2A')
 text_rect = text_surface.get_rect(midtop=(240, 25))
 
-monk_surface = pygame.image.load('graphics/spr_monkey_l.png').convert_alpha()
-bunny_surface = pygame.image.load('graphics/spr_bunny.png').convert_alpha()
+monk_frame_1 = pygame.image.load('graphics/spr_monkey_l.png').convert_alpha()
+monk_frame_2 = pygame.image.load('graphics/spr_monkey_r.png').convert_alpha()
+monk_frames = [monk_frame_1, monk_frame_2]
+monk_frame_index = 0
+monk_surface = monk_frames[monk_frame_index]
+
+bunny_frame_1 = pygame.image.load('graphics/spr_bunny.png').convert_alpha()
+bunny_frame_2 = pygame.image.load('graphics/spr_bunny_2.png').convert_alpha()
+bunny_frames = [bunny_frame_1, bunny_frame_2]
+bunny_frame_index = 0
+bunny_surface = bunny_frames[bunny_frame_index]
 
 obstacle_rect_list = []
 
 # creating player surface
-player_surface = pygame.image.load('graphics/spr_link.png').convert_alpha()
+player_surface_w1 = pygame.image.load('graphics/spr_link.png').convert_alpha()
+player_surface_w2 = pygame.image.load('graphics/spr_link_2.png').convert_alpha()
+player_walk = [player_surface_w1, player_surface_w2]
+player_index = 0
+player_surface = player_walk[player_index]
 player_rect = player_surface.get_rect(topleft=(145,200))
 
 # creating scaled player
-player_scaled = pygame.transform.scale(player_surface,(64,64))
+player_scaled = pygame.transform.scale(player_surface_w1,(64,64))
 player_scaled_rect = player_scaled.get_rect(center=(240,160))
+
 
 # creating press_start_text
 start_text_surface = test_font.render('Ellie Kemper: 16-Bit Edition', False, '#DE4E2A')
@@ -75,6 +98,12 @@ start_text_rect = start_text_surface.get_rect(center=(240, 280))
 
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer,1500)
+
+monkey_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(monkey_animation_timer,500)
+
+bunny_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(bunny_animation_timer,350)
 
 # the game loop
 while True:
@@ -95,11 +124,20 @@ while True:
                 obstacle_rect_list.clear()
                 player_rect = player_surface.get_rect(topleft=(145,200))
                 start_time = pygame.time.get_ticks()
-        if event.type == obstacle_timer and game_active:
-            if randint(0,2):
-                obstacle_rect_list.append(monk_surface.get_rect(topleft=(randint(500,700),randint(100,300))))
-            else:
-                obstacle_rect_list.append(bunny_surface.get_rect(topleft=(randint(500,700),randint(100,300))))
+        if game_active:
+            if event.type == obstacle_timer:
+                if randint(0,2):
+                    obstacle_rect_list.append(monk_surface.get_rect(topleft=(randint(500,700),randint(100,300))))
+                else:
+                    obstacle_rect_list.append(bunny_surface.get_rect(topleft=(randint(500,700),randint(100,300))))
+            if event.type == monkey_animation_timer:
+                if monk_frame_index == 0: monk_frame_index = 1
+                else: monk_frame_index = 0
+                monk_surface = monk_frames[monk_frame_index]
+            if event.type == bunny_animation_timer:
+                if bunny_frame_index == 0: bunny_frame_index = 1
+                else: bunny_frame_index = 0
+                bunny_surface = bunny_frames[bunny_frame_index]
 
     if game_active:
         # draw all our elements & update everything
@@ -118,6 +156,7 @@ while True:
         if player_rect.left < 0: player_rect.left = 0
         if player_rect.right >= 480: player_rect.right = 480
 
+        player_animation(keys)
         screen.blit(player_surface,player_rect)
 
         obstacle_rec_list = obstacle_movement(obstacle_rect_list)
