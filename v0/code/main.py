@@ -11,8 +11,8 @@ from sys import exit
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        player_surface_w1 = pygame.image.load('graphics/spr_link.png').convert_alpha()
-        player_surface_w2 = pygame.image.load('graphics/spr_link_2.png').convert_alpha()
+        player_surface_w1 = pygame.image.load('v0/graphics/spr_link.png').convert_alpha()
+        player_surface_w2 = pygame.image.load('v0/graphics/spr_link_2.png').convert_alpha()
         self.player_walk = [player_surface_w1, player_surface_w2]
         self.player_index = 0
 
@@ -47,11 +47,11 @@ class Obstacle(pygame.sprite.Sprite):
     def __init__(self,type):
         super().__init__()
         if type == 'monkey':
-            self.frame_1 = pygame.image.load('graphics/spr_monkey_l.png').convert_alpha()
-            self.frame_2 = pygame.image.load('graphics/spr_monkey_r.png').convert_alpha()
+            self.frame_1 = pygame.image.load('v0/graphics/spr_monkey_l.png').convert_alpha()
+            self.frame_2 = pygame.image.load('v0/graphics/spr_monkey_r.png').convert_alpha()
         elif type == 'bunny':
-            self.frame_1 = pygame.image.load('graphics/spr_bunny.png').convert_alpha()
-            self.frame_2 = pygame.image.load('graphics/spr_bunny_2.png').convert_alpha()
+            self.frame_1 = pygame.image.load('v0/graphics/spr_bunny.png').convert_alpha()
+            self.frame_2 = pygame.image.load('v0/graphics/spr_bunny_2.png').convert_alpha()
         self.frames = [self.frame_1, self.frame_2]
         self.animation_index = 0
 
@@ -101,9 +101,9 @@ screen_width = 480
 screen_height = 320
 screen = pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption('ELLIE KEMPER: 16-Bit Edition')
-pygame.display.set_icon(pygame.image.load('graphics/logo_ek16b.png'))
+pygame.display.set_icon(pygame.image.load('v0/graphics/logo_ek16b.png'))
 clock = pygame.time.Clock()
-test_font = pygame.font.Font('font/AncientModernTales.ttf',30)
+test_font = pygame.font.Font('v0/font/AncientModernTales.ttf',30)
 game_active = True
 start_time = 0
 
@@ -114,12 +114,12 @@ obstacle_group = pygame.sprite.Group()
 
 
 # creating background & npc surfaces & setting initial variables
-bg_surface = pygame.image.load('graphics/bg_test.png').convert_alpha()
+bg_surface = pygame.image.load('v0/graphics/bg_test.png').convert_alpha()
 text_surface = test_font.render('Ellie Kemper: 16-Bit Edition', False, '#DE4E2A')
 text_rect = text_surface.get_rect(midtop=(240, 25))
 
 # creating player surface
-player_surface_w1 = pygame.image.load('graphics/spr_link.png').convert_alpha()
+player_surface_w1 = pygame.image.load('v0/graphics/spr_link.png').convert_alpha()
 
 # creating scaled player
 player_scaled = pygame.transform.scale(player_surface_w1,(64,64))
