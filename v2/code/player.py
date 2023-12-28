@@ -1,11 +1,12 @@
 import pygame
 from settings import *
 from support import import_folder
+from entity import Entity
 
 # we're passing the Sprite class into the parentheses of Player() so that
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
@@ -15,8 +16,6 @@ class Player(pygame.sprite.Sprite):
         # graphics setup
         self.import_player_assets()
         self.status = 'down'
-        self.frame_index = 0
-        self.animation_speed = 0.15
 
         # direction attribute gets set to a vector so that we can multiply it be a speed variable
         # movement attributes

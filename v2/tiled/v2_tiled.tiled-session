@@ -32,11 +32,11 @@
             "scaleInEditor": 1
         },
         "malon_v1.tmx": {
-            "scale": 0.3461,
+            "scale": 0.2848,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1301.6469228546664,
-                "y": 975.1516902629297
+                "x": 1571.2780898876404,
+                "y": 1199.0870786516855
             }
         },
         "object_tiles.tsx": {
