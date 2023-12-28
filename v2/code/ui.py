@@ -11,6 +11,7 @@ class UI:
         # bar setup
         self.health_bar_rect = pygame.Rect(10,10,HEALTH_BAR_WIDTH,BAR_HEIGHT)
         self.energy_bar_rect = pygame.Rect(10,34,ENERGY_BAR_WIDTH,BAR_HEIGHT)
+        self.stamina_bar_rect = pygame.Rect(10,58,STAMINA_BAR_WIDTH,STAMINA_BAR_HEIGHT)
 
         # convert weapon dictionary into list of images
         self.weapon_graphics = []
@@ -58,8 +59,13 @@ class UI:
         self.display_surface.blit(weapon_surface,weapon_rect)
 
     def display(self,player):
+        if player.oversprinting_status:
+            stamina_col = STAMINA_COLOR_OVERSPRINT
+        else:
+            stamina_col = STAMINA_COLOR
         self.show_bar(player.health,player.stats['health'],self.health_bar_rect,HEALTH_COLOR)
         self.show_bar(player.energy,player.stats['energy'],self.energy_bar_rect,ENERGY_COLOR)
+        self.show_bar(player.stamina,player.stats['stamina'],self.stamina_bar_rect,stamina_col)
         self.show_exp(player.exp)
         
         self.weapon_overlay(player.weapon_index,not player.can_switch_weapon)

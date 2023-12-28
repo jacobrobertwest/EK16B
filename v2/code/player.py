@@ -37,11 +37,18 @@ class Player(Entity):
         self.switch_duration_cooldown = 200
 
         # stats
-        self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':7.5}
+        self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':7.5,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
         self.health = self.stats['health'] * 0.5
         self.energy = self.stats['energy'] * 0.5
         self.exp = 123
         self.speed = self.stats['speed']
+
+        self.stamina = self.stats['stamina']
+        self.sprint_drain = self.stats['sprint_drain']
+        self.sprint_replenish = self.stats['sprint_replenish']
+        self.oversprinting_status = False
+        self.oversprint_time = None
+        self.oversprint_cooldown = 2500
 
     def import_player_assets(self):
         character_path = 'graphics/player/'
@@ -79,12 +86,36 @@ class Player(Entity):
                 self.direction.x = 0
 
             # run input
-            if keys[pygame.K_LSHIFT]:
-                self.speed = 10
-                self.animation_speed = 0.15*1.33
+            if keys[pygame.K_LSHIFT]: # if shift is being held
+                if self.stamina > 0: # if 
+                    if not self.oversprinting_status:
+                        self.speed = 10
+                        self.animation_speed = 0.15*1.33
+                        self.stamina -= self.sprint_drain
+                    else:
+                        self.speed = 4.5
+                        self.animation_speed = 0.125
+                        if self.stamina < self.stats['stamina']:
+                            self.stamina += self.sprint_replenish
+                        else:
+                            self.stamina = self.stats['stamina']
+                else:
+                    self.oversprinting_status = True
+                    self.oversprint_time = pygame.time.get_ticks()
+                    self.speed = 4.5
+                    self.animation_speed = 0.125
+
             else:
-                self.speed = 7.5
-                self.animation_speed = 0.15
+                if not self.oversprinting_status:
+                    self.speed = 7.5
+                    self.animation_speed = 0.15
+                else:
+                    self.speed = 4.5
+                    self.animation_speed = 0.125
+                if self.stamina < self.stats['stamina']:
+                    self.stamina += self.sprint_replenish
+                else:
+                    self.stamina = self.stats['stamina']
 
             # attack input
             if keys[pygame.K_SPACE] and not self.attacking:
@@ -171,6 +202,10 @@ class Player(Entity):
         if not self.can_switch_weapon:
             if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
                 self.can_switch_weapon = True
+
+        if self.oversprinting_status:
+            if current_time - self.oversprint_time >= self.oversprint_cooldown:
+                self.oversprinting_status = False
 
     def animate(self):
         animation = self.animations[self.status]
