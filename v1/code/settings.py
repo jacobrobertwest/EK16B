@@ -3,6 +3,11 @@ WIDTH    = 1280
 HEIGTH   = 720
 FPS      = 50
 TILESIZE = 64
+HITBOX_OFFSET = {
+	'player': -26,
+	'object': -40,
+	'grass': -10,
+	'invisible': 0}
 
 # ui 
 BAR_HEIGHT = 20
@@ -22,6 +27,12 @@ TEXT_COLOR = '#EEEEEE'
 HEALTH_COLOR = 'red'
 ENERGY_COLOR = 'blue'
 UI_BORDER_COLOR_ACTIVE = 'gold'
+
+# upgrade menu
+TEXT_COLOR_SELECTED = '#111111'
+BAR_COLOR = '#EEEEEE'
+BAR_COLOR_SELECTED = '#111111'
+UPGRADE_BG_COLOR_SELECTED = '#EEEEEE'
 
 weapon_data = {
     'sword': {'cooldown': 100, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'},
