@@ -55,6 +55,9 @@ class Player(Entity):
         self.hurt_time = None
         self.invulnerability_duration = 500
 
+        #is dead
+        self.is_dead = False
+
     def import_player_assets(self):
         character_path = 'graphics/player/'
         self.animations = {
@@ -216,6 +219,12 @@ class Player(Entity):
             if current_time - self.hurt_time >= self.invulnerability_duration:
                 self.vulnerable = True
 
+    def check_death(self):
+        if self.health <= 0:
+            print('dead')
+            self.is_dead = True
+
+
     def animate(self):
         animation = self.animations[self.status]
         # loop over the frame index 
@@ -241,6 +250,7 @@ class Player(Entity):
         return base_damage + weapon_damage
 
     def update(self):
+        self.check_death()
         self.input()
         self.cooldowns()
         self.get_status()

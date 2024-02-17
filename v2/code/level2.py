@@ -11,7 +11,7 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
 
-class Level:
+class Level2:
     def __init__(self):
         # this function gets the display surface from any part of the code
         self.display_surface = pygame.display.get_surface()
@@ -183,7 +183,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         # creating the floor
-        self.floor_surf = pygame.image.load('graphics/tilemap/ground.png').convert()
+        self.floor_surf = pygame.image.load('graphics/tilemap/ground2.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
     

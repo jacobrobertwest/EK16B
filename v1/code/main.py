@@ -29,6 +29,9 @@ class Game:
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_m:
 						self.level.toggle_menu()
+					if self.level.game_over:
+						if event.key == pygame.K_r:
+							self.level.restart_level()
 
 			self.screen.fill(WATER_COLOR)
 			self.level.run()

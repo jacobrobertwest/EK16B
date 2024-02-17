@@ -50,6 +50,7 @@ class Player(Entity):
         self.energy = self.stats['energy']
         self.exp = 0
         self.speed = self.stats['speed']
+        self.is_dead = False
 
         # damage timer
         self.vulnerable = True
@@ -58,6 +59,8 @@ class Player(Entity):
 
         # sound
         self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
+        self.weapon_attack_sound.set_volume(0.4)
+        self.death_sound = pygame.mixer.Sound('audio/death.wav')
         self.weapon_attack_sound.set_volume(0.4)
 
 
@@ -221,10 +224,17 @@ class Player(Entity):
         else:
             self.energy = self.stats['energy']
 
+    def check_death(self):
+        if self.health <= 0:
+            self.death_sound.play()
+            self.is_dead = True
+
     def update(self):
+        self.check_death()
         self.input()
         self.cooldowns()
         self.get_status()
         self.animate()
         self.move(self.stats['speed'])
         self.energy_recovery()
+

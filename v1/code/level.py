@@ -11,6 +11,7 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from magic import MagicPlayer
 from upgrade import Upgrade
+from restart import Restart
 
 class Level:
     def __init__(self):
@@ -35,10 +36,13 @@ class Level:
         #user interface
         self.ui = UI()
         self.upgrade = Upgrade(self.player)
+        self.restart = Restart()
+        self.game_over = False
 
         # particles
         self.animation_player = AnimationPlayer()
         self.magic_player = MagicPlayer(self.animation_player)
+
 
     def create_map(self):
         layouts = {
@@ -139,15 +143,51 @@ class Level:
     def toggle_menu(self):
         self.game_paused = not self.game_paused
 
+    def toggle_end(self):
+        if self.player.is_dead:
+            self.game_over = True
+
+    def restart_level(self):
+        self.display_surface = pygame.display.get_surface()
+        self.game_paused = False
+        
+        # sprite group setup
+        # A level has 2 attributes for visibile sprites and obstacle sprites
+        # both are sprite groups
+        self.visibile_sprites = YSortCameraGroup()
+        self.obstacle_sprites = pygame.sprite.Group()
+
+        # attack sprites
+        self.current_attack = None
+        self.attack_sprites = pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
+
+        # sprite setup
+        self.create_map()
+
+        #user interface
+        self.ui = UI()
+        self.upgrade = Upgrade(self.player)
+        self.restart = Restart()
+        self.game_over = False
+
+        # particles
+        self.animation_player = AnimationPlayer()
+        self.magic_player = MagicPlayer(self.animation_player)
+    
     def run(self):
-        self.visibile_sprites.custom_draw(self.player)
-        self.ui.display(self.player)
-        if self.game_paused:
-            self.upgrade.display()
+        self.toggle_end()
+        if self.game_over:
+            self.restart.display()
         else:
-            self.visibile_sprites.update()
-            self.visibile_sprites.enemy_update(self.player)
-            self.player_attack_logic()
+            self.visibile_sprites.custom_draw(self.player)
+            self.ui.display(self.player)
+            if self.game_paused:
+                self.upgrade.display()
+            else:
+                self.visibile_sprites.update()
+                self.visibile_sprites.enemy_update(self.player)
+                self.player_attack_logic()
 
 
 class YSortCameraGroup(pygame.sprite.Group):
