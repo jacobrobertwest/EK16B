@@ -16,6 +16,10 @@ class Game:
 		self.level_num = 0
 		self.levels = [Level(),Level2()]
 		self.level = self.levels[self.level_num]
+
+		main_sound = pygame.mixer.Sound('audio/0.mp3')
+		main_sound.set_volume(0.3)
+		main_sound.play(loops = -1)
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
 	def run(self):
