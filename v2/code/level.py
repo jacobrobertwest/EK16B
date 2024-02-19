@@ -15,7 +15,7 @@ class Level:
     def __init__(self):
         # this function gets the display surface from any part of the code
         self.display_surface = pygame.display.get_surface()
-        
+
         # sprite group setup
         # A level has 2 attributes for visible sprites and obstacle sprites
         # both are sprite groups
@@ -39,6 +39,10 @@ class Level:
         self.level_complete_status = False
         self.restart = Restart()
         self.game_over = False
+
+        # music
+        self.main_sound = pygame.mixer.Sound('audio/0.mp3')
+        self.main_sound.set_volume(0.3)
 
     def create_map(self):
         layouts = {
@@ -127,11 +131,16 @@ class Level:
     def level_complete_update(self):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
-            if self.player.hitbox.top == exit_sprite.hitbox.bottom:
+            # if self.player.hitbox.top == exit_sprite.hitbox.bottom:
+            #     self.main_sound.stop()
+            #     self.level_complete_status = True
+            if self.player.hitbox.colliderect(exit_sprite.hitbox):
+                self.main_sound.stop()
                 self.level_complete_status = True
     
     def toggle_end(self):
         if self.player.is_dead:
+            self.main_sound.stop()
             self.game_over = True
 
     def restart_level(self):
@@ -158,6 +167,10 @@ class Level:
 
         # particles
         self.animation_player = AnimationPlayer()
+
+        self.main_sound = pygame.mixer.Sound('audio/0.mp3')
+        self.main_sound.set_volume(0.3)
+        self.main_sound.play(loops = -1)
        
     def run(self):
         self.toggle_end()

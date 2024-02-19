@@ -40,12 +40,17 @@ class Level2:
         self.restart = Restart()
         self.game_over = False
 
+        # music
+        self.main_sound = pygame.mixer.Sound('audio/1b.mp3')
+        self.main_sound.set_volume(0.3)
+        # self.main_sound.play(loops = -1)
+
     def create_map(self):
         layouts = {
-            'boundary': import_csv_layout('map/map_FloorBlocks.csv'),
-            'grass': import_csv_layout('map/map_Grass.csv'),
-            'object': import_csv_layout('map/map_Objects.csv'),
-            'entities': import_csv_layout('map/map_Entities.csv')
+            'boundary': import_csv_layout('map/map_FloorBlocks2.csv'),
+            'grass': import_csv_layout('map/map_Grass2.csv'),
+            'object': import_csv_layout('map/map_Objects2.csv'),
+            'entities': import_csv_layout('map/map_Entities2.csv')
         }
 
         graphics = {
@@ -72,6 +77,10 @@ class Level2:
                         if style == 'object':
                             if int(col) in (2,3):
                                 sp_type = 'invisible_half'
+                            elif int(col) == 4:
+                                sp_type = 'invisible_half_bottom_left'
+                            elif int(col) == 5:
+                                sp_type = 'level_2_big_tree'
                             else:
                                 sp_type = 'object'
                             surf = graphics['objects'][int(col)]
@@ -127,11 +136,14 @@ class Level2:
     def level_complete_update(self):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
-            if self.player.hitbox.top == exit_sprite.hitbox.bottom:
+            # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
+            if self.player.hitbox.colliderect(exit_sprite.hitbox):
+                self.main_sound.stop()
                 self.level_complete_status = True
     
     def toggle_end(self):
         if self.player.is_dead:
+            self.main_sound.stop()
             self.game_over = True
 
     def restart_level(self):
@@ -186,7 +198,8 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground2.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
-    
+        self.fog_surface = pygame.Surface((2000,2000),pygame.SRCALPHA) 
+
     def custom_draw(self,player):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
@@ -203,6 +216,13 @@ class YSortCameraGroup(pygame.sprite.Group):
             # image actually gets rastered so that its not directly inside the rectangle
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image,offset_pos)
+
+        player_vec = pygame.math.Vector2(player.rect.center)
+        end_vec = pygame.math.Vector2(0,0)
+        distance = (player_vec - end_vec).magnitude()
+        alpha = 250 - (250 * (distance / 3400)) if 250 - (250 * (distance / 3400)) > 0 else 0
+        self.fog_surface.fill((224,224,224,alpha))
+        self.display_surface.blit(self.fog_surface, (0,0))
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

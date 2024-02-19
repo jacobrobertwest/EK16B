@@ -16,10 +16,7 @@ class Game:
 		self.level_num = 0
 		self.levels = [Level(),Level2()]
 		self.level = self.levels[self.level_num]
-
-		main_sound = pygame.mixer.Sound('audio/0.mp3')
-		main_sound.set_volume(0.3)
-		main_sound.play(loops = -1)
+		self.level.main_sound.play(loops=-1)
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
 	def run(self):
@@ -29,7 +26,7 @@ class Game:
 					pygame.quit()
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_ESCAPE: # restarting
+					if event.key == pygame.K_ESCAPE: # restarting 
 						Game().run()
 					if self.level.game_over:
 						if event.key == pygame.K_r:
@@ -40,6 +37,7 @@ class Game:
 			if self.level.level_complete_status:
 				self.level_num += 1
 				self.level = self.levels[self.level_num]
+				self.level.main_sound.play(loops=-1)
 			pygame.display.update()
 			self.clock.tick(FPS)
 

@@ -186,19 +186,25 @@ class Player(Entity):
             # looping through every sprite in the obstacle sprite group
             # and checking to see if there is a collission
             for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.x > 0: # if moving right
-                        self.hitbox.right = sprite.hitbox.left
-                    if self.direction.x < 0: # if moving left
-                        self.hitbox.left = sprite.hitbox.right
+                if sprite.sprite_type == 'exit':
+                    pass
+                else:
+                    if sprite.hitbox.colliderect(self.hitbox):
+                        if self.direction.x > 0: # if moving right
+                            self.hitbox.right = sprite.hitbox.left
+                        if self.direction.x < 0: # if moving left
+                            self.hitbox.left = sprite.hitbox.right
 
         if direction == 'vertical':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.y > 0: # if moving down (remember increasing y is down
-                        self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction.y < 0: # if moving up
-                        self.hitbox.top = sprite.hitbox.bottom
+                for sprite in self.obstacle_sprites:
+                    if sprite.sprite_type == 'exit':
+                        pass
+                    else:
+                        if sprite.hitbox.colliderect(self.hitbox):
+                            if self.direction.y > 0: # if moving down (remember increasing y is down
+                                self.hitbox.bottom = sprite.hitbox.top
+                            if self.direction.y < 0: # if moving up
+                                self.hitbox.top = sprite.hitbox.bottom
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
@@ -221,7 +227,6 @@ class Player(Entity):
 
     def check_death(self):
         if self.health <= 0:
-            print('dead')
             self.is_dead = True
 
 

@@ -9,8 +9,15 @@ class Tile(pygame.sprite.Sprite):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
         self.sprite_type = sprite_type
         self.image = surface
-        self.rect = self.image.get_rect(topleft = pos) #creating a rectangle based on the image attribute, putting the position at the top left
-        if self.sprite_type == 'invisible_half':
+        if self.sprite_type == 'invisible_half_bottom_left':
+            self.rect = self.image.get_rect(midleft = pos + pygame.math.Vector2(0,-30))
+        elif self.sprite_type == 'level_2_big_tree':
+            self.rect = self.image.get_rect(midleft = pos)
+        else:
+            self.rect = self.image.get_rect(topleft = pos) #creating a rectangle based on the image attribute, putting the position at the top left
+        if self.sprite_type in ('invisible_half','level_2_big_tree'):
             self.hitbox = self.rect.inflate(-65,-30)
+        elif self.sprite_type == 'invisible_half_bottom_left':
+            self.hitbox = self.rect.inflate(-100,-150)
         else:
             self.hitbox = self.rect.inflate(-10,-10)
