@@ -27,6 +27,9 @@ class Game:
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE: # restarting 
+						self.level.main_sound.stop()
+						if hasattr(self.level,'top_sound'):
+							self.level.top_sound.stop()
 						Game().run()
 					if self.level.game_over:
 						if event.key == pygame.K_r:
@@ -38,6 +41,8 @@ class Game:
 				self.level_num += 1
 				self.level = self.levels[self.level_num]
 				self.level.main_sound.play(loops=-1)
+				if self.level_num == 1:
+					self.level.top_sound.play(loops=-1)
 			pygame.display.update()
 			self.clock.tick(FPS)
 

@@ -3,18 +3,19 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "malon_v1.tmx",
+    "activeFile": "level2_v1.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "1-0.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 0.7631,
             "scaleInEditor": 1
         },
         "1-1.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 1
         },
         "Objects.tsx": {
             "dynamicWrapping": true,
@@ -27,24 +28,30 @@
             "scaleInEditor": 1
         },
         "epic_tileset.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 0.1649,
+            "scaleInEditor": 1
         },
         "graveyard.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "level2-tileset.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 0.5663,
+            "scaleInEditor": 1
         },
         "level2_v1.tmx": {
-            "scale": 0.48,
+            "scale": 0.2673,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 2544.791666666667,
-                "y": 1550
+                "x": 1300.0374111485223,
+                "y": 991.3954358398803
             }
         },
         "level2_v1.tmx#Objects": {
-            "scaleInDock": 1
+            "scaleInDock": 0.2148
         },
         "malon fence.tsx": {
             "dynamicWrapping": false,
@@ -95,20 +102,27 @@
     "map.tileWidth": 64,
     "map.width": 48,
     "openFiles": [
-        "malon_v1.tmx"
+        "malon_v1.tmx",
+        "epic_tileset.tsx",
+        "level2_v1.tmx",
+        "level2-tileset.tsx",
+        "graveyard.tsx",
+        "Objects.tsx"
     ],
     "project": "v2_tiled.tiled-project",
     "recentFiles": [
-        "1-0.tsx",
         "malon_v1.tmx",
+        "epic_tileset.tsx",
+        "Objects.tsx",
+        "graveyard.tsx",
+        "level2-tileset.tsx",
+        "level2_v1.tmx",
+        "1-0.tsx",
         "boundary.tsx",
         "object_tiles.tsx",
         "malon fence.tsx",
         "malon_grass.tsx",
-        "Objects.tsx",
-        "malon_basemap_blank.tsx",
-        "v2_romani_ranch.tmx",
-        "v2_tiles.tsx"
+        "malon_basemap_blank.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 0,

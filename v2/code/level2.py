@@ -43,6 +43,8 @@ class Level2:
         # music
         self.main_sound = pygame.mixer.Sound('audio/1b.mp3')
         self.main_sound.set_volume(0.3)
+        self.top_sound = pygame.mixer.Sound('audio/1t.mp3')
+        self.top_sound.set_volume(0.05)
         # self.main_sound.play(loops = -1)
 
     def create_map(self):
@@ -92,7 +94,8 @@ class Level2:
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.create_attack,
-                                    self.destroy_attack)
+                                    self.destroy_attack,
+                                    player_level=1)
                             else:
                                 monster_name = 'them'
                                 Enemy(
@@ -139,11 +142,13 @@ class Level2:
             # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
                 self.main_sound.stop()
+                self.top_sound.stop()
                 self.level_complete_status = True
     
     def toggle_end(self):
         if self.player.is_dead:
             self.main_sound.stop()
+            self.top_sound.stop()
             self.game_over = True
 
     def restart_level(self):
@@ -176,7 +181,7 @@ class Level2:
         if self.game_over:
             self.restart.display()
         else:
-            self.visible_sprites.custom_draw(self.player)
+            self.visible_sprites.custom_draw(self.player,self.top_sound)
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
@@ -200,7 +205,21 @@ class YSortCameraGroup(pygame.sprite.Group):
 
         self.fog_surface = pygame.Surface((2000,2000),pygame.SRCALPHA) 
 
-    def custom_draw(self,player):
+    def calculate_alpha(self,distance):
+        base_alpha = 250
+        max_distance = 3400
+        min_alpha = 0
+        alpha = base_alpha * (1 - (distance / max_distance)) ** 2
+        return max(alpha, min_alpha)
+
+    def calculate_volume(self,distance):
+        base_volume = 0.26
+        max_distance = 3400
+        min_volume = 0.05
+        volume = base_volume * (1 - (distance / max_distance)) ** 2
+        return max(volume, min_volume)
+
+    def custom_draw(self,player,sound):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
@@ -218,9 +237,13 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image,offset_pos)
 
         player_vec = pygame.math.Vector2(player.rect.center)
-        end_vec = pygame.math.Vector2(0,0)
+        end_vec = pygame.math.Vector2(0, 0)
         distance = (player_vec - end_vec).magnitude()
-        alpha = 250 - (250 * (distance / 3400)) if 250 - (250 * (distance / 3400)) > 0 else 0
+
+        
+        top_level_volume = self.calculate_volume(distance)
+        sound.set_volume(top_level_volume)
+        alpha = self.calculate_alpha(distance)
         self.fog_surface.fill((224,224,224,alpha))
         self.display_surface.blit(self.fog_surface, (0,0))
 

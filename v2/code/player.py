@@ -7,15 +7,21 @@ from entity import Entity
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
 class Player(Entity):
-    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack):
+    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,player_level=0):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
-        self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
-        self.rect = self.image.get_rect(topleft = pos) #creating a rectangle based on the image attribute, putting the position at the top left
+        if player_level == 0:
+            self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'down'
+        elif player_level == 1:
+            self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(-38,130)
+            self.status = 'up'
+        self.rect = self.image.get_rect(topleft = pos + rect_offset) #creating a rectangle based on the image attribute, putting the position at the top left
         self.hitbox = self.rect.inflate(0,-26)
 
         # graphics setup
         self.import_player_assets()
-        self.status = 'down'
 
         # direction attribute gets set to a vector so that we can multiply it be a speed variable
         # movement attributes

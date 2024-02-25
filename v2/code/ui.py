@@ -10,8 +10,8 @@ class UI:
         
         # bar setup
         self.health_bar_rect = pygame.Rect(10,10,HEALTH_BAR_WIDTH,BAR_HEIGHT)
-        self.energy_bar_rect = pygame.Rect(10,34,ENERGY_BAR_WIDTH,BAR_HEIGHT)
-        self.stamina_bar_rect = pygame.Rect(10,58,STAMINA_BAR_WIDTH,STAMINA_BAR_HEIGHT)
+        # self.energy_bar_rect = pygame.Rect(10,34,ENERGY_BAR_WIDTH,BAR_HEIGHT)
+        self.stamina_bar_rect = pygame.Rect(10,34,STAMINA_BAR_WIDTH,STAMINA_BAR_HEIGHT)
 
         # convert weapon dictionary into list of images
         self.weapon_graphics = []
@@ -33,15 +33,15 @@ class UI:
         pygame.draw.rect(self.display_surface,color,current_rect)
         pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,current_rect,3)
     
-    def show_exp(self,exp):
-        text_surf = self.font.render(str(int(exp)),False,TEXT_COLOR)
-        x = self.display_surface.get_size()[0] - 20
-        y = self.display_surface.get_size()[1] - 20
-        text_rect = text_surf.get_rect(bottomright=(x,y))
+    # def show_exp(self,exp):
+    #     text_surf = self.font.render(str(int(exp)),False,TEXT_COLOR)
+    #     x = self.display_surface.get_size()[0] - 20
+    #     y = self.display_surface.get_size()[1] - 20
+    #     text_rect = text_surf.get_rect(bottomright=(x,y))
 
-        pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(20,20))
-        self.display_surface.blit(text_surf,text_rect)
-        pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(20,20),3)       
+    #     pygame.draw.rect(self.display_surface,UI_BG_COLOR,text_rect.inflate(20,20))
+    #     self.display_surface.blit(text_surf,text_rect)
+    #     pygame.draw.rect(self.display_surface,UI_BORDER_COLOR,text_rect.inflate(20,20),3)       
 
     def selection_box(self,left,top,has_switched):
         bg_rect = pygame.Rect(left,top,ITEM_BOX_SIZE,ITEM_BOX_SIZE)
@@ -64,9 +64,9 @@ class UI:
         else:
             stamina_col = STAMINA_COLOR
         self.show_bar(player.health,player.stats['health'],self.health_bar_rect,HEALTH_COLOR)
-        self.show_bar(player.energy,player.stats['energy'],self.energy_bar_rect,ENERGY_COLOR)
+        # self.show_bar(player.energy,player.stats['energy'],self.energy_bar_rect,ENERGY_COLOR)
         self.show_bar(player.stamina,player.stats['stamina'],self.stamina_bar_rect,stamina_col)
-        self.show_exp(player.exp)
+        # self.show_exp(player.exp)
         
         self.weapon_overlay(player.weapon_index,not player.can_switch_weapon)
         # self.selection_box(80,635) # magic
