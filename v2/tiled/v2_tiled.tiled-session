@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level2_v1.tmx",
+    "activeFile": "level3.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -29,7 +29,7 @@
         },
         "epic_tileset.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.1649,
+            "scaleInDock": 0.3245,
             "scaleInEditor": 1
         },
         "graveyard.tsx": {
@@ -43,15 +43,28 @@
             "scaleInEditor": 1
         },
         "level2_v1.tmx": {
-            "scale": 0.2673,
-            "selectedLayer": 2,
+            "scale": 0.19,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1300.0374111485223,
-                "y": 991.3954358398803
+                "x": 1160.526315789474,
+                "y": 1286.842105263158
             }
         },
         "level2_v1.tmx#Objects": {
             "scaleInDock": 0.2148
+        },
+        "level3 cloud fog ground.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "level3.tmx": {
+            "scale": 0.3063,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 984.3290891283054,
+                "y": 1092.0666013712046
+            }
         },
         "malon fence.tsx": {
             "dynamicWrapping": false,
@@ -71,9 +84,13 @@
             "scale": 0.22,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1661.3636363636365,
-                "y": 295.45454545454527
+                "x": 1538.636363636364,
+                "y": 1022.7272727272727
             }
+        },
+        "new fogshit.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "object_tiles.tsx": {
             "dynamicWrapping": false,
@@ -93,8 +110,8 @@
             "scaleInEditor": 1.3724
         }
     },
-    "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/map/level2",
-    "last.imagePath": "/Users/jacob/Downloads",
+    "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/map/level3",
+    "last.imagePath": "/Users/jacob/Documents/EK16B/v2/aseprite files/level3",
     "map.height": 32,
     "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",
@@ -103,26 +120,25 @@
     "map.width": 48,
     "openFiles": [
         "malon_v1.tmx",
-        "epic_tileset.tsx",
         "level2_v1.tmx",
-        "level2-tileset.tsx",
-        "graveyard.tsx",
-        "Objects.tsx"
+        "level3.tmx",
+        "level3 cloud fog ground.tsx",
+        "new fogshit.tsx"
     ],
     "project": "v2_tiled.tiled-project",
     "recentFiles": [
         "malon_v1.tmx",
+        "level2_v1.tmx",
+        "new fogshit.tsx",
+        "level3 cloud fog ground.tsx",
+        "level3.tmx",
         "epic_tileset.tsx",
         "Objects.tsx",
         "graveyard.tsx",
         "level2-tileset.tsx",
-        "level2_v1.tmx",
         "1-0.tsx",
         "boundary.tsx",
-        "object_tiles.tsx",
-        "malon fence.tsx",
-        "malon_grass.tsx",
-        "malon_basemap_blank.tsx"
+        "object_tiles.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 0,
@@ -131,6 +147,6 @@
         "width": 64
     },
     "tileset.transparentColor": "#162b2a",
-    "tileset.type": 1,
+    "tileset.type": 0,
     "tileset.useTransparentColor": true
 }

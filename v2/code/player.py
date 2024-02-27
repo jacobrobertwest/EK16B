@@ -17,6 +17,18 @@ class Player(Entity):
             self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
             rect_offset = pygame.math.Vector2(-38,130)
             self.status = 'up'
+        elif player_level == 2:
+            self.image = pygame.image.load('graphics/player/left_idle/idle_left.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'up'
+            self.mask = pygame.mask.from_surface(self.image,threshold=1)
+            self.mask_image = self.mask.to_surface(setcolor=(200,200,200,255),unsetcolor=(0,0,0,0))
+            # colliding_bits_image = colliding_bits.to_surface(setcolor=(0, 255, 0, 255), unsetcolor=(0, 0, 0, 0))
+            # self.mask_image.fill((100, 100, 100, 255))  # Dark grey color with 50% transparency
+        else:
+            self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'down'
         self.rect = self.image.get_rect(topleft = pos + rect_offset) #creating a rectangle based on the image attribute, putting the position at the top left
         self.hitbox = self.rect.inflate(0,-26)
 
@@ -235,7 +247,6 @@ class Player(Entity):
         if self.health <= 0:
             self.is_dead = True
 
-
     def animate(self):
         animation = self.animations[self.status]
         # loop over the frame index 
@@ -260,6 +271,13 @@ class Player(Entity):
         weapon_damage = weapon_data[self.weapon]['damage']
         return base_damage + weapon_damage
 
+    def update_mask(self):
+        if hasattr(self,'mask'):
+            self.mask = pygame.mask.from_surface(self.image,threshold=1)
+            self.mask_image = self.mask.to_surface().convert_alpha()
+            self.mask_image = self.mask.to_surface(setcolor=(200,200,200,255),unsetcolor=(0,0,0,0))
+            # self.mask_image.fill((100, 100, 100, 255))  # Dark grey color with 50% transparency
+
     def update(self):
         self.check_death()
         self.input()
@@ -267,3 +285,4 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
+        self.update_mask()
