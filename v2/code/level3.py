@@ -31,6 +31,7 @@ class Level3:
 
         #user interface
         self.ui = UI()
+        self.background = 'white'
 
         # particles
         self.animation_player = AnimationPlayer()

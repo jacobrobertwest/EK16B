@@ -37,7 +37,7 @@ class Game:
 						if event.key == pygame.K_r:
 							self.level.restart_level()
 
-			self.screen.fill('black')
+			self.screen.fill(self.level.background)
 			self.level.run()
 			if self.level.level_complete_status:
 				self.level_num += 1
