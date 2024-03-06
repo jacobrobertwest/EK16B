@@ -1,8 +1,17 @@
-import pygame, sys
+import util
+try:
+    import pygame
+except ImportError:
+    util.import_or_install('pygame')
+
+import sys
+import os
 from settings import *
 from level import Level
 from level2 import Level2
 from level3 import Level3
+
+os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
 class Game:
 	def __init__(self):
