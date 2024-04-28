@@ -41,7 +41,7 @@ class Level:
         self.game_over = False
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/0.mp3')
+        self.main_sound = pygame.mixer.Sound('audio/0.ogg')
         self.main_sound.set_volume(0.3)
 
     def create_map(self):

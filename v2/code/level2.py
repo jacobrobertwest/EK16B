@@ -41,9 +41,9 @@ class Level2:
         self.game_over = False
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/1b.mp3')
+        self.main_sound = pygame.mixer.Sound('audio/1b.ogg')
         self.main_sound.set_volume(0.3)
-        self.top_sound = pygame.mixer.Sound('audio/1t.mp3')
+        self.top_sound = pygame.mixer.Sound('audio/1t.ogg')
         self.top_sound.set_volume(0.05)
         # self.main_sound.play(loops = -1)
 

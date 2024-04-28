@@ -10,7 +10,8 @@ from settings import *
 from level import Level
 from level2 import Level2
 from level3 import Level3
-import asyncio
+
+os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
 class Game:
 	def __init__(self):
@@ -28,7 +29,7 @@ class Game:
 		self.level.main_sound.play(loops=-1)
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
-	async def main(self):
+	def run(self):
 		while True:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -49,13 +50,12 @@ class Game:
 			if self.level.level_complete_status:
 				self.level_num += 1
 				self.level = self.levels[self.level_num]
-				self.levels[self.level_num-1] = None
 				self.level.main_sound.play(loops=-1)
 				if self.level_num == 1:
 					self.level.top_sound.play(loops=-1)
 			pygame.display.update()
 			self.clock.tick(FPS)
-			await asyncio.sleep(0)
 
-if __name__ == "__main__":
-	asyncio.run(Game().main())
+if __name__ == '__main__':
+	game = Game()
+	game.run()
