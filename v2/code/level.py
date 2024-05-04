@@ -76,6 +76,8 @@ class Level:
                         if style == 'object':
                             if int(col) in (2,3):
                                 sp_type = 'invisible_half'
+                            elif int(col) == 6:
+                                sp_type = 'invisible_willow'
                             else:
                                 sp_type = 'object'
                             surf = graphics['objects'][int(col)]
@@ -168,7 +170,7 @@ class Level:
         # particles
         self.animation_player = AnimationPlayer()
 
-        self.main_sound = pygame.mixer.Sound('audio/0.mp3')
+        self.main_sound = pygame.mixer.Sound('audio/0.ogg')
         self.main_sound.set_volume(0.3)
         self.main_sound.play(loops = -1)
        
