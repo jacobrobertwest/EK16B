@@ -65,9 +65,6 @@ class Enemy(Entity):
         self.can_attack = True
         self.attack_time = None
         self.attack_cooldown_time = 1000
-        self.in_boids = False
-        self.in_boids_time = None
-        self.in_boids_cooldown_time = 80
         self.damage_player = damage_player
         self.trigger_death_particles = trigger_death_particles
 
@@ -105,29 +102,45 @@ class Enemy(Entity):
             self.status = 'idle'
 
     def avoid_collisions(self, other_enemies):
+
+        
         for enemy in other_enemies:
+            separation_strength = 0.1
+            alignment_strength = 0.02
+            cohesion_strength = 0.005
+
+            separation_vector = pygame.math.Vector2(0,0)
+            alignment_vector = pygame.math.Vector2(0,0)
+            cohesion_vector = pygame.math.Vector2(0,0)
+
             if enemy != self:
                 if self.hitbox.colliderect(enemy.hitbox):
-                    same_direction = are_enemies_moving_in_same_direction(self,enemy)
-                    # Convert positions to vectors for vector operations
-                    if not same_direction:
-                        self_position = pygame.math.Vector2(self.hitbox.center)
-                        enemy_position = pygame.math.Vector2(enemy.hitbox.center)
-                        self.in_boids_time = pygame.time.get_ticks()
-                        self.in_boids = True
-                        # Calculate new direction away from the colliding enemy
-                        self.direction += self_position - enemy_position
-                        self.direction += pygame.math.Vector2((random.uniform(-0.3, 0.3),random.uniform(-0.3, 0.3)))
-                        self.direction.normalize_ip()
+                    separation_vector += pygame.math.Vector2(self.hitbox.center) - pygame.math.Vector2(enemy.hitbox.center)
+                    alignment_vector += pygame.math.Vector2(enemy.direction)
+                    cohesion_vector += pygame.math.Vector2(enemy.rect.center)
+
+            if len(other_enemies) > 1:
+                # Normalize vectors if they are not zero
+                if separation_vector.length() > 0:
+                    separation_vector.normalize_ip()
+                    separation_vector *= separation_strength
+                if alignment_vector.length() > 0:
+                    alignment_vector.normalize_ip()
+                    alignment_vector *= alignment_strength
+                if cohesion_vector.length() > 0:
+                    cohesion_vector.normalize_ip()
+                    cohesion_vector *= cohesion_strength
+                # Update direction based on combined vectors
+                self.direction += separation_vector + alignment_vector + cohesion_vector
+                self.direction.normalize_ip()
 
     def actions(self,player,other_enemies):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
             self.damage_player(self.attack_damage,self.attack_type)
         elif self.status == 'move':
-            if not self.in_boids:
-                self.direction = self.get_player_distance_direction(player)[1]
-                self.avoid_collisions(other_enemies)
+            self.direction = self.get_player_distance_direction(player)[1]
+            self.avoid_collisions(other_enemies)
         else:
             self.direction = pygame.math.Vector2()
 
@@ -140,10 +153,6 @@ class Enemy(Entity):
         if not self.vulnerable:
             if current_time - self.hit_time >= self.invincibility_duration:
                 self.vulnerable = True
-
-        if self.in_boids:
-            if current_time - self.in_boids_time >= self.in_boids_cooldown_time:
-                self.in_boids = False
 
     def get_damage(self,player,attack_type):
         if self.vulnerable:
