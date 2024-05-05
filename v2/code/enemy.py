@@ -2,7 +2,35 @@ import pygame
 from settings import *
 from entity import Entity
 from support import *
-from math import sqrt
+from math import sqrt, acos, degrees
+import random
+
+def angle_between(v1, v2):
+    dot_product = v1[0] * v2[0] + v1[1] * v2[1]
+    magnitudes = sqrt(v1[0]**2 + v1[1]**2) * sqrt(v2[0]**2 + v2[1]**2)
+    if magnitudes == 0:
+        return 0
+    else:
+        argument = max(-1.0, min(dot_product / magnitudes, 1.0))  # Clamping the argument
+        return acos(argument)
+    
+def are_enemies_moving_in_same_direction(enemy1, enemy2):
+    # Get normalized movement vectors for each enemy
+    movement_vector1 = pygame.math.Vector2(enemy1.direction)
+    movement_vector2 = pygame.math.Vector2(enemy2.direction)
+
+    # Calculate the angle between the movement vectors
+    angle = degrees(angle_between((movement_vector1.x, movement_vector1.y),
+                                    (movement_vector2.x, movement_vector2.y)))
+
+    # Define a threshold angle for similarity
+    threshold_angle = 10 # Adjust as needed
+
+    # Check if the angle is less than the threshold
+    if angle < threshold_angle:
+        return True
+    else:
+        return False
 
 class Enemy(Entity):
     def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles):
@@ -37,6 +65,9 @@ class Enemy(Entity):
         self.can_attack = True
         self.attack_time = None
         self.attack_cooldown_time = 1000
+        self.in_boids = False
+        self.in_boids_time = None
+        self.in_boids_cooldown_time = 80
         self.damage_player = damage_player
         self.trigger_death_particles = trigger_death_particles
 
@@ -73,12 +104,30 @@ class Enemy(Entity):
         else: 
             self.status = 'idle'
 
-    def actions(self,player):
+    def avoid_collisions(self, other_enemies):
+        for enemy in other_enemies:
+            if enemy != self:
+                if self.hitbox.colliderect(enemy.hitbox):
+                    same_direction = are_enemies_moving_in_same_direction(self,enemy)
+                    # Convert positions to vectors for vector operations
+                    if not same_direction:
+                        self_position = pygame.math.Vector2(self.hitbox.center)
+                        enemy_position = pygame.math.Vector2(enemy.hitbox.center)
+                        self.in_boids_time = pygame.time.get_ticks()
+                        self.in_boids = True
+                        # Calculate new direction away from the colliding enemy
+                        self.direction += self_position - enemy_position
+                        self.direction += pygame.math.Vector2((random.uniform(-0.3, 0.3),random.uniform(-0.3, 0.3)))
+                        self.direction.normalize_ip()
+
+    def actions(self,player,other_enemies):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
             self.damage_player(self.attack_damage,self.attack_type)
         elif self.status == 'move':
-            self.direction = self.get_player_distance_direction(player)[1]
+            if not self.in_boids:
+                self.direction = self.get_player_distance_direction(player)[1]
+                self.avoid_collisions(other_enemies)
         else:
             self.direction = pygame.math.Vector2()
 
@@ -91,6 +140,10 @@ class Enemy(Entity):
         if not self.vulnerable:
             if current_time - self.hit_time >= self.invincibility_duration:
                 self.vulnerable = True
+
+        if self.in_boids:
+            if current_time - self.in_boids_time >= self.in_boids_cooldown_time:
+                self.in_boids = False
 
     def get_damage(self,player,attack_type):
         if self.vulnerable:
@@ -135,6 +188,6 @@ class Enemy(Entity):
         self.cooldowns()
         self.check_death()
 
-    def enemy_update(self,player):
+    def enemy_update(self,player,enemy_sprites):
         self.get_status(player)
-        self.actions(player)
+        self.actions(player,enemy_sprites)

@@ -74,7 +74,7 @@ class Level:
                             surf_grass = graphics['grass'][int(col)]
                             Tile((x,y),[self.visible_sprites],'grass',surf_grass)
                         if style == 'object':
-                            if int(col) in (2,3):
+                            if int(col) in (2,3,7):
                                 sp_type = 'invisible_half'
                             elif int(col) == 6:
                                 sp_type = 'invisible_willow'
@@ -222,4 +222,4 @@ class YSortCameraGroup(pygame.sprite.Group):
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:
-            enemy.enemy_update(player)
+            enemy.enemy_update(player, enemy_sprites)
