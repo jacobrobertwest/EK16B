@@ -2,35 +2,7 @@ import pygame
 from settings import *
 from entity import Entity
 from support import *
-from math import sqrt, acos, degrees
-import random
-
-def angle_between(v1, v2):
-    dot_product = v1[0] * v2[0] + v1[1] * v2[1]
-    magnitudes = sqrt(v1[0]**2 + v1[1]**2) * sqrt(v2[0]**2 + v2[1]**2)
-    if magnitudes == 0:
-        return 0
-    else:
-        argument = max(-1.0, min(dot_product / magnitudes, 1.0))  # Clamping the argument
-        return acos(argument)
-    
-def are_enemies_moving_in_same_direction(enemy1, enemy2):
-    # Get normalized movement vectors for each enemy
-    movement_vector1 = pygame.math.Vector2(enemy1.direction)
-    movement_vector2 = pygame.math.Vector2(enemy2.direction)
-
-    # Calculate the angle between the movement vectors
-    angle = degrees(angle_between((movement_vector1.x, movement_vector1.y),
-                                    (movement_vector2.x, movement_vector2.y)))
-
-    # Define a threshold angle for similarity
-    threshold_angle = 10 # Adjust as needed
-
-    # Check if the angle is less than the threshold
-    if angle < threshold_angle:
-        return True
-    else:
-        return False
+from math import sqrt
 
 class Enemy(Entity):
     def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles):
@@ -102,8 +74,6 @@ class Enemy(Entity):
             self.status = 'idle'
 
     def avoid_collisions(self, other_enemies):
-
-        
         for enemy in other_enemies:
             separation_strength = 0.1
             alignment_strength = 0.02
