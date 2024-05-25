@@ -23,7 +23,7 @@ class TitlePage:
 
     def input(self):
         keys = pygame.key.get_pressed()
-        if any(keys):
+        if keys[pygame.K_RETURN]:
             self.level_complete_status = True
             self.main_sound.stop()
 
