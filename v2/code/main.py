@@ -12,6 +12,7 @@ from level import Level
 from level2 import Level2
 from level3 import Level3
 from level4 import Level4
+from endpage import EndPage
 import asyncio
 
 class Game:
@@ -24,7 +25,7 @@ class Game:
 		
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
-		self.levels = [TitlePage(),Level(),Level2(),Level3(),Level4()]
+		self.levels = [TitlePage(),Level(),Level2(),Level3(),Level4(),EndPage()]
 		# self.levels = [Level4()]
 		self.level = self.levels[self.level_num]
 		self.level.main_sound.play(loops=-1)
