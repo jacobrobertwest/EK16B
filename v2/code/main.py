@@ -7,7 +7,7 @@ except ImportError:
 import sys
 import os
 from settings import *
-from title import TitleScreen
+from titlepage import TitlePage
 from level import Level
 from level2 import Level2
 from level3 import Level3
@@ -24,16 +24,13 @@ class Game:
 		
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
-		self.levels = [Level(),Level2(),Level3(),Level4()]
+		self.levels = [TitlePage(),Level(),Level2(),Level3(),Level4()]
 		# self.levels = [Level4()]
 		self.level = self.levels[self.level_num]
 		self.level.main_sound.play(loops=-1)
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
 	async def main(self):
-		title_screen = TitleScreen(self.screen, self.clock)
-		title_screen.run()
-
 		while True:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -48,7 +45,7 @@ class Game:
 					if self.level.game_over:
 						if event.key == pygame.K_r:
 							self.level.restart_level()
-							
+
 			self.screen.fill(self.level.background)
 			self.level.run()
 			if self.level.level_complete_status:
@@ -56,7 +53,7 @@ class Game:
 				self.level = self.levels[self.level_num]
 				self.levels[self.level_num-1] = None
 				self.level.main_sound.play(loops=-1)
-				if self.level_num == 1:
+				if self.level_num == 2:
 					self.level.top_sound.play(loops=-1)
 			pygame.display.update()
 			self.clock.tick(FPS)
