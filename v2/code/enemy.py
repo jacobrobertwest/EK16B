@@ -102,7 +102,10 @@ class Enemy(Entity):
                     cohesion_vector *= cohesion_strength
                 # Update direction based on combined vectors
                 self.direction += separation_vector + alignment_vector + cohesion_vector
-                self.direction.normalize_ip()
+                try:
+                    self.direction.normalize_ip()
+                except:
+                    pass
 
     def actions(self,player,other_enemies):
         if self.status == 'attack':

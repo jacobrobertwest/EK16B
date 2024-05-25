@@ -185,6 +185,7 @@ class Level:
             self.player_attack_logic()
             self.level_complete_update()
             self.ui.display(self.player)
+            self.toggle_end()
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
