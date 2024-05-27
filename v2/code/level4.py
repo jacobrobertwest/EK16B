@@ -75,7 +75,7 @@ class Level4:
                             surf_grass = graphics['grass'][int(col)]
                             Tile((x,y),[self.visible_sprites],'grass',surf_grass)
                         if style == 'object':
-                            if int(col) in (2,3):
+                            if int(col) in (2,3,8):
                                 sp_type = 'invisible_half'
                             elif int(col) == 4:
                                 sp_type = 'invisible_half_bottom_left'
@@ -93,7 +93,7 @@ class Level4:
                                     self.obstacle_sprites,
                                     self.create_attack,
                                     self.destroy_attack,
-                                    player_level=1)
+                                    player_level=4)
                             else:
                                 monster_name = 'them'
                                 Enemy(

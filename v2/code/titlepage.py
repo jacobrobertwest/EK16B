@@ -20,6 +20,7 @@ class TitlePage:
         self.game_over = False
         self.level_complete_status = False
         self.background = 'black'
+        self.font = pygame.font.Font(UI_FONT,UI_FONT_SIZE)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -29,7 +30,9 @@ class TitlePage:
 
     def display(self):
         self.display_surface.blit(self.title_image, (0, 0))
-        pygame.display.update()
+        updated_surf = self.font.render(" v1.1 - Last Updated: 5/27/24", False, "white")
+        updated_rect = updated_surf.get_rect(center=(100,20))
+        self.display_surface.blit(updated_surf,updated_rect)
 
     def run(self):
         self.input()

@@ -8,8 +8,17 @@
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "Objects.tsx": {
+            "dynamicWrapping": true
+        },
+        "ground flour.tsx": {
+            "dynamicWrapping": false
+        },
+        "object_tiles.tsx": {
+            "dynamicWrapping": false
+        }
     },
-    "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/code/map",
+    "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/code/map/level4",
     "last.imagePath": "/Users/jacob/Documents/EK16B/v2/code/aseprite files",
     "map.height": 32,
     "map.lastUsedExportFilter": "CSV files (*.csv)",

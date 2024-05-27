@@ -25,6 +25,10 @@ class Player(Entity):
             self.mask_image = self.mask.to_surface(setcolor=(200,200,200,255),unsetcolor=(0,0,0,0))
             # colliding_bits_image = colliding_bits.to_surface(setcolor=(0, 255, 0, 255), unsetcolor=(0, 0, 0, 0))
             # self.mask_image.fill((100, 100, 100, 255))  # Dark grey color with 50% transparency
+        elif player_level == 4:
+            self.image = pygame.image.load('graphics/player/left_idle/idle_left.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'left'
         else:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
