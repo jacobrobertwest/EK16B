@@ -132,10 +132,11 @@ class Enemy(Entity):
             self.direction = self.get_player_distance_direction(player)[1]
             if attack_type == 'weapon':
                 self.health -= player.get_full_weapon_damage()
+            elif attack_type == 'shield':
+                pass
             else:
                 pass
             self.hit_time = pygame.time.get_ticks()
-                # magic damage
             self.vulnerable = False
         
     def check_death(self):

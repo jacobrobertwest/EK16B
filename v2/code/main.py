@@ -26,7 +26,7 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
 		self.levels = [TitlePage(),Level(),Level2(),Level3(),Level4(),EndPage()]
-		# self.levels = [Level4()]
+		# self.levels = [Level()]
 		self.level = self.levels[self.level_num]
 		self.level.main_sound.play(loops=-1)
 	 

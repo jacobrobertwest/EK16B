@@ -10,6 +10,7 @@ from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
+from shield import Shield
 
 class Level4:
     def __init__(self):
@@ -26,6 +27,9 @@ class Level4:
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
+
+        self.current_shield = None
+        self.shield_sprites = pygame.sprite.Group()
         # sprite setup
         self.create_map()
 
@@ -93,6 +97,8 @@ class Level4:
                                     self.obstacle_sprites,
                                     self.create_attack,
                                     self.destroy_attack,
+                                    self.create_shield,
+                                    self.destroy_shield,
                                     player_level=4)
                             else:
                                 monster_name = 'them'
@@ -112,6 +118,14 @@ class Level4:
             self.current_attack.kill()
         self.current_attack = None
 
+    def create_shield(self):
+        self.current_shield = Shield(self.player,[self.visible_sprites,self.shield_sprites])
+
+    def destroy_shield(self):
+        if self.current_shield:
+            self.current_shield.kill()
+        self.current_shield = None
+
     def player_attack_logic(self):
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
@@ -122,6 +136,15 @@ class Level4:
                             pos = target_sprite.rect.center
                             self.animation_player.create_slash_particles(pos,[self.visible_sprites])
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+
+    def player_defense_logic(self):
+        if self.shield_sprites:
+            for shield_sprite in self.shield_sprites:
+                collision_sprites = pygame.sprite.spritecollide(shield_sprite,self.attackable_sprites,False)
+                if collision_sprites:
+                    for target_sprite in collision_sprites:
+                        if target_sprite.sprite_type == 'enemy':
+                            target_sprite.get_damage(self.player, shield_sprite.sprite_type)
 
     def damage_player(self,amount,attack_type):
         if self.player.vulnerable:
@@ -182,6 +205,7 @@ class Level4:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
+            self.player_defense_logic()
             self.level_complete_update()
             self.ui.display(self.player)
 

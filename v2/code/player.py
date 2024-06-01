@@ -7,7 +7,7 @@ from entity import Entity
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
 class Player(Entity):
-    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,player_level=0):
+    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
         if player_level == 0:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
@@ -58,6 +58,12 @@ class Player(Entity):
         self.weapon_switch_time = None
         self.switch_duration_cooldown = 200
 
+        self.defending = False
+        self.defend_cooldown = 400
+        self.defend_time = None
+        self.create_shield = create_shield
+        self.destroy_shield = destroy_shield
+
         # stats
         self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':7.5,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
         self.health = self.stats['health']
@@ -85,14 +91,15 @@ class Player(Entity):
         self.animations = {
         'up': [],'down': [],'left': [],'right': [],
         'right_idle': [],'left_idle': [],'up_idle': [],'down_idle': [],
-        'right_attack': [],'left_attack': [],'up_attack': [],'down_attack': []
+        'right_attack': [],'left_attack': [],'up_attack': [],'down_attack': [],
+        'right_defend': [],'left_defend': [],'up_defend': [],'down_defend': [],
         }
         for animation in self.animations.keys():
             folder_path = character_path + animation
             self.animations[animation] = import_folder(folder_path)
 
     def input(self):
-        if not self.attacking:
+        if not self.attacking and not self.defending:
             # getting all the keys that are being pressed
             keys = pygame.key.get_pressed()
 
@@ -153,25 +160,17 @@ class Player(Entity):
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
 
-            # magic input
-            if keys[pygame.K_LSUPER] and not self.attacking:
-                self.attacking = True
-                self.attack_time = pygame.time.get_ticks()
-
-            # if keys[pygame.K_q] and self.can_switch_weapon:
-            #     self.can_switch_weapon = False
-            #     self.weapon_switch_time = pygame.time.get_ticks()
-            #     if self.weapon_index < len(list(weapon_data.keys())) - 1:
-            #         self.weapon_index += 1
-            #     else:
-            #         self.weapon_index = 0
-            #     self.weapon = list(weapon_data.keys())[self.weapon_index]
+            # shield input
+            if keys[pygame.K_LSUPER] and not self.defending:
+                self.defending = True
+                self.defend_time = pygame.time.get_ticks()
+                self.create_shield()
     
     def get_status(self):
 
         # idle status
         if self.direction.x == 0 and self.direction.y == 0:
-            if not 'idle' in self.status and not 'attack' in self.status:
+            if not 'idle' in self.status and not 'attack' in self.status and not 'defend' in self.status:
                 self.status = self.status + '_idle'
 
         if self.attacking:
@@ -183,10 +182,25 @@ class Player(Entity):
                     self.status = self.status.replace('_idle','_attack')
                 else:
                     self.status = self.status + '_attack'
+        elif self.defending:
+            self.direction.x = 0
+            self.direction.y = 0
+            if not 'defend' in self.status:
+                if 'idle' in self.status:
+                    # overwrite idle
+                    self.status = self.status.replace('_idle','_defend')
+                elif 'attack' in self.status:
+                    # overwrite attack
+                    self.status = self.status.replace('_attack','_defend')
+                else:
+                    self.status = self.status + '_defend'
         else:
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
                 self.destroy_attack()
+            if 'defend' in self.status:
+                self.status = self.status.replace('_defend', '')
+                self.destroy_shield()
 
     def move(self,speed):
         # we have to normalize the self.direction vector in order
@@ -234,6 +248,10 @@ class Player(Entity):
         if self.attacking:
             if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
+
+        if self.defending:
+            if current_time - self.defend_time >= self.defend_cooldown:
+                self.defending = False
 
         if not self.can_switch_weapon:
             if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
