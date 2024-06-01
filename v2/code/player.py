@@ -100,6 +100,8 @@ class Player(Entity):
 
     def input(self):
         if not self.attacking and not self.defending:
+            self.direction.x = 0
+            self.direction.y = 0
             # getting all the keys that are being pressed
             keys = pygame.key.get_pressed()
 
@@ -161,10 +163,13 @@ class Player(Entity):
                 self.create_attack()
 
             # shield input
-            if keys[pygame.K_LSUPER] and not self.defending:
+            if keys[pygame.K_c] and not self.defending:
                 self.defending = True
                 self.defend_time = pygame.time.get_ticks()
                 self.create_shield()
+        else:
+            self.direction.x = 0
+            self.direction.y = 0
     
     def get_status(self):
 
@@ -198,9 +203,13 @@ class Player(Entity):
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
                 self.destroy_attack()
+                self.direction.x = 0
+                self.direction.y = 0
             if 'defend' in self.status:
                 self.status = self.status.replace('_defend', '')
                 self.destroy_shield()
+                self.direction.x = 0
+                self.direction.y = 0
 
     def move(self,speed):
         # we have to normalize the self.direction vector in order
