@@ -128,11 +128,11 @@ class Player(Entity):
             if keys[pygame.K_LSHIFT] and (keys[pygame.K_UP] or keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]): # if shift is being held
                 if self.stamina > 0: # if 
                     if not self.oversprinting_status:
-                        self.speed = 10
+                        self.speed = 9
                         self.animation_speed = 0.15*1.33
                         self.stamina -= self.sprint_drain
                     else:
-                        self.speed = 4.5
+                        self.speed = 4
                         self.animation_speed = 0.125
                         if self.stamina < self.stats['stamina']:
                             self.stamina += self.sprint_replenish
@@ -141,15 +141,15 @@ class Player(Entity):
                 else:
                     self.oversprinting_status = True
                     self.oversprint_time = pygame.time.get_ticks()
-                    self.speed = 4.5
+                    self.speed = 4
                     self.animation_speed = 0.125
 
             else:
                 if not self.oversprinting_status:
-                    self.speed = 7.5
+                    self.speed = 6.5
                     self.animation_speed = 0.15
                 else:
-                    self.speed = 4.5
+                    self.speed = 4
                     self.animation_speed = 0.125
                 if self.stamina < self.stats['stamina']:
                     self.stamina += self.sprint_replenish
@@ -163,7 +163,7 @@ class Player(Entity):
                 self.create_attack()
 
             # shield input
-            if keys[pygame.K_c] and not self.defending:
+            if keys[pygame.K_c] and not self.defending and not self.attacking:
                 self.defending = True
                 self.defend_time = pygame.time.get_ticks()
                 self.create_shield()
@@ -203,6 +203,7 @@ class Player(Entity):
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
                 self.destroy_attack()
+                self.destroy_shield()
                 self.direction.x = 0
                 self.direction.y = 0
             if 'defend' in self.status:
