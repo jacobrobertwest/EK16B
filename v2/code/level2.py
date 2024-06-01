@@ -204,7 +204,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground2.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
-        self.fog_surface = pygame.Surface((2000,2000),pygame.SRCALPHA) 
+        self.fog_surface = pygame.Surface((640,360),pygame.SRCALPHA) 
 
     def calculate_alpha(self,distance):
         base_alpha = 250
@@ -217,7 +217,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         base_volume = 0.26
         max_distance = 3400
         min_volume = 0.05
-        volume = round(base_volume * (1 - (distance / max_distance)) ** 2)
+        volume = round(base_volume * (1 - (distance / max_distance)) ** 2,2)
         return max(volume, min_volume)
 
     def custom_draw(self,player,sound):

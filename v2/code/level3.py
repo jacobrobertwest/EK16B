@@ -199,7 +199,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         # creating the floor
         self.floor_surf = pygame.image.load('graphics/tilemap/ground3.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
-        self.fog_surface = pygame.Surface((2000,2000),pygame.SRCALPHA)
+        self.fog_surface = pygame.Surface((640,360),pygame.SRCALPHA)
         self.fractal_surface_0 = pygame.image.load('graphics/fractal/level3_fractal/0.png').convert_alpha()
         self.fractal_surface_1 = pygame.image.load('graphics/fractal/level3_fractal/1.png').convert_alpha()
         self.fractal_surface_2 = pygame.image.load('graphics/fractal/level3_fractal/2.png').convert_alpha()
