@@ -15,7 +15,7 @@ class EndPage:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.title_image = pygame.image.load('graphics/end.png')  # Path to your title screen image
-        self.main_sound = pygame.mixer.Sound('audio/4beta.ogg')
+        self.main_sound = pygame.mixer.Sound('audio/4.ogg')
         self.main_sound.set_volume(0.3)
         self.game_over = False
         self.level_complete_status = False

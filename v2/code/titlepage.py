@@ -15,7 +15,7 @@ class TitlePage:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.title_image = pygame.image.load('graphics/title.png')  # Path to your title screen image
-        self.main_sound = pygame.mixer.Sound('audio/4beta.ogg')
+        self.main_sound = pygame.mixer.Sound('audio/4.ogg')
         self.main_sound.set_volume(0.3)
         self.game_over = False
         self.level_complete_status = False
@@ -30,7 +30,7 @@ class TitlePage:
 
     def display(self):
         self.display_surface.blit(self.title_image, (0, 0))
-        updated_surf = self.font.render(" v1.1 - Last Updated: 5/27/24", False, "white")
+        updated_surf = self.font.render(" v2.0.2 - Last Updated: 6/1/24", False, "white")
         updated_rect = updated_surf.get_rect(center=(100,20))
         self.display_surface.blit(updated_surf,updated_rect)
 

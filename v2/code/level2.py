@@ -210,14 +210,14 @@ class YSortCameraGroup(pygame.sprite.Group):
         base_alpha = 250
         max_distance = 3400
         min_alpha = 0
-        alpha = base_alpha * (1 - (distance / max_distance)) ** 2
+        alpha = round(base_alpha * (1 - (distance / max_distance)) ** 2)
         return max(alpha, min_alpha)
 
     def calculate_volume(self,distance):
         base_volume = 0.26
         max_distance = 3400
         min_volume = 0.05
-        volume = base_volume * (1 - (distance / max_distance)) ** 2
+        volume = round(base_volume * (1 - (distance / max_distance)) ** 2)
         return max(volume, min_volume)
 
     def custom_draw(self,player,sound):
