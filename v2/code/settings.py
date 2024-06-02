@@ -35,5 +35,6 @@ weapon_data = {
     'sai':{'cooldown': 80, 'damage': 10, 'graphic':'graphics/weapons/sai/full.png'}}
 
 monster_data = {
-	'them': {'health': 400,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 40, 'notice_radius': 1000}
+	'them': {'health': 400,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 40, 'notice_radius': 1000},
+    'monkey': {'health': 100,'exp':100,'damage':5,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 30, 'notice_radius': 250}
 }

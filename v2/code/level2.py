@@ -103,14 +103,15 @@ class Level2:
                                     self.destroy_shield,
                                     player_level=1)
                             else:
-                                monster_name = 'them'
-                                Enemy(
-                                    monster_name,
-                                    (x,y),
-                                    [self.visible_sprites, self.attackable_sprites],
-                                    self.obstacle_sprites,
-                                    self.damage_player,
-                                    self.trigger_death_particles)
+                                if col == '401':
+                                    monster_name = 'monkey'
+                                    Enemy(
+                                        monster_name,
+                                        (x,y),
+                                        [self.visible_sprites, self.attackable_sprites],
+                                        self.obstacle_sprites,
+                                        self.damage_player,
+                                        self.trigger_death_particles)
 
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visible_sprites,self.attack_sprites])

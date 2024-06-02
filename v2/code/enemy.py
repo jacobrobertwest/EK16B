@@ -156,6 +156,8 @@ class Enemy(Entity):
                 self.can_attack = False
             self.frame_index = 0
         self.image = animation[int(self.frame_index)]
+        if self.direction.x > 0:
+            self.image = pygame.transform.flip(self.image,True,False)
         self.rect = self.image.get_rect(center=self.hitbox.center)
 
         if not self.vulnerable:
