@@ -26,7 +26,7 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
 		self.levels = [TitlePage(),Level(),Level2(),Level3(),Level4(),EndPage()]
-		# self.levels = [Level()]
+		# self.levels = [Level4()]
 		self.level = self.levels[self.level_num]
 		self.level.main_sound.play(loops=-1)
 	 
@@ -62,3 +62,9 @@ class Game:
 
 if __name__ == "__main__":
 	asyncio.run(Game().main())
+
+
+# TODO
+# - Add "arsenic clouds" into level 4 that float by randomly from left to right of screen
+# - Make it so that health carries on from level to level
+# - add in 2 kinds of enemies to level 4

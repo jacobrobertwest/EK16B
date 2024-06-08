@@ -11,6 +11,8 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
+from cloud import Cloud
+from random import randint
 
 class Level4:
     def __init__(self):
@@ -30,6 +32,12 @@ class Level4:
 
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
+
+        self.cloud_sprites = pygame.sprite.Group()
+        self.last_cloud_time = None
+        self.cloud_cooldown = 1000
+        self.cloud_modifier = randint(0,4000)
+
         # sprite setup
         self.create_map()
 
@@ -48,6 +56,8 @@ class Level4:
         self.main_sound = pygame.mixer.Sound('audio/4.ogg')
         self.main_sound.set_volume(0.3)
         # self.main_sound.play(loops = -1)
+
+        self.spawn_cloud()
 
     def create_map(self):
         layouts = {
@@ -126,6 +136,11 @@ class Level4:
             self.current_shield.kill()
         self.current_shield = None
 
+    def spawn_cloud(self):
+        Cloud([self.visible_sprites, self.cloud_sprites])
+        self.last_cloud_time = pygame.time.get_ticks()
+        self.cloud_modifier = randint(0,4000)
+
     def player_attack_logic(self):
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
@@ -171,6 +186,11 @@ class Level4:
             self.top_sound.stop()
             self.game_over = True
 
+    def continuous_cloud_spawn(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_cloud_time >= self.cloud_cooldown + self.cloud_modifier:
+            self.spawn_cloud()
+
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
         
@@ -208,6 +228,8 @@ class Level4:
             self.player_defense_logic()
             self.level_complete_update()
             self.ui.display(self.player)
+            self.continuous_cloud_spawn()
+            self.cloud_sprites.update()
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -235,11 +257,16 @@ class YSortCameraGroup(pygame.sprite.Group):
 
         # all we are effectively doing here is sorting the sprites in order of their rectangles center y value
         # that way the sprites are drawn in from the top of the screen to the bottom
-        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
-            # in order to create an illusion of depth we can offset where the
-            # image actually gets rastered so that its not directly inside the rectangle
-            offset_pos = sprite.rect.topleft - self.offset
-            self.display_surface.blit(sprite.image,offset_pos)
+        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
+            if not isinstance(sprite, Cloud):  # Exclude cloud sprites
+                offset_pos = sprite.rect.topleft - self.offset
+                self.display_surface.blit(sprite.image, offset_pos)
+
+        # Draw cloud sprites last to ensure they are on top
+        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
+            if isinstance(sprite, Cloud): 
+                offset_pos = sprite.rect.topleft - self.offset
+                self.display_surface.blit(sprite.image, offset_pos)
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
