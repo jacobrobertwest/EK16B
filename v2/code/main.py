@@ -14,7 +14,7 @@ from level3 import Level3
 from level4 import Level4
 from endpage import EndPage
 import asyncio
-from time import sleep
+
 
 class Game:
 	def __init__(self):
@@ -27,6 +27,9 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
 		self.health = 100
+
+		self.music_start_time = None
+		self.music_delay = 1000
 
 	def create_level(self, level_num):
         # Dynamically create level based on level number
@@ -61,10 +64,13 @@ class Game:
 					self.health = self.level.player.health
 				self.level_num += 1
 				self.level = self.create_level(self.level_num)
-				sleep(0.5)
+				self.music_start_time = pygame.time.get_ticks()
+				self.waiting_to_start = True
+			if self.level_num > 0 and pygame.time.get_ticks() - self.music_start_time > self.music_delay and self.waiting_to_start:
 				self.level.main_sound.play(loops=-1)
 				if self.level_num == 2:
 					self.level.top_sound.play(loops=-1)
+				self.waiting_to_start = False
 			pygame.display.update()
 			self.clock.tick(FPS)
 			await asyncio.sleep(0)
@@ -75,5 +81,4 @@ if __name__ == "__main__":
 
 # TODO
 # - Add "arsenic clouds" into level 4 that float by randomly from left to right of screen
-# - Make it so that health carries on from level to level
 # - add in 2 kinds of enemies to level 4
