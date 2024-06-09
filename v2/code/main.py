@@ -14,6 +14,7 @@ from level3 import Level3
 from level4 import Level4
 from endpage import EndPage
 import asyncio
+from time import sleep
 
 class Game:
 	def __init__(self):
@@ -25,13 +26,19 @@ class Game:
 		
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
-		self.levels = [TitlePage(),Level(),Level2(),Level3(),Level4(),EndPage()]
-		# self.levels = [Level4()]
-		self.level = self.levels[self.level_num]
-		self.level.main_sound.play(loops=-1)
+		self.health = 100
+
+	def create_level(self, level_num):
+        # Dynamically create level based on level number
+		levels = [TitlePage, Level, Level2, Level3, Level4, EndPage]
+		if level_num < len(levels):
+			return levels[level_num](self.health)
+		return None
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
 	async def main(self):
+		self.level = self.create_level(self.level_num)
+		self.level.main_sound.play(loops=-1)
 		while True:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -50,9 +57,11 @@ class Game:
 			self.screen.fill(self.level.background)
 			self.level.run()
 			if self.level.level_complete_status:
+				if self.level_num > 0:
+					self.health = self.level.player.health
 				self.level_num += 1
-				self.level = self.levels[self.level_num]
-				self.levels[self.level_num-1] = None
+				self.level = self.create_level(self.level_num)
+				sleep(0.5)
 				self.level.main_sound.play(loops=-1)
 				if self.level_num == 2:
 					self.level.top_sound.play(loops=-1)

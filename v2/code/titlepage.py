@@ -12,7 +12,7 @@ from particles import AnimationPlayer
 from restart import Restart
 
 class TitlePage:
-    def __init__(self):
+    def __init__(self,health):
         self.display_surface = pygame.display.get_surface()
         self.title_image = pygame.image.load('graphics/title.png')  # Path to your title screen image
         self.main_sound = pygame.mixer.Sound('audio/4.ogg')
@@ -30,7 +30,7 @@ class TitlePage:
 
     def display(self):
         self.display_surface.blit(self.title_image, (0, 0))
-        updated_surf = self.font.render(" v2.0.4 - Last Updated: 6/8/24", False, "white")
+        updated_surf = self.font.render(" v2.0.5 - Last Updated: 6/9/24", False, "white")
         updated_rect = updated_surf.get_rect(center=(100,20))
         self.display_surface.blit(updated_surf,updated_rect)
 

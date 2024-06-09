@@ -12,7 +12,7 @@ from particles import AnimationPlayer
 from restart import Restart
 
 class EndPage:
-    def __init__(self):
+    def __init__(self,health):
         self.display_surface = pygame.display.get_surface()
         self.title_image = pygame.image.load('graphics/end.png')  # Path to your title screen image
         self.main_sound = pygame.mixer.Sound('audio/4.ogg')

@@ -7,7 +7,7 @@ from entity import Entity
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
 class Player(Entity):
-    def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0):
+    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
         if player_level == 0:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
@@ -66,7 +66,7 @@ class Player(Entity):
 
         # stats
         self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':7.5,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
-        self.health = self.stats['health']
+        self.health = player_health
         self.energy = self.stats['energy']
         self.exp = 123
         self.speed = self.stats['speed']

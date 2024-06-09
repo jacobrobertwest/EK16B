@@ -13,7 +13,7 @@ from restart import Restart
 from shield import Shield
 
 class Level:
-    def __init__(self):
+    def __init__(self,health):
         # this function gets the display surface from any part of the code
         self.display_surface = pygame.display.get_surface()
 
@@ -22,7 +22,7 @@ class Level:
         # both are sprite groups
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
-
+        self.player_health = health
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
@@ -93,6 +93,7 @@ class Level:
                                     (x,y),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
+                                    self.player_health,
                                     self.create_attack,
                                     self.destroy_attack,
                                     self.create_shield,

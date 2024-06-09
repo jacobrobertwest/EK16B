@@ -15,7 +15,7 @@ from cloud import Cloud
 from random import randint
 
 class Level4:
-    def __init__(self):
+    def __init__(self,health):
         # this function gets the display surface from any part of the code
         self.display_surface = pygame.display.get_surface()
         
@@ -29,7 +29,7 @@ class Level4:
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-
+        self.player_health = health
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
 
@@ -105,6 +105,7 @@ class Level4:
                                     (x,y),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
+                                    self.player_health,
                                     self.create_attack,
                                     self.destroy_attack,
                                     self.create_shield,
