@@ -29,11 +29,12 @@ class Game:
 		self.health = 100
 
 		self.music_start_time = None
-		self.music_delay = 1000
+		self.music_delay = 750
 
 	def create_level(self, level_num):
         # Dynamically create level based on level number
 		levels = [TitlePage, Level, Level2, Level3, Level4, EndPage]
+		# levels = [Level4]
 		if level_num < len(levels):
 			return levels[level_num](self.health)
 		return None
