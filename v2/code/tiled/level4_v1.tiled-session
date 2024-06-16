@@ -3,19 +3,41 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "LEVEL4_V1.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "LEVEL4_V1.tmx": {
+            "scale": 0.266,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1310.1503759398497,
+                "y": 843.984962406015
+            }
+        },
         "Objects.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 0.4785,
+            "scaleInEditor": 0.37
         },
         "ground flour.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 0.0892,
+            "scaleInEditor": 0.37
+        },
+        "lake inverse.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 0.37
+        },
+        "lake.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 0.37
         },
         "object_tiles.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.37
         }
     },
     "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/code/map/level4",
@@ -27,9 +49,21 @@
     "map.tileWidth": 64,
     "map.width": 48,
     "openFiles": [
+        "LEVEL4_V1.tmx",
+        "ground flour.tsx",
+        "lake.tsx",
+        "lake inverse.tsx",
+        "object_tiles.tsx",
+        "Objects.tsx"
     ],
     "project": "level4_v1.tiled-project",
     "recentFiles": [
+        "Objects.tsx",
+        "object_tiles.tsx",
+        "lake inverse.tsx",
+        "lake.tsx",
+        "ground flour.tsx",
+        "LEVEL4_V1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

@@ -65,7 +65,7 @@ class Player(Entity):
         self.destroy_shield = destroy_shield
 
         # stats
-        self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':7.5,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
+        self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':4.25,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
         self.health = player_health
         self.energy = self.stats['energy']
         self.exp = 123
@@ -128,11 +128,11 @@ class Player(Entity):
             if keys[pygame.K_LSHIFT] and (keys[pygame.K_UP] or keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]): # if shift is being held
                 if self.stamina > 0: # if 
                     if not self.oversprinting_status:
-                        self.speed = 9
+                        self.speed = 6.5
                         self.animation_speed = 0.15*1.33
                         self.stamina -= self.sprint_drain
                     else:
-                        self.speed = 4
+                        self.speed = 2.5
                         self.animation_speed = 0.125
                         if self.stamina < self.stats['stamina']:
                             self.stamina += self.sprint_replenish
@@ -141,15 +141,15 @@ class Player(Entity):
                 else:
                     self.oversprinting_status = True
                     self.oversprint_time = pygame.time.get_ticks()
-                    self.speed = 4
+                    self.speed = 2.5
                     self.animation_speed = 0.125
 
             else:
                 if not self.oversprinting_status:
-                    self.speed = 6.5
+                    self.speed = 4.25
                     self.animation_speed = 0.15
                 else:
-                    self.speed = 4
+                    self.speed = 2.5
                     self.animation_speed = 0.125
                 if self.stamina < self.stats['stamina']:
                     self.stamina += self.sprint_replenish
