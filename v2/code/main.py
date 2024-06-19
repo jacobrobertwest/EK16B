@@ -63,6 +63,8 @@ class Game:
 			if self.level.level_complete_status:
 				if self.level_num > 0:
 					self.health = self.level.player.health
+				else:
+					self.level_num = self.level.chosen_level
 				self.level_num += 1
 				self.level = self.create_level(self.level_num)
 				self.music_start_time = pygame.time.get_ticks()

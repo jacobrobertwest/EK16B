@@ -35,7 +35,7 @@ class Player(Entity):
             self.status = 'down'
         self.rect = self.image.get_rect(topleft = pos + rect_offset) #creating a rectangle based on the image attribute, putting the position at the top left
         self.hitbox = self.rect.inflate(0,-26)
-
+        self.sprite_type = 'player'
         # graphics setup
         self.import_player_assets()
 

@@ -13,6 +13,7 @@ from restart import Restart
 from shield import Shield
 from cloud import Cloud
 from random import randint
+from enemy2 import Enemy2
 
 class Level4:
     def __init__(self,health):
@@ -112,8 +113,8 @@ class Level4:
                                     self.destroy_shield,
                                     player_level=4)
                             else:
-                                monster_name = 'them'
-                                Enemy(
+                                monster_name = 'snail'
+                                Enemy2(
                                     monster_name,
                                     (x,y),
                                     [self.visible_sprites, self.attackable_sprites],
@@ -148,7 +149,7 @@ class Level4:
                 collision_sprites = pygame.sprite.spritecollide(attack_sprite,self.attackable_sprites,False)
                 if collision_sprites:
                     for target_sprite in collision_sprites:
-                        if target_sprite.sprite_type == 'enemy':
+                        if target_sprite.sprite_type == 'enemy' and target_sprite.status == 'dizzy':
                             pos = target_sprite.rect.center
                             self.animation_player.create_slash_particles(pos,[self.visible_sprites])
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
@@ -184,7 +185,6 @@ class Level4:
     def toggle_end(self):
         if self.player.is_dead:
             self.main_sound.stop()
-            self.top_sound.stop()
             self.game_over = True
 
     def continuous_cloud_spawn(self):
