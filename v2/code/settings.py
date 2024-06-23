@@ -28,11 +28,8 @@ STAMINA_COLOR_OVERSPRINT = 'red'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
 weapon_data = {
-    'sword': {'cooldown': 100, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'},
-    'lance': {'cooldown': 400, 'damage': 30,'graphic':'graphics/weapons/lance/full.png'},
-    'axe': {'cooldown': 300, 'damage': 20, 'graphic':'graphics/weapons/axe/full.png'},
-    'rapier':{'cooldown': 50, 'damage': 8, 'graphic':'graphics/weapons/rapier/full.png'},
-    'sai':{'cooldown': 80, 'damage': 10, 'graphic':'graphics/weapons/sai/full.png'}}
+    'sword': {'cooldown': 100, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'}
+}
 
 monster_data = {
 	'them': {'health': 400,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 40, 'notice_radius': 1000},

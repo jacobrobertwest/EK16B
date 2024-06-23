@@ -104,6 +104,9 @@ class Enemy2(Entity):
             self.speed = 6
         else: 
             self.status = 'idle'
+            self.charge -= 5
+            if self.charge < 0:
+                self.charge = 0
 
     def avoid_collisions(self, other_enemies):
         for enemy in other_enemies:
