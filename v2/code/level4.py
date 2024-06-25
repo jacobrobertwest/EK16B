@@ -13,7 +13,7 @@ from restart import Restart
 from shield import Shield
 from cloud import Cloud
 from random import randint
-from enemy2 import Enemy2
+from enemy2 import SnailEnemy
 
 class Level4:
     def __init__(self,health):
@@ -114,7 +114,7 @@ class Level4:
                                     player_level=4)
                             else:
                                 monster_name = 'snail'
-                                Enemy2(
+                                SnailEnemy(
                                     monster_name,
                                     (x,y),
                                     [self.visible_sprites, self.attackable_sprites],

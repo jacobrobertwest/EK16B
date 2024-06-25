@@ -40,7 +40,7 @@ class TitlePage:
 
     def display(self):
         self.display_surface.blit(self.title_image, (0, 0))
-        updated_surf = self.font.render(" v2.0.9 - Last Updated: 6/23/24", False, "white")
+        updated_surf = self.font.render(" v2.1.0 - Last Updated: 6/24/24", False, "white")
         updated_rect = updated_surf.get_rect(center=(100,20))
         self.display_surface.blit(updated_surf,updated_rect)
 
