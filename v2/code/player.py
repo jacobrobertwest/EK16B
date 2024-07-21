@@ -43,6 +43,8 @@ class Player(Entity):
         # movement attributes
         self.direction = pygame.math.Vector2()
 
+        self.is_climbing = False
+
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
@@ -63,6 +65,7 @@ class Player(Entity):
         self.defend_time = None
         self.create_shield = create_shield
         self.destroy_shield = destroy_shield
+        self.special_interactions_code = 0
 
         # stats
         self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':4.25,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
@@ -93,6 +96,7 @@ class Player(Entity):
         'right_idle': [],'left_idle': [],'up_idle': [],'down_idle': [],
         'right_attack': [],'left_attack': [],'up_attack': [],'down_attack': [],
         'right_defend': [],'left_defend': [],'up_defend': [],'down_defend': [],
+        'right_climbing': [],'left_climbing': [],'up_climbing': [],'down_climbing': []
         }
         for animation in self.animations.keys():
             folder_path = character_path + animation
@@ -172,45 +176,51 @@ class Player(Entity):
             self.direction.y = 0
     
     def get_status(self):
-
-        # idle status
-        if self.direction.x == 0 and self.direction.y == 0:
-            if not 'idle' in self.status and not 'attack' in self.status and not 'defend' in self.status:
-                self.status = self.status + '_idle'
-
-        if self.attacking:
-            self.direction.x = 0
-            self.direction.y = 0
-            if not 'attack' in self.status:
-                if 'idle' in self.status:
-                    # overwrite idle
-                    self.status = self.status.replace('_idle','_attack')
-                else:
-                    self.status = self.status + '_attack'
-        elif self.defending:
-            self.direction.x = 0
-            self.direction.y = 0
-            if not 'defend' in self.status:
-                if 'idle' in self.status:
-                    # overwrite idle
-                    self.status = self.status.replace('_idle','_defend')
-                elif 'attack' in self.status:
-                    # overwrite attack
-                    self.status = self.status.replace('_attack','_defend')
-                else:
-                    self.status = self.status + '_defend'
+        if self.is_climbing:
+            if self.direction.x == 0 and self.direction.y == 0:
+                self.status = 'up_idle'
+            elif '_idle' in self.status:
+                self.status = self.status.replace('_idle','_climbing')
+            elif not '_climbing' in self.status:
+                self.status = self.status + '_climbing'
         else:
-            if 'attack' in self.status:
-                self.status = self.status.replace('_attack', '')
-                self.destroy_attack()
-                self.destroy_shield()
+            if self.direction.x == 0 and self.direction.y == 0:
+                if not 'idle' in self.status and not 'attack' in self.status and not 'defend' in self.status:
+                    self.status = self.status + '_idle'
+
+            if self.attacking:
                 self.direction.x = 0
                 self.direction.y = 0
-            if 'defend' in self.status:
-                self.status = self.status.replace('_defend', '')
-                self.destroy_shield()
+                if not 'attack' in self.status:
+                    if 'idle' in self.status:
+                        # overwrite idle
+                        self.status = self.status.replace('_idle','_attack')
+                    else:
+                        self.status = self.status + '_attack'
+            elif self.defending:
                 self.direction.x = 0
                 self.direction.y = 0
+                if not 'defend' in self.status:
+                    if 'idle' in self.status:
+                        # overwrite idle
+                        self.status = self.status.replace('_idle','_defend')
+                    elif 'attack' in self.status:
+                        # overwrite attack
+                        self.status = self.status.replace('_attack','_defend')
+                    else:
+                        self.status = self.status + '_defend'
+            else:
+                if 'attack' in self.status:
+                    self.status = self.status.replace('_attack', '')
+                    self.destroy_attack()
+                    self.destroy_shield()
+                    self.direction.x = 0
+                    self.direction.y = 0
+                if 'defend' in self.status:
+                    self.status = self.status.replace('_defend', '')
+                    self.destroy_shield()
+                    self.direction.x = 0
+                    self.direction.y = 0
 
     def move(self,speed):
         # we have to normalize the self.direction vector in order
@@ -279,6 +289,14 @@ class Player(Entity):
         if self.health <= 0:
             self.is_dead = True
 
+    def check_special_interactions(self):
+        if self.special_interactions_code == 1: # climbing special interaction
+            self.is_climbing = True
+            self.speed = 2
+            self.animation_speed = 0.1
+        else:
+            self.is_climbing = False
+
     def animate(self):
         animation = self.animations[self.status]
         # loop over the frame index 
@@ -314,6 +332,7 @@ class Player(Entity):
         self.check_death()
         self.input()
         self.cooldowns()
+        self.check_special_interactions()
         self.get_status()
         self.animate()
         self.move(self.speed)

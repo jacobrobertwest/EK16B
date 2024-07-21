@@ -1,0 +1,53 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level5.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "boundary.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 0.67
+        },
+        "level5.tmx": {
+            "scale": 0.9938,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 492.5538337693701,
+                "y": 465.88850875427653
+            }
+        },
+        "level5map.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.0968,
+            "scaleInEditor": 0.67
+        }
+    },
+    "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/code/map/level5",
+    "last.imagePath": "/Users/jacob/Documents/EK16B/v2/code/graphics/tilemap",
+    "map.height": 32,
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 48,
+    "openFiles": [
+        "level5.tmx",
+        "level5map.tsx",
+        "boundary.tsx"
+    ],
+    "project": "level5.tiled-project",
+    "recentFiles": [
+        "boundary.tsx",
+        "level5map.tsx",
+        "level5.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

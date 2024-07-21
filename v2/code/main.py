@@ -12,6 +12,7 @@ from level import Level
 from level2 import Level2
 from level3 import Level3
 from level4 import Level4
+from level5 import Level5
 from endpage import EndPage
 import asyncio
 
@@ -33,7 +34,7 @@ class Game:
 
 	def create_level(self, level_num):
         # Dynamically create level based on level number
-		levels = [TitlePage, Level, Level2, Level3, Level4, EndPage]
+		levels = [TitlePage, Level, Level2, Level3, Level4, Level5, EndPage]
 		# levels = [Level4]
 		if level_num < len(levels):
 			return levels[level_num](self.health)
@@ -81,7 +82,3 @@ class Game:
 if __name__ == "__main__":
 	asyncio.run(Game().main())
 
-
-# TODO
-# - Add "arsenic clouds" into level 4 that float by randomly from left to right of screen
-# - add in 2 kinds of enemies to level 4

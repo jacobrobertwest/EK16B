@@ -9,11 +9,11 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "LEVEL4_V1.tmx": {
-            "scale": 0.266,
+            "scale": 0.6,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1757.5187969924814,
-                "y": 1058.2706766917295
+                "x": 1854.1666666666667,
+                "y": 1150
             }
         },
         "Objects.tsx": {
@@ -49,21 +49,16 @@
     "map.tileWidth": 64,
     "map.width": 48,
     "openFiles": [
-        "LEVEL4_V1.tmx",
-        "ground flour.tsx",
-        "lake.tsx",
-        "lake inverse.tsx",
-        "object_tiles.tsx",
-        "Objects.tsx"
+        "LEVEL4_V1.tmx"
     ],
     "project": "level4_v1.tiled-project",
     "recentFiles": [
+        "LEVEL4_V1.tmx",
         "Objects.tsx",
         "object_tiles.tsx",
         "lake inverse.tsx",
         "lake.tsx",
-        "ground flour.tsx",
-        "LEVEL4_V1.tmx"
+        "ground flour.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
