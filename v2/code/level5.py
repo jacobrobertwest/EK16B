@@ -37,8 +37,8 @@ class Level5:
 
         self.cloud_sprites = pygame.sprite.Group()
         self.last_cloud_time = None
-        self.cloud_cooldown = 500
-        self.cloud_modifier = randint(0,4000)
+        self.cloud_cooldown = 200
+        self.cloud_modifier = randint(0,1000)
 
         # sprite setup
         self.create_map()
@@ -55,8 +55,8 @@ class Level5:
         self.game_over = False
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/4.ogg')
-        self.main_sound.set_volume(0.3)
+        self.main_sound = pygame.mixer.Sound('audio/5.ogg')
+        self.main_sound.set_volume(0.5)
         # self.main_sound.play(loops = -1)
 
         self.spawn_cloud()

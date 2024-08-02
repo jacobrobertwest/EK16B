@@ -35,7 +35,7 @@ class Game:
 	def create_level(self, level_num):
         # Dynamically create level based on level number
 		levels = [TitlePage, Level, Level2, Level3, Level4, Level5, EndPage]
-		# levels = [Level4]
+		# levels = [Level5]
 		if level_num < len(levels):
 			return levels[level_num](self.health)
 		return None

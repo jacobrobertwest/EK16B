@@ -13,11 +13,11 @@
             "scaleInEditor": 0.67
         },
         "level5.tmx": {
-            "scale": 0.9938,
+            "scale": 0.2374,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 492.5538337693701,
-                "y": 465.88850875427653
+                "x": 2028.2224094355515,
+                "y": 783.4877843302444
             }
         },
         "level5map.tsx": {
