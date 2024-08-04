@@ -5,17 +5,17 @@ from player import Player
 from debug import debug
 from support import import_csv_layout, import_folder
 from random import choice
+from GroundTile import GroundTile
 from weapon import Weapon
 from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
-from cloud import Cloud
 from random import randint
 from enemy2 import SnailEnemy
 
-class Level5:
+class Level6:
     def __init__(self,health):
         # this function gets the display surface from any part of the code
         self.display_surface = pygame.display.get_surface()
@@ -35,12 +35,8 @@ class Level5:
         self.shield_sprites = pygame.sprite.Group()
         self.special_interaction_sprites = pygame.sprite.Group()
 
-        self.cloud_sprites = pygame.sprite.Group()
-        self.last_cloud_time = None
-        self.cloud_cooldown = 200
-        self.cloud_mod_max = 1000
-        self.cloud_mod_cieling = 1000
-        self.cloud_modifier = randint(0,self.cloud_mod_max)
+        self.ground_tiles = pygame.sprite.Group()
+        self.tiles = {}
 
         # sprite setup
         self.create_map()
@@ -57,76 +53,53 @@ class Level5:
         self.game_over = False
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/5.ogg')
-        self.main_sound.set_volume(0.5)
-        # self.main_sound.play(loops = -1)
-
-        self.spawn_cloud()
+        self.main_sound = pygame.mixer.Sound('audio/6.ogg')
+        self.main_sound.set_volume(0.2)
 
     def create_map(self):
-        self.start_time = pygame.time.get_ticks()
-        layouts = {
-            'boundary': import_csv_layout('map/map_FloorBlocks5.csv'),
-            'grass': import_csv_layout('map/map_Grass5.csv'),
-            'object': import_csv_layout('map/map_Objects5.csv'),
-            'entities': import_csv_layout('map/map_Entities5.csv')
-        }
+        self.ground_tile_width = 768
+        self.ground_tile_height = 512
+        self.ground_images = [pygame.image.load(f'graphics/tilemap/ground6/{i}.png').convert() for i in range(1, 7)]
+        player_start_pos = (WIDTH // 2, HEIGTH // 2)
+        self.player = Player(
+            player_start_pos,
+            [self.visible_sprites],
+            self.obstacle_sprites,
+            self.player_health,
+            self.create_attack,
+            self.destroy_attack,
+            self.create_shield,
+            self.destroy_shield,
+            player_level=6
+        )
+        self.generate_tiles_around_player()
 
-        graphics = {
-            'grass': import_folder('graphics/grass'),
-            'objects': import_folder('graphics/objects')
-        }
+    def generate_tiles_around_player(self):
+        player_x, player_y = self.player.rect.centerx, self.player.rect.centery
+        player_tile_x, player_tile_y = player_x // self.ground_tile_width, player_y // self.ground_tile_height
+        radius = 2  # Number of tiles around the player to generate
 
-        for style,layout in layouts.items():
-            for row_index, row in enumerate(layout): # enumerate seems to unpack both the index of the element & the row itself
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * TILESIZE
-                        y = row_index * TILESIZE
-                        if style == 'boundary':
-                            if col == '222':
-                                Tile((x,y),[self.obstacle_sprites],sprite_type='invisible_half')
-                            elif col == '666':
-                                Tile((x,y),[self.obstacle_sprites],sprite_type='exit')
-                            elif col == '88': #ladder
-                                Tile((x,y),[self.special_interaction_sprites],sprite_type='ladder')
-                            else:
-                                Tile((x,y),[self.obstacle_sprites],'invisible')
-                        if style == 'grass':
-                            surf_grass = graphics['grass'][int(col)]
-                            Tile((x,y),[self.visible_sprites],'grass',surf_grass)
-                        if style == 'object':
-                            if int(col) in (2,3,8):
-                                sp_type = 'invisible_half'
-                            elif int(col) == 4:
-                                sp_type = 'invisible_half_bottom_left'
-                            elif int(col) == 5:
-                                sp_type = 'level_2_big_tree'
-                            else:
-                                sp_type = 'object'
-                            surf = graphics['objects'][int(col)]
-                            Tile((x,y),[self.visible_sprites, self.obstacle_sprites],sp_type,surf)
-                        if style == 'entities':
-                            if col == '394':
-                                self.player = Player(
-                                    (x,y),
-                                    [self.visible_sprites],
-                                    self.obstacle_sprites,
-                                    self.player_health,
-                                    self.create_attack,
-                                    self.destroy_attack,
-                                    self.create_shield,
-                                    self.destroy_shield,
-                                    player_level=4)
-                            else:
-                                monster_name = 'snail'
-                                SnailEnemy(
-                                    monster_name,
-                                    (x,y),
-                                    [self.visible_sprites, self.attackable_sprites],
-                                    self.obstacle_sprites,
-                                    self.damage_player,
-                                    self.trigger_death_particles)
+        for x in range(player_tile_x - radius, player_tile_x + radius + 1):
+            for y in range(player_tile_y - radius, player_tile_y + radius + 1):
+                if (x, y) not in self.tiles:
+                    chosen_surf = choice(self.ground_images)
+                    self.tiles[(x,y)] = GroundTile((x*self.ground_tile_width,y*self.ground_tile_height),[self.visible_sprites,self.ground_tiles],(x,y),chosen_surf)
+
+    def remove_distant_tiles(self):
+        player_tile_x = self.player.rect.centerx // self.ground_tile_width
+        player_tile_y = self.player.rect.centery // self.ground_tile_height
+
+        keys_to_remove = []
+        for (x, y) in self.tiles.keys():
+            if abs(player_tile_x - x) > 2 or abs(player_tile_y - y) > 2:
+                keys_to_remove.append((x, y))
+
+        for ground_tile in self.ground_tiles:
+            if ground_tile.tile_id in keys_to_remove:
+                ground_tile.kill()
+
+        for key in keys_to_remove:
+            del self.tiles[key]
 
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visible_sprites,self.attack_sprites])
@@ -143,11 +116,6 @@ class Level5:
         if self.current_shield:
             self.current_shield.kill()
         self.current_shield = None
-
-    def spawn_cloud(self):
-        Cloud([self.visible_sprites, self.cloud_sprites],speed_type="rand")
-        self.last_cloud_time = pygame.time.get_ticks()
-        self.cloud_modifier = randint(0,self.cloud_mod_max)
 
     def player_attack_logic(self):
         if self.attack_sprites:
@@ -189,25 +157,20 @@ class Level5:
         self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
 
     def level_complete_update(self):
-        exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
-        for exit_sprite in exit_sprites:
-            # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
-            if self.player.hitbox.colliderect(exit_sprite.hitbox):
-                self.main_sound.stop()
-                self.level_complete_status = True
+        # exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
+        # for exit_sprite in exit_sprites:
+        #     # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
+        #     if self.player.hitbox.colliderect(exit_sprite.hitbox):
+        #         self.main_sound.stop()
+        #         self.level_complete_status = True
+        if abs(self.player.rect.x) > 5000 or abs(self.player.rect.y) > 5000:
+            self.main_sound.stop()
+            self.level_complete_status = True
     
     def toggle_end(self):
         if self.player.is_dead:
             self.main_sound.stop()
             self.game_over = True
-
-    def continuous_cloud_spawn(self):
-        current_time = pygame.time.get_ticks()
-        self.relative_current_time = current_time - self.start_time
-        multiplier = self.relative_current_time // 5000
-        self.cloud_mod_max = max(self.cloud_mod_cieling - 100 * multiplier,0)
-        if current_time - self.last_cloud_time >= self.cloud_cooldown + self.cloud_modifier:
-            self.spawn_cloud()
 
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
@@ -239,7 +202,9 @@ class Level5:
         if self.game_over:
             self.restart.display()
         else:
-            self.visible_sprites.custom_draw(self.player,self.main_sound)
+            self.remove_distant_tiles()
+            self.generate_tiles_around_player()
+            self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
@@ -247,13 +212,10 @@ class Level5:
             self.player_climbing_logic()
             self.level_complete_update()
             self.ui.display(self.player)
-            self.continuous_cloud_spawn()
-            self.cloud_sprites.update()
-            # debug(f"Ticks: {self.relative_current_time} | Cloud Mod Max: {self.cloud_mod_max}")
+            # debug(f"{self.player.rect.x},{self.player.rect.y}" )
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
-
         # general setup of all the stuff we need
         # initialize parent class
         super().__init__()
@@ -263,10 +225,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         # creating the floor
-        self.floor_surf = pygame.image.load('graphics/tilemap/ground5.png').convert()
+        self.floor_surf = pygame.image.load('graphics/tilemap/ground6/1.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
-    def custom_draw(self,player, sound):
+    def custom_draw(self,player):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
@@ -278,15 +240,19 @@ class YSortCameraGroup(pygame.sprite.Group):
         # all we are effectively doing here is sorting the sprites in order of their rectangles center y value
         # that way the sprites are drawn in from the top of the screen to the bottom
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            if not isinstance(sprite, Cloud):  # Exclude cloud sprites
+            if isinstance(sprite, GroundTile): 
                 offset_pos = sprite.rect.topleft - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)
 
         # Draw cloud sprites last to ensure they are on top
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            if isinstance(sprite, Cloud): 
+            if not isinstance(sprite, GroundTile): 
                 offset_pos = sprite.rect.topleft - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)
+        mask_offset_pos = player.rect.topleft - self.offset
+        mask_image = player.mask.to_surface(setcolor=(36,45,67,200),unsetcolor=None)
+        mask_image = mask_image.convert_alpha()
+        self.display_surface.blit(mask_image,mask_offset_pos)
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

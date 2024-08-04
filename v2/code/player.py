@@ -20,7 +20,7 @@ class Player(Entity):
         elif player_level == 2:
             self.image = pygame.image.load('graphics/player/left_idle/idle_left.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
-            self.status = 'up'
+            self.status = 'left'
             self.mask = pygame.mask.from_surface(self.image,threshold=1)
             self.mask_image = self.mask.to_surface(setcolor=(200,200,200,255),unsetcolor=(0,0,0,0))
             # colliding_bits_image = colliding_bits.to_surface(setcolor=(0, 255, 0, 255), unsetcolor=(0, 0, 0, 0))
@@ -29,6 +29,11 @@ class Player(Entity):
             self.image = pygame.image.load('graphics/player/left_idle/idle_left.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
             self.status = 'left'
+        elif player_level == 6:
+            self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'up'
+            self.mask = pygame.mask.from_surface(self.image)
         else:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)

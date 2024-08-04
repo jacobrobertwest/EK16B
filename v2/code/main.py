@@ -13,6 +13,7 @@ from level2 import Level2
 from level3 import Level3
 from level4 import Level4
 from level5 import Level5
+from level6 import Level6
 from endpage import EndPage
 import asyncio
 
@@ -34,8 +35,8 @@ class Game:
 
 	def create_level(self, level_num):
         # Dynamically create level based on level number
-		levels = [TitlePage, Level, Level2, Level3, Level4, Level5, EndPage]
-		# levels = [Level5]
+		levels = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, EndPage]
+		# levels = [Level6]
 		if level_num < len(levels):
 			return levels[level_num](self.health)
 		return None

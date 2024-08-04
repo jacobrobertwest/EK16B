@@ -38,10 +38,12 @@ class TitlePage:
             self.chosen_level = 3
         if keys[pygame.K_5]:
             self.chosen_level = 4
+        if keys[pygame.K_6]:
+            self.chosen_level = 5
 
     def display(self):
         self.display_surface.blit(self.title_image, (0, 0))
-        updated_surf = self.font.render(" v2.1.2 - Last Updated: 8/2/24", False, "white")
+        updated_surf = self.font.render(" v2.1.3 - Last Updated: 8/4/24", False, "white")
         updated_rect = updated_surf.get_rect(center=(100,20))
         self.display_surface.blit(updated_surf,updated_rect)
 
