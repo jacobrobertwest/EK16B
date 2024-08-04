@@ -54,11 +54,11 @@ class Level6:
 
         # music
         self.main_sound = pygame.mixer.Sound('audio/6.ogg')
-        self.main_sound.set_volume(0.2)
+        self.main_sound.set_volume(0.1)
 
     def create_map(self):
-        self.ground_tile_width = 768
-        self.ground_tile_height = 512
+        self.ground_tile_width = 750
+        self.ground_tile_height = 500
         self.ground_images = [pygame.image.load(f'graphics/tilemap/ground6/{i}.png').convert() for i in range(1, 7)]
         player_start_pos = (WIDTH // 2, HEIGTH // 2)
         self.player = Player(
