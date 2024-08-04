@@ -238,6 +238,15 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground6/1.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
+        self.fog_surface = pygame.Surface((640,360),pygame.SRCALPHA) 
+
+    def calculate_alpha(self,distance):
+        base_alpha = 230
+        max_distance = 5000
+        min_alpha = 0
+        alpha = round(base_alpha * (1 - (distance / max_distance)) ** 4)
+        return max(alpha, min_alpha)
+
     def custom_draw(self,player):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
@@ -246,6 +255,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         # drawing the floor
         floor_offset_pos = self.floor_rect.topleft - self.offset
         self.display_surface.blit(self.floor_surf,floor_offset_pos)
+    
 
         # all we are effectively doing here is sorting the sprites in order of their rectangles center y value
         # that way the sprites are drawn in from the top of the screen to the bottom
@@ -263,6 +273,14 @@ class YSortCameraGroup(pygame.sprite.Group):
         mask_image = player.mask.to_surface(setcolor=(36,45,67,200),unsetcolor=None)
         mask_image = mask_image.convert_alpha()
         self.display_surface.blit(mask_image,mask_offset_pos)
+
+        player_vec = pygame.math.Vector2(player.rect.center)
+        end_vec = pygame.math.Vector2(5000,-1500)
+        distance = (player_vec - end_vec).magnitude()
+
+        alpha = self.calculate_alpha(distance)
+        self.fog_surface.fill((255,0,0,alpha))
+        self.display_surface.blit(self.fog_surface, (0,0))
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

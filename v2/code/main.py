@@ -55,7 +55,8 @@ class Game:
 						self.level.main_sound.stop()
 						if hasattr(self.level,'top_sound'):
 							self.level.top_sound.stop()
-						Game().run()
+						Game().main()
+						self.level.main_sound.play(loops=-1)
 					if self.level.game_over:
 						if event.key == pygame.K_r:
 							self.level.restart_level()
