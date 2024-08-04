@@ -13,6 +13,8 @@ class Tile(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(midleft = pos + pygame.math.Vector2(0,-30))
         elif self.sprite_type == 'level_2_big_tree':
             self.rect = self.image.get_rect(midleft = pos)
+        elif self.sprite_type == 'bloodmoon':
+            self.rect = self.image.get_rect(center=pos)
         else:
             self.rect = self.image.get_rect(topleft = pos) #creating a rectangle based on the image attribute, putting the position at the top left
         if self.sprite_type in ('invisible_half','level_2_big_tree'):

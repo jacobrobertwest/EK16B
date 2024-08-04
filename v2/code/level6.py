@@ -38,6 +38,9 @@ class Level6:
         self.ground_tiles = pygame.sprite.Group()
         self.tiles = {}
 
+         #blood moon
+        self.blood_moon_pos = (5000,-1500)
+
         # sprite setup
         self.create_map()
 
@@ -57,6 +60,9 @@ class Level6:
         self.main_sound.set_volume(0.1)
 
     def create_map(self):
+        graphics = {
+            'objects': import_folder('graphics/objects')
+        }
         self.ground_tile_width = 750
         self.ground_tile_height = 500
         self.ground_images = [pygame.image.load(f'graphics/tilemap/ground6/{i}.png').convert() for i in range(1, 7)]
@@ -72,6 +78,10 @@ class Level6:
             self.destroy_shield,
             player_level=6
         )
+        print(graphics)
+        surf = graphics['objects'][10]
+        scaled_surf = pygame.transform.scale(surf, (320, 320))
+        Tile(self.blood_moon_pos,[self.visible_sprites],'bloodmoon',scaled_surf)
         self.generate_tiles_around_player()
 
     def generate_tiles_around_player(self):
@@ -163,7 +173,7 @@ class Level6:
         #     if self.player.hitbox.colliderect(exit_sprite.hitbox):
         #         self.main_sound.stop()
         #         self.level_complete_status = True
-        if abs(self.player.rect.x) > 5000 or abs(self.player.rect.y) > 5000:
+        if (self.blood_moon_pos[0] - 10) <= self.player.rect.center[0] <= (self.blood_moon_pos[0] + 10) and (self.blood_moon_pos[1] - 10) <= self.player.rect.center[1] <= (self.blood_moon_pos[1] + 10):
             self.main_sound.stop()
             self.level_complete_status = True
     
