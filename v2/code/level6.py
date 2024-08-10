@@ -13,19 +13,22 @@ from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
 from random import randint
-from enemy2 import SnailEnemy
+from base_level_class import BaseLevel
 
-class Level6:
-    def __init__(self,health):
-        # this function gets the display surface from any part of the code
-        self.display_surface = pygame.display.get_surface()
+class Level6(BaseLevel):
+    def __init__(self,health,in_dev_mode):
+        super().__init__(health,in_dev_mode)
         
         # sprite group setup
+         #blood moon
+        self.blood_moon_x = randint(3000,7000)
+        self.blood_moon_y = randint(1300,1700)*(-1)
+        self.blood_moon_pos = (self.blood_moon_x, self.blood_moon_y)
         # A level has 2 attributes for visible sprites and obstacle sprites
         # both are sprite groups
-        self.visible_sprites = YSortCameraGroup()
+        self.visible_sprites = YSortCameraGroup(self.blood_moon_pos)
         self.obstacle_sprites = pygame.sprite.Group()
-
+        self.mode_at_start = in_dev_mode
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
@@ -37,9 +40,6 @@ class Level6:
 
         self.ground_tiles = pygame.sprite.Group()
         self.tiles = {}
-
-         #blood moon
-        self.blood_moon_pos = (5000,-1500)
 
         # sprite setup
         self.create_map()
@@ -76,9 +76,9 @@ class Level6:
             self.destroy_attack,
             self.create_shield,
             self.destroy_shield,
-            player_level=6
+            player_level=6,
+            in_dev_mode = self.mode_at_start
         )
-        print(graphics)
         surf = graphics['objects'][10]
         scaled_surf = pygame.transform.scale(surf, (320, 320))
         Tile(self.blood_moon_pos,[self.visible_sprites],'bloodmoon',scaled_surf)
@@ -173,7 +173,7 @@ class Level6:
         #     if self.player.hitbox.colliderect(exit_sprite.hitbox):
         #         self.main_sound.stop()
         #         self.level_complete_status = True
-        if (self.blood_moon_pos[0] - 10) <= self.player.rect.center[0] <= (self.blood_moon_pos[0] + 10) and (self.blood_moon_pos[1] - 10) <= self.player.rect.center[1] <= (self.blood_moon_pos[1] + 10):
+        if (self.blood_moon_pos[0] - 32) <= self.player.rect.center[0] <= (self.blood_moon_pos[0] + 32) and (self.blood_moon_pos[1] - 32) <= self.player.rect.center[1] <= (self.blood_moon_pos[1] + 32):
             self.main_sound.stop()
             self.level_complete_status = True
     
@@ -222,10 +222,10 @@ class Level6:
             self.player_climbing_logic()
             self.level_complete_update()
             self.ui.display(self.player)
-            # debug(f"{self.player.rect.x},{self.player.rect.y}" )
+            # debug(f"({self.player.rect.x},{self.player.rect.y}) | BMP: ({self.blood_moon_x},{self.blood_moon_y})" )
 
 class YSortCameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self,bmp):
         # general setup of all the stuff we need
         # initialize parent class
         super().__init__()
@@ -233,7 +233,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
-
+        self.blood_moon_pos = bmp
         # creating the floor
         self.floor_surf = pygame.image.load('graphics/tilemap/ground6/1.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
@@ -244,8 +244,12 @@ class YSortCameraGroup(pygame.sprite.Group):
         base_alpha = 230
         max_distance = 5000
         min_alpha = 0
+        
+        if distance >= max_distance:
+            return 0
+        
         alpha = round(base_alpha * (1 - (distance / max_distance)) ** 4)
-        return max(alpha, min_alpha)
+        return min(max(alpha, min_alpha), base_alpha)
 
     def custom_draw(self,player):
         # getting the offset
@@ -275,12 +279,13 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.display_surface.blit(mask_image,mask_offset_pos)
 
         player_vec = pygame.math.Vector2(player.rect.center)
-        end_vec = pygame.math.Vector2(5000,-1500)
+        end_vec = pygame.math.Vector2(self.blood_moon_pos)
         distance = (player_vec - end_vec).magnitude()
 
         alpha = self.calculate_alpha(distance)
         self.fog_surface.fill((255,0,0,alpha))
         self.display_surface.blit(self.fog_surface, (0,0))
+        # debug(f'A: {alpha} | Dist: {round(distance)}',x = 10, y = 320)
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

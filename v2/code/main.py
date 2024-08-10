@@ -3,7 +3,6 @@ try:
     import pygame
 except ImportError:
     util.import_or_install('pygame')
-
 import sys
 import os
 from settings import *
@@ -17,10 +16,18 @@ from level6 import Level6
 from endpage import EndPage
 import asyncio
 
+VERSION = "2.2.0"
+LAST_UPDATED_DATE = "8/10/24"
+MASTER_LEVEL_LIST = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, EndPage]
+PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
+METADATA = {
+	"version":VERSION,
+	"updated":LAST_UPDATED_DATE,
+	"lvls":PLAYABLE_LEVELS
+}
 
 class Game:
 	def __init__(self):
-		# general setup
 		pygame.init()
 		self.screen = pygame.display.set_mode((WIDTH,HEIGTH),pygame.DOUBLEBUF)
 		pygame.display.set_caption('ELLIE KEMPER: 16-Bit Edition (v2)')
@@ -29,16 +36,21 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.level_num = 0
 		self.health = 100
+		self.in_dev_mode = False
 
 		self.music_start_time = None
 		self.music_delay = 750
 
 	def create_level(self, level_num):
         # Dynamically create level based on level number
-		levels = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, EndPage]
+		levels = MASTER_LEVEL_LIST
 		# levels = [Level6]
 		if level_num < len(levels):
-			return levels[level_num](self.health)
+			level_class = levels[level_num]
+			if level_class == TitlePage:
+				return level_class(self.health, self.in_dev_mode, METADATA)
+			else:
+				return level_class(self.health, self.in_dev_mode)
 		return None
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
@@ -66,8 +78,12 @@ class Game:
 			if self.level.level_complete_status:
 				if self.level_num > 0:
 					self.health = self.level.player.health
+					self.in_dev_mode = self.level.player.in_dev_mode
 				else:
-					self.level_num = self.level.chosen_level
+					if self.level.chosen_level == 0:
+						self.level_num = 0
+					else:
+						self.level_num = self.level.chosen_level - 1
 				self.level_num += 1
 				self.level = self.create_level(self.level_num)
 				self.music_start_time = pygame.time.get_ticks()
@@ -83,4 +99,6 @@ class Game:
 
 if __name__ == "__main__":
 	asyncio.run(Game().main())
+
+# TODO
 

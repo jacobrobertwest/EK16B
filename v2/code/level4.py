@@ -14,15 +14,12 @@ from shield import Shield
 from cloud import Cloud
 from random import randint
 from enemy2 import SnailEnemy
+from base_level_class import BaseLevel
 
-class Level4:
-    def __init__(self,health):
-        # this function gets the display surface from any part of the code
-        self.display_surface = pygame.display.get_surface()
+class Level4(BaseLevel):
+    def __init__(self,health,in_dev_mode):
+        super().__init__(health,in_dev_mode)
         
-        # sprite group setup
-        # A level has 2 attributes for visible sprites and obstacle sprites
-        # both are sprite groups
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
@@ -38,6 +35,8 @@ class Level4:
         self.last_cloud_time = None
         self.cloud_cooldown = 1000
         self.cloud_modifier = randint(0,4000)
+
+        self.mode_at_start = in_dev_mode
 
         # sprite setup
         self.create_map()
@@ -111,7 +110,8 @@ class Level4:
                                     self.destroy_attack,
                                     self.create_shield,
                                     self.destroy_shield,
-                                    player_level=4)
+                                    player_level=4,
+                                    in_dev_mode = self.mode_at_start)
                             else:
                                 monster_name = 'snail'
                                 SnailEnemy(

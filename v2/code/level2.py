@@ -11,23 +11,20 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
+from base_level_class import BaseLevel
 
-class Level2:
-    def __init__(self,health):
-        # this function gets the display surface from any part of the code
-        self.display_surface = pygame.display.get_surface()
+class Level2(BaseLevel):
+    def __init__(self,health,in_dev_mode):
+        super().__init__(health,in_dev_mode)
         
-        # sprite group setup
-        # A level has 2 attributes for visible sprites and obstacle sprites
-        # both are sprite groups
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
-        self.player_health = health
+
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-
+        self.mode_at_start = in_dev_mode
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
         # sprite setup
@@ -102,7 +99,8 @@ class Level2:
                                     self.destroy_attack,
                                     self.create_shield,
                                     self.destroy_shield,
-                                    player_level=1)
+                                    player_level=1,
+                                    in_dev_mode=self.mode_at_start)
                             else:
                                 if col == '401':
                                     monster_name = 'monkey'

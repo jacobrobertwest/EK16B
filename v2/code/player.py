@@ -2,12 +2,13 @@ import pygame
 from settings import *
 from support import import_folder
 from entity import Entity
+from debug import debug
 
 # we're passing the Sprite class into the parentheses of Player() so that
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
 class Player(Entity):
-    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0):
+    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0,in_dev_mode=False):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
         if player_level == 0:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
@@ -73,11 +74,10 @@ class Player(Entity):
         self.special_interactions_code = 0
 
         # stats
-        self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'speed':4.25,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
+        self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
         self.health = player_health
+        self.max_health = self.stats['health']
         self.energy = self.stats['energy']
-        self.exp = 123
-        self.speed = self.stats['speed']
 
         self.stamina = self.stats['stamina']
         self.sprint_drain = self.stats['sprint_drain']
@@ -90,6 +90,10 @@ class Player(Entity):
         self.vulnerable = True
         self.hurt_time = None
         self.invulnerability_duration = 500
+
+        self.in_dev_mode = in_dev_mode
+        self.mode_change_time = 0
+        self.mode_change_duration = 500
 
         #is dead
         self.is_dead = False
@@ -106,6 +110,12 @@ class Player(Entity):
         for animation in self.animations.keys():
             folder_path = character_path + animation
             self.animations[animation] = import_folder(folder_path)
+    
+    def enforce_player_dev_mode(self):
+        if self.in_dev_mode:
+            if self.health < self.max_health:
+                self.health += 1
+            debug("DEV",x=10,y=335)
 
     def input(self):
         if not self.attacking and not self.defending:
@@ -133,16 +143,40 @@ class Player(Entity):
             else:
                 self.direction.x = 0
 
+            if keys[pygame.K_q] and not self.in_dev_mode and pygame.time.get_ticks() - self.mode_change_time >= self.mode_change_duration:
+                self.in_dev_mode = True
+                self.mode_change_time = pygame.time.get_ticks()
+
+            if keys[pygame.K_q] and self.in_dev_mode and pygame.time.get_ticks() - self.mode_change_time >= self.mode_change_duration:
+                self.in_dev_mode = False
+                self.mode_change_time = pygame.time.get_ticks()
+            
+            # BASE SPEED LEVELS
+            self.base_speed = 4
+            self.sprint_buff = 0.5
+            self.sprint_speed = self.base_speed * (1 + self.sprint_buff)
+            self.tired_speed = self.base_speed * (1 - self.sprint_buff)
+
+            self.base_animation_speed = 0.15
+            self.sprint_animation_buff = 0.33
+            self.sprint_animation_speed = self.base_animation_speed * (1 + self.sprint_animation_buff)
+            self.tired_animation_speed = self.base_animation_speed * (1 - self.sprint_animation_buff)
+
+            if self.in_dev_mode:
+                self.base_speed *= 3
+                self.sprint_buff *= 3
+                self.base_animation_speed *= 3
+                self.sprint_animation_buff *= 3
             # run input
             if keys[pygame.K_LSHIFT] and (keys[pygame.K_UP] or keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]): # if shift is being held
-                if self.stamina > 0: # if 
+                if self.stamina > 0: 
                     if not self.oversprinting_status:
-                        self.speed = 6.5
-                        self.animation_speed = 0.15*1.33
+                        self.speed = self.sprint_speed
+                        self.animation_speed = self.sprint_animation_speed
                         self.stamina -= self.sprint_drain
                     else:
-                        self.speed = 2.5
-                        self.animation_speed = 0.125
+                        self.speed = self.tired_speed
+                        self.animation_speed = self.tired_animation_speed
                         if self.stamina < self.stats['stamina']:
                             self.stamina += self.sprint_replenish
                         else:
@@ -150,16 +184,16 @@ class Player(Entity):
                 else:
                     self.oversprinting_status = True
                     self.oversprint_time = pygame.time.get_ticks()
-                    self.speed = 2.5
-                    self.animation_speed = 0.125
+                    self.speed = self.tired_speed
+                    self.animation_speed = self.tired_animation_speed
 
             else:
                 if not self.oversprinting_status:
-                    self.speed = 4.25
-                    self.animation_speed = 0.15
+                    self.speed = self.base_speed
+                    self.animation_speed = self.base_animation_speed
                 else:
-                    self.speed = 2.5
-                    self.animation_speed = 0.125
+                    self.speed = self.tired_speed
+                    self.animation_speed = self.tired_animation_speed
                 if self.stamina < self.stats['stamina']:
                     self.stamina += self.sprint_replenish
                 else:
@@ -334,6 +368,7 @@ class Player(Entity):
             # self.mask_image.fill((100, 100, 100, 255))  # Dark grey color with 50% transparency
 
     def update(self):
+        self.enforce_player_dev_mode()
         self.check_death()
         self.input()
         self.cooldowns()

@@ -11,15 +11,12 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
+from base_level_class import BaseLevel
 
-class Level3:
-    def __init__(self,health):
-        # this function gets the display surface from any part of the code
-        self.display_surface = pygame.display.get_surface()
+class Level3(BaseLevel):
+    def __init__(self,health,in_dev_mode):
+        super().__init__(health,in_dev_mode)
         
-        # sprite group setup
-        # A level has 2 attributes for visible sprites and obstacle sprites
-        # both are sprite groups
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
@@ -30,6 +27,8 @@ class Level3:
         self.player_health = health
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
+
+        self.mode_at_start = in_dev_mode
         # sprite setup
         self.create_map()
 
@@ -101,7 +100,8 @@ class Level3:
                                     self.destroy_attack,
                                     self.create_shield,
                                     self.destroy_shield,
-                                    player_level=2)
+                                    player_level=2,
+                                    in_dev_mode = self.mode_at_start)
                             else:
                                 monster_name = 'them'
                                 Enemy(
