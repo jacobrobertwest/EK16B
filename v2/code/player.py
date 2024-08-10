@@ -35,6 +35,15 @@ class Player(Entity):
             rect_offset = pygame.math.Vector2(0,0)
             self.status = 'up'
             self.mask = pygame.mask.from_surface(self.image)
+        elif player_level == 7 or player_level == '7a':
+            self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'up'
+            self.mask = pygame.mask.from_surface(self.image)
+        elif player_level == '7o':
+            self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'down'
         else:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)

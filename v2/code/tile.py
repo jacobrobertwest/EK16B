@@ -23,5 +23,7 @@ class Tile(pygame.sprite.Sprite):
             self.hitbox = self.rect.inflate(-100,-100)
         elif self.sprite_type == 'invisible_half_bottom_left':
             self.hitbox = self.rect.inflate(-100,-150)
+        elif self.sprite_type == 'door':
+            self.hitbox = self.rect.inflate(-30,-30)
         else:
             self.hitbox = self.rect.inflate(-10,-10)

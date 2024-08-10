@@ -27,11 +27,11 @@ class Level5(BaseLevel):
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-        self.player_health = health
+
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
         self.special_interaction_sprites = pygame.sprite.Group()
-        self.mode_at_start = in_dev_mode
+
         self.cloud_sprites = pygame.sprite.Group()
         self.last_cloud_time = None
         self.cloud_cooldown = 200
@@ -42,21 +42,9 @@ class Level5(BaseLevel):
         # sprite setup
         self.create_map()
 
-        #user interface
-        self.ui = UI()
-        self.background = 'black'
-        # particles
-        self.animation_player = AnimationPlayer()
-
-        #level status
-        self.level_complete_status = False
-        self.restart = Restart()
-        self.game_over = False
-
         # music
         self.main_sound = pygame.mixer.Sound('audio/5.ogg')
         self.main_sound.set_volume(0.5)
-        # self.main_sound.play(loops = -1)
 
         self.spawn_cloud()
 
@@ -126,22 +114,6 @@ class Level5(BaseLevel):
                                     self.damage_player,
                                     self.trigger_death_particles)
 
-    def create_attack(self):
-        self.current_attack = Weapon(self.player,[self.visible_sprites,self.attack_sprites])
-
-    def destroy_attack(self):
-        if self.current_attack:
-            self.current_attack.kill()
-        self.current_attack = None
-
-    def create_shield(self):
-        self.current_shield = Shield(self.player,[self.visible_sprites,self.shield_sprites])
-
-    def destroy_shield(self):
-        if self.current_shield:
-            self.current_shield.kill()
-        self.current_shield = None
-
     def spawn_cloud(self):
         Cloud([self.visible_sprites, self.cloud_sprites],speed_type="rand")
         self.last_cloud_time = pygame.time.get_ticks()
@@ -167,37 +139,12 @@ class Level5(BaseLevel):
                         if target_sprite.sprite_type == 'enemy':
                             target_sprite.get_damage(self.player, shield_sprite.sprite_type)
 
-    def player_climbing_logic(self):
-        if self.special_interaction_sprites:
-            ladder_collision_sprites = pygame.sprite.spritecollide(self.player,self.special_interaction_sprites,False)
-            if ladder_collision_sprites:
-                self.player.special_interactions_code = 1 # climbing
-            else:
-                self.player.special_interactions_code = 0
-
-    def damage_player(self,amount,attack_type):
-        if self.player.vulnerable:
-            self.player.health -= amount
-            self.player.vulnerable = False
-            self.player.hurt_time = pygame.time.get_ticks()
-            pos = self.player.rect.center
-            self.animation_player.create_ghost_particles(pos,[self.visible_sprites])
-
-    def trigger_death_particles(self,pos,particle_type):
-        self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
-
     def level_complete_update(self):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
-            # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
                 self.main_sound.stop()
                 self.level_complete_status = True
-    
-    def toggle_end(self):
-        if self.player.is_dead:
-            self.main_sound.stop()
-            self.game_over = True
 
     def continuous_cloud_spawn(self):
         current_time = pygame.time.get_ticks()
@@ -237,7 +184,7 @@ class Level5(BaseLevel):
         if self.game_over:
             self.restart.display()
         else:
-            self.visible_sprites.custom_draw(self.player,self.main_sound)
+            self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
@@ -247,7 +194,6 @@ class Level5(BaseLevel):
             self.ui.display(self.player)
             self.continuous_cloud_spawn()
             self.cloud_sprites.update()
-            # debug(f"Ticks: {self.relative_current_time} | Cloud Mod Max: {self.cloud_mod_max}")
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -264,7 +210,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground5.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
-    def custom_draw(self,player, sound):
+    def custom_draw(self,player):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height

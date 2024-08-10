@@ -19,26 +19,14 @@ class Level(BaseLevel):
         
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
+        
         # sprite setup
         self.create_map()
-        # shield sprites
-        self.current_shield = None
-        self.shield_sprites = pygame.sprite.Group()
-
-        #user interface
-        self.ui = UI()
-        self.background = 'black'
-        # particles
-        self.animation_player = AnimationPlayer()
-
-        #level status
-        self.level_complete_status = False
-        self.restart = Restart()
-        self.game_over = False
 
         # music
         self.main_sound = pygame.mixer.Sound('audio/0.ogg')
@@ -105,22 +93,6 @@ class Level(BaseLevel):
                                     self.damage_player,
                                     self.trigger_death_particles)
 
-    def create_attack(self):
-        self.current_attack = Weapon(self.player,[self.visible_sprites,self.attack_sprites])
-
-    def destroy_attack(self):
-        if self.current_attack:
-            self.current_attack.kill()
-        self.current_attack = None
-
-    def create_shield(self):
-        self.current_shield = Shield(self.player,[self.visible_sprites,self.shield_sprites])
-
-    def destroy_shield(self):
-        if self.current_shield:
-            self.current_shield.kill()
-        self.current_shield = None
-
     def player_attack_logic(self):
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
@@ -141,31 +113,12 @@ class Level(BaseLevel):
                         if target_sprite.sprite_type == 'enemy':
                             target_sprite.get_damage(self.player, shield_sprite.sprite_type)
 
-    def damage_player(self,amount,attack_type):
-        if self.player.vulnerable:
-            self.player.health -= amount
-            self.player.vulnerable = False
-            self.player.hurt_time = pygame.time.get_ticks()
-            pos = self.player.rect.center
-            self.animation_player.create_ghost_particles(pos,[self.visible_sprites])
-
-    def trigger_death_particles(self,pos,particle_type):
-        self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
-
     def level_complete_update(self):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
-            # if self.player.hitbox.top == exit_sprite.hitbox.bottom:
-            #     self.main_sound.stop()
-            #     self.level_complete_status = True
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
                 self.main_sound.stop()
                 self.level_complete_status = True
-    
-    def toggle_end(self):
-        if self.player.is_dead:
-            self.main_sound.stop()
-            self.game_over = True
 
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()

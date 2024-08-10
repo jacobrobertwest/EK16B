@@ -28,12 +28,12 @@ class Level6(BaseLevel):
         # both are sprite groups
         self.visible_sprites = YSortCameraGroup(self.blood_moon_pos)
         self.obstacle_sprites = pygame.sprite.Group()
-        self.mode_at_start = in_dev_mode
+        
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-        self.player_health = health
+
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
         self.special_interaction_sprites = pygame.sprite.Group()
@@ -43,17 +43,6 @@ class Level6(BaseLevel):
 
         # sprite setup
         self.create_map()
-
-        #user interface
-        self.ui = UI()
-        self.background = 'black'
-        # particles
-        self.animation_player = AnimationPlayer()
-
-        #level status
-        self.level_complete_status = False
-        self.restart = Restart()
-        self.game_over = False
 
         # music
         self.main_sound = pygame.mixer.Sound('audio/6.ogg')
@@ -111,22 +100,6 @@ class Level6(BaseLevel):
         for key in keys_to_remove:
             del self.tiles[key]
 
-    def create_attack(self):
-        self.current_attack = Weapon(self.player,[self.visible_sprites,self.attack_sprites])
-
-    def destroy_attack(self):
-        if self.current_attack:
-            self.current_attack.kill()
-        self.current_attack = None
-
-    def create_shield(self):
-        self.current_shield = Shield(self.player,[self.visible_sprites,self.shield_sprites])
-
-    def destroy_shield(self):
-        if self.current_shield:
-            self.current_shield.kill()
-        self.current_shield = None
-
     def player_attack_logic(self):
         if self.attack_sprites:
             for attack_sprite in self.attack_sprites:
@@ -147,40 +120,10 @@ class Level6(BaseLevel):
                         if target_sprite.sprite_type == 'enemy':
                             target_sprite.get_damage(self.player, shield_sprite.sprite_type)
 
-    def player_climbing_logic(self):
-        if self.special_interaction_sprites:
-            ladder_collision_sprites = pygame.sprite.spritecollide(self.player,self.special_interaction_sprites,False)
-            if ladder_collision_sprites:
-                self.player.special_interactions_code = 1 # climbing
-            else:
-                self.player.special_interactions_code = 0
-
-    def damage_player(self,amount,attack_type):
-        if self.player.vulnerable:
-            self.player.health -= amount
-            self.player.vulnerable = False
-            self.player.hurt_time = pygame.time.get_ticks()
-            pos = self.player.rect.center
-            self.animation_player.create_ghost_particles(pos,[self.visible_sprites])
-
-    def trigger_death_particles(self,pos,particle_type):
-        self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
-
     def level_complete_update(self):
-        # exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
-        # for exit_sprite in exit_sprites:
-        #     # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
-        #     if self.player.hitbox.colliderect(exit_sprite.hitbox):
-        #         self.main_sound.stop()
-        #         self.level_complete_status = True
         if (self.blood_moon_pos[0] - 32) <= self.player.rect.center[0] <= (self.blood_moon_pos[0] + 32) and (self.blood_moon_pos[1] - 32) <= self.player.rect.center[1] <= (self.blood_moon_pos[1] + 32):
             self.main_sound.stop()
             self.level_complete_status = True
-    
-    def toggle_end(self):
-        if self.player.is_dead:
-            self.main_sound.stop()
-            self.game_over = True
 
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()

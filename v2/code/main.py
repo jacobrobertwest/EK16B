@@ -13,12 +13,13 @@ from level3 import Level3
 from level4 import Level4
 from level5 import Level5
 from level6 import Level6
+from level7 import Level7
 from endpage import EndPage
 import asyncio
 
-VERSION = "2.2.0"
+VERSION = "2.2.1"
 LAST_UPDATED_DATE = "8/10/24"
-MASTER_LEVEL_LIST = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, EndPage]
+MASTER_LEVEL_LIST = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, Level7, EndPage]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
@@ -44,7 +45,7 @@ class Game:
 	def create_level(self, level_num):
         # Dynamically create level based on level number
 		levels = MASTER_LEVEL_LIST
-		# levels = [Level6]
+		# levels = [Level7]
 		if level_num < len(levels):
 			level_class = levels[level_num]
 			if level_class == TitlePage:
