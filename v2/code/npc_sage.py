@@ -72,7 +72,7 @@ class Sage(Entity):
         #     self.image.set_alpha(255)
 
     def trigger_dialog(self):
-        self.dialogue_box = DialogBox("MALON...",DESERET_FONT)
+        self.dialogue_box = DialogBox("\"MALON...\"",DESERET_FONT)
         self.dialogue_box.show()
 
     def get_status_direction(self):

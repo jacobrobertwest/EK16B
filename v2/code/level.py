@@ -13,7 +13,7 @@ from restart import Restart
 from shield import Shield
 from base_level_class import BaseLevel
 
-class Level(BaseLevel):
+class Level1(BaseLevel):
     def __init__(self,health,in_dev_mode):
         super().__init__(health,in_dev_mode)
         

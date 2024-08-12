@@ -7,7 +7,7 @@ import sys
 import os
 from settings import *
 from titlepage import TitlePage
-from level import Level
+from level import Level1
 from level2 import Level2
 from level3 import Level3
 from level4 import Level4
@@ -19,7 +19,7 @@ import asyncio
 
 VERSION = "2.2.2"
 LAST_UPDATED_DATE = "8/11/24"
-MASTER_LEVEL_LIST = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, Level7, EndPage]
+MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, EndPage]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
