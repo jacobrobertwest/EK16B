@@ -6,7 +6,7 @@ except ImportError:
 import sys
 import os
 from settings import *
-from titlepage2 import TitlePage
+from titlepage import TitlePage
 from level import Level
 from level2 import Level2
 from level3 import Level3

@@ -27,6 +27,7 @@ class Sage(Entity):
         self.status = 'down_idle'
         self.is_moving = False
         self.direction = pygame.math.Vector2(0,0)
+        self.current_y_direction = round(randint(-100,100)/100,2)
 
         self.begin_idle_timestamp = pygame.time.get_ticks()
         self.idle_duration = randint(10000,20000)
@@ -36,6 +37,8 @@ class Sage(Entity):
 
         self.x_boundaries = [10,470]
         self.y_boundaries = [10,290]
+
+        self.hit_boundary = False
 
         self.next_move_direction_is_left = True
 
@@ -82,34 +85,49 @@ class Sage(Entity):
                 self.is_moving = True
                 self.begin_move_timestamp = current_time
         elif self.is_moving:
-            y_value = round((0.9)*(sin(pygame.time.get_ticks()/200)),4)
-            if self.next_move_direction_is_left:
-                self.direction = pygame.math.Vector2(-1,y_value)
-                self.status = 'left'
+            if not self.hit_boundary:
+                y_value = self.current_y_direction
+                if self.next_move_direction_is_left:
+                    self.direction = pygame.math.Vector2(-1,y_value)
+                    self.status = 'left'
+                else:
+                    self.direction = pygame.math.Vector2(1,y_value)
+                    self.status = 'right'
+                self.status += '_move'
             else:
-                self.direction = pygame.math.Vector2(1,y_value)
-                self.status = 'right'
-            self.status += '_move'
+                if 'idle' not in self.status:
+                    self.status = re.sub(r'_\w*', '_idle', self.status)
+                self.direction = pygame.math.Vector2(0,0)
             if current_time - self.begin_move_timestamp >= self.move_duration:
                 self.is_moving = False
                 self.begin_idle_timestamp = current_time
                 self.move_duration = randint(4000,7500)
                 self.idle_duration = randint(10000,20000)
                 self.next_move_direction_is_left = not self.next_move_direction_is_left
+                self.current_y_direction = round(randint(-100,100)/100,2)
+                self.hit_boundary = False
 
     def keep_within_boundaries(self):
+        adjustments = 0
         if self.rect.left < self.x_boundaries[0]:
             self.rect.left = self.x_boundaries[0]
+            adjustments += 1
         if self.rect.right > self.x_boundaries[1]:
             self.rect.right = self.x_boundaries[1]
+            adjustments += 1
         if self.rect.top < self.y_boundaries[0]:
             self.rect.top = self.y_boundaries[0]
+            adjustments += 1
         if self.rect.bottom > self.y_boundaries[1]:
             self.rect.bottom = self.y_boundaries[1]
+            adjustments += 1
         self.hitbox.center = self.rect.center
+        if adjustments > 0:
+            self.hit_boundary = True
             
     def update(self):
         self.get_status_direction()
         self.animate()
         self.move(self.speed)
         self.keep_within_boundaries()
+        # debug(self.status,x=10,y=300)
