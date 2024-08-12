@@ -1,0 +1,115 @@
+import pygame
+from settings import *
+from support import import_folder
+from dialog_box import DialogBox
+from entity import Entity
+from debug import debug
+from math import sin
+from random import randint
+import re
+
+
+class Sage(Entity):
+    def __init__(self,pos,groups,obstacle_sprites):
+        super().__init__(groups)
+        self.starting_pos = pos
+        self.obstacle_sprites = obstacle_sprites
+
+        # setting up surface
+        self.image = pygame.Surface((64, 80))
+        self.image.fill((137, 207, 240)) 
+        # self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha() #
+        self.rect = self.image.get_rect(topleft = self.starting_pos)
+        self.hitbox = self.rect.inflate(0,-26)
+        self.sprite_type = 'npc'
+
+        self.speed = 1
+        self.status = 'down_idle'
+        self.is_moving = False
+        self.direction = pygame.math.Vector2(0,0)
+
+        self.begin_idle_timestamp = pygame.time.get_ticks()
+        self.idle_duration = randint(10000,20000)
+
+        self.begin_move_timestamp = None
+        self.move_duration = randint(4000,7500)
+
+        self.x_boundaries = [10,470]
+        self.y_boundaries = [10,290]
+
+        self.next_move_direction_is_left = True
+
+        # Additional attributes for vertical oscillation
+        self.oscillation_speed = 0.05  # Speed of the vertical oscillation
+        self.oscillation_amplitude = 5  # Amplitude of the vertical oscillation
+
+        # Time reference for oscillation
+        self.start_time = pygame.time.get_ticks()
+
+    
+    def animate(self):
+        # animation = self.animations[self.status]
+        # # loop over the frame index 
+        # self.frame_index += self.animation_speed
+        # # resetting the frame index once you hit the length of the list
+        # if self.frame_index >= len(animation):
+        #     self.frame_index = 0
+        
+        # # set the image
+        # self.image = animation[int(self.frame_index)]
+        # self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        # # flicker
+        alpha = min(self.wave_value_continuous() + 70,200)
+        self.image.set_alpha(alpha)
+        # if not self.vulnerable:
+        #     alpha = self.wave_value()
+        #     self.image.set_alpha(alpha)
+        # else:
+        #     self.image.set_alpha(255)
+
+    def trigger_dialog(self):
+        self.dialogue_box = DialogBox("MALON...",DESERET_FONT)
+        self.dialogue_box.show()
+
+    def get_status_direction(self):
+        current_time = pygame.time.get_ticks()
+        if not self.is_moving:
+            self.direction = pygame.math.Vector2(0,0)
+            if 'idle' not in self.status:
+                self.status = re.sub(r'_\w*', '_idle', self.status)
+            if current_time - self.begin_idle_timestamp >= self.idle_duration:
+                self.is_moving = True
+                self.begin_move_timestamp = current_time
+        elif self.is_moving:
+            y_value = round((0.9)*(sin(pygame.time.get_ticks()/200)),4)
+            if self.next_move_direction_is_left:
+                self.direction = pygame.math.Vector2(-1,y_value)
+                self.status = 'left'
+            else:
+                self.direction = pygame.math.Vector2(1,y_value)
+                self.status = 'right'
+            self.status += '_move'
+            if current_time - self.begin_move_timestamp >= self.move_duration:
+                self.is_moving = False
+                self.begin_idle_timestamp = current_time
+                self.move_duration = randint(4000,7500)
+                self.idle_duration = randint(10000,20000)
+                self.next_move_direction_is_left = not self.next_move_direction_is_left
+
+    def keep_within_boundaries(self):
+        if self.rect.left < self.x_boundaries[0]:
+            self.rect.left = self.x_boundaries[0]
+        if self.rect.right > self.x_boundaries[1]:
+            self.rect.right = self.x_boundaries[1]
+        if self.rect.top < self.y_boundaries[0]:
+            self.rect.top = self.y_boundaries[0]
+        if self.rect.bottom > self.y_boundaries[1]:
+            self.rect.bottom = self.y_boundaries[1]
+        self.hitbox.center = self.rect.center
+            
+    def update(self):
+        self.get_status_direction()
+        self.animate()
+        self.move(self.speed)
+        self.keep_within_boundaries()

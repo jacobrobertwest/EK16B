@@ -16,6 +16,7 @@ class TitlePage(BaseLevel):
         self.mode_at_start = in_dev_mode
         self.background = 'black'
         self.font = pygame.font.Font(None,23)
+        self.notes_font = pygame.font.Font(None,16)
         self.hopping_levels = False
 
     def input(self):
@@ -45,9 +46,13 @@ class TitlePage(BaseLevel):
 
     def display(self):
         self.display_surface.blit(self.title_image, (0, 0))
-        updated_surf = self.font.render(f"v{self.metadata['version']} - Last Updated: {self.metadata['updated']}  |  Playable Levels: {self.metadata['lvls']}", False, "white")
+        updated_surf = self.notes_font.render(f"v{self.metadata['version']} - Last Updated: {self.metadata['updated']}  |  Playable Levels: {self.metadata['lvls']}", False, "white",True)
         updated_rect = updated_surf.get_rect(midleft=(10,20))
         bg_rect = updated_surf.get_rect(midleft = (10,20))
+        pygame.draw.rect(self.display_surface,'Black',bg_rect)
+        d = self.notes_font.render(" / Interact", False, "white",True)
+        # updated_rect = updated_surf.get_rect(midleft=(10,20))
+        # bg_rect = updated_surf.get_rect(midleft = (10,20))
         pygame.draw.rect(self.display_surface,'Black',bg_rect)
         self.display_surface.blit(updated_surf,updated_rect)
 

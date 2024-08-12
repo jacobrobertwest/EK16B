@@ -29,6 +29,9 @@ class BaseLevel:
         self.ui = UI()
         self.background = bgcolor
 
+        #dialogue handling
+        self.showing_dialogue = False
+
         # particles
         self.animation_player = AnimationPlayer()
 
@@ -37,6 +40,8 @@ class BaseLevel:
         self.restart = Restart()
         self.game_over = False
     
+    # CREATE ATTACK
+    # base granularity
     def create_attack(self):
         self.current_attack = Weapon(self.player,[self.visible_sprites,self.attack_sprites])
 
@@ -45,6 +50,7 @@ class BaseLevel:
             self.current_attack.kill()
         self.current_attack = None
 
+    # CREATE SHIELD
     def create_shield(self):
         self.current_shield = Shield(self.player,[self.visible_sprites,self.shield_sprites])
 

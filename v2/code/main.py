@@ -6,7 +6,7 @@ except ImportError:
 import sys
 import os
 from settings import *
-from titlepage import TitlePage
+from titlepage2 import TitlePage
 from level import Level
 from level2 import Level2
 from level3 import Level3
@@ -17,8 +17,8 @@ from level7 import Level7
 from endpage import EndPage
 import asyncio
 
-VERSION = "2.2.1"
-LAST_UPDATED_DATE = "8/10/24"
+VERSION = "2.2.2"
+LAST_UPDATED_DATE = "8/11/24"
 MASTER_LEVEL_LIST = [TitlePage, Level, Level2, Level3, Level4, Level5, Level6, Level7, EndPage]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
@@ -102,4 +102,9 @@ if __name__ == "__main__":
 	asyncio.run(Game().main())
 
 # TODO
+# Level 1 - foresty exterior artwork, move boulders more overlapping the edge of the boundary & path
+# Level 2 - make forest exterior overlaying everything
+# Level 4 - fairy fountain unlocks if you burst open crack in wall - can use either bomb flower or snail enemy rolling, water animations
+# Level 5 - make it become night slowly, shooting enemies, make it difficult to run against the wind, easier to run with
+# Level 6 - NPC, dialogue cutscreen
 

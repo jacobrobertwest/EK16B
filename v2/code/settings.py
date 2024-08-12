@@ -12,6 +12,10 @@ STAMINA_BAR_WIDTH = 140
 STAMINA_BAR_HEIGHT = 10
 ITEM_BOX_SIZE = 80
 UI_FONT = 'font/AncientModernTales.ttf'
+DESERET_FONT = 'font/AdamicBee.ttf'
+FUTURA_FONT = 'font/Futura.ttf'
+FUTURA_CONDENSED = 'font/FuturaCondensed.ttf'
+FUTURA_CONDENSED_BOLD = 'font/FuturaCondensedBold.ttf'
 UI_FONT_SIZE = 18
 
 # general colors

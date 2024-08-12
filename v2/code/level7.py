@@ -12,8 +12,8 @@ from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
 from random import randint
-from enemy2 import SnailEnemy
 from base_level_class import BaseLevel
+from npc_sage import Sage
 
 class Level7(BaseLevel):
     def __init__(self,health,in_dev_mode):
@@ -23,10 +23,6 @@ class Level7(BaseLevel):
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
-        # inside a
-        self.visible_sprites_ia = YSortCameraGroup('inside_a')
-        self.obstacle_sprites_ia = pygame.sprite.Group()
-
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
@@ -35,12 +31,17 @@ class Level7(BaseLevel):
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
         self.special_interaction_sprites = pygame.sprite.Group()
+
+        self.npc_sage = None
+
+        self.buffer_interaction_duration = 300
         
         self.is_inside_building_a = False
-        self.special_interaction_sprites_ia = pygame.sprite.Group()
+
+        self.latest_interaction_start_timestamp = None
 
         self.player_starting_pos_outside = (0, 540)
-        self.player_starting_pos_building_a = (0,236)
+        self.player_starting_pos_building_a = (0, 236)
 
         self.player_level_code = 7
 
@@ -49,12 +50,13 @@ class Level7(BaseLevel):
 
         # music
         self.main_sound = pygame.mixer.Sound('audio/6.ogg')
-        self.main_sound.set_volume(0.5)
+        self.main_sound.set_volume(0.2)
 
     def create_map(self):
-        self.visible_sprites_ia.empty()
-        self.obstacle_sprites_ia.empty()
-        self.special_interaction_sprites_ia.empty()
+        self.visible_sprites = YSortCameraGroup()
+        self.obstacle_sprites = pygame.sprite.Group()
+        self.special_interaction_sprites = pygame.sprite.Group()
+        self.npc_sage = None
 
         if hasattr(self,'player'):
             mode = self.player.in_dev_mode
@@ -81,13 +83,13 @@ class Level7(BaseLevel):
         Tile((1000,548),[self.visible_sprites,self.obstacle_sprites],sprite_type='exit',surface=exit_surf)
 
     def create_building_a(self):
-        self.visible_sprites.empty()
-        self.obstacle_sprites.empty()
-        self.special_interaction_sprites.empty()
+        self.visible_sprites = YSortCameraGroup('inside_a')
+        self.obstacle_sprites = pygame.sprite.Group()
+        self.special_interaction_sprites = pygame.sprite.Group()
 
         self.player = Player(
             self.player_starting_pos_building_a,
-            [self.visible_sprites_ia],
+            [self.visible_sprites],
             self.obstacle_sprites,
             self.player.health,
             self.create_attack,
@@ -99,7 +101,8 @@ class Level7(BaseLevel):
         )
         bldg_a_door_surf = pygame.Surface((64,64))
         bldg_a_door_surf.fill((255, 140, 0))
-        Tile((0,300),[self.visible_sprites_ia,self.special_interaction_sprites_ia],sprite_type='door',surface=bldg_a_door_surf)
+        Tile((0,300),[self.visible_sprites,self.special_interaction_sprites],sprite_type='door',surface=bldg_a_door_surf)
+        self.npc_sage = Sage((360,68),[self.visible_sprites,self.special_interaction_sprites],self.obstacle_sprites)
 
     def player_attack_logic(self):
         if self.attack_sprites:
@@ -138,7 +141,7 @@ class Level7(BaseLevel):
                     self.create_building_a()
 
     def door_handler_inside_a(self):
-        door_sprites = [sprite for sprite in self.special_interaction_sprites_ia if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'door']
+        door_sprites = [sprite for sprite in self.special_interaction_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'door']
         if door_sprites:
             for target_sprite in door_sprites:
                 if self.player.hitbox.colliderect(target_sprite.hitbox):
@@ -146,6 +149,25 @@ class Level7(BaseLevel):
                     self.player_level_code = '7o'
                     self.player_starting_pos_outside = (300,350)
                     self.create_map()
+
+    def check_for_npc_interaction(self):
+        keys = pygame.key.get_pressed()
+        if self.player.rect.colliderect(self.npc_sage.rect):
+            if keys[pygame.K_d]:
+                #starting dialog
+                self.showing_dialogue = True
+                self.player.special_interactions_code = 2
+                self.latest_interaction_start_timestamp = pygame.time.get_ticks()
+                self.npc_sage.trigger_dialog()
+
+    def check_for_interaction_end(self):
+        if pygame.time.get_ticks() - self.latest_interaction_start_timestamp >= self.buffer_interaction_duration:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_RETURN]:
+                # ending dialog
+                self.showing_dialogue = False
+                self.player.special_interactions_code = 0
+
 
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
@@ -188,16 +210,20 @@ class Level7(BaseLevel):
                 self.level_complete_update()
                 self.ui.display(self.player)
             else:
-                self.door_handler_inside_a()
-                self.visible_sprites_ia.custom_draw(self.player)
-                self.visible_sprites_ia.update()
-                self.visible_sprites_ia.enemy_update(self.player)
-                self.player_attack_logic()
-                self.player_defense_logic()
-                self.player_climbing_logic()
-                self.level_complete_update()
-                self.ui.display(self.player)
-            # debug(self.is_inside_building_a,x=10,y=150)
+                if not self.showing_dialogue:
+                    self.check_for_npc_interaction()
+                    self.door_handler_inside_a()
+                    self.visible_sprites.custom_draw(self.player)
+                    self.visible_sprites.update()
+                    self.visible_sprites.enemy_update(self.player)
+                    self.player_attack_logic()
+                    self.player_defense_logic()
+                    self.player_climbing_logic()
+                    self.level_complete_update()
+                    self.ui.display(self.player)
+                else:
+                    self.npc_sage.dialogue_box.show()
+                    self.check_for_interaction_end()
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self,granularity='outside'):

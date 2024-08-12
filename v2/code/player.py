@@ -58,7 +58,7 @@ class Player(Entity):
         # movement attributes
         self.direction = pygame.math.Vector2()
 
-        self.is_climbing = False
+        # Player Status Types
 
         self.attacking = False
         self.attack_cooldown = 400
@@ -80,7 +80,11 @@ class Player(Entity):
         self.defend_time = None
         self.create_shield = create_shield
         self.destroy_shield = destroy_shield
-        self.special_interactions_code = 0
+        
+        # special interactions
+        self.is_climbing = False
+        self.is_interacting_with_npc = False
+        self.special_interactions_code = 0 # 1 = climbing_ladder, 2 = talking with NPC
 
         # stats
         self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
@@ -103,6 +107,7 @@ class Player(Entity):
         self.in_dev_mode = in_dev_mode
         self.mode_change_time = 0
         self.mode_change_duration = 500
+
 
         #is dead
         self.is_dead = False
@@ -232,6 +237,8 @@ class Player(Entity):
             elif not '_climbing' in self.status:
                 self.status = self.status + '_climbing'
         else:
+            if '_climbing' in self.status:
+                self.status = self.status.replace('_climbing','')
             if self.direction.x == 0 and self.direction.y == 0:
                 if not 'idle' in self.status and not 'attack' in self.status and not 'defend' in self.status:
                     self.status = self.status + '_idle'
@@ -342,8 +349,11 @@ class Player(Entity):
             self.is_climbing = True
             self.speed = 2
             self.animation_speed = 0.1
+        elif self.special_interactions_code == 2: # interacting with NPC
+            self.is_interacting_with_npc = True
         else:
             self.is_climbing = False
+            self.is_interacting_with_npc = False
 
     def animate(self):
         animation = self.animations[self.status]

@@ -18,8 +18,7 @@ class Entity(pygame.sprite.Sprite):
         self.hitbox.y += self.direction.y * speed
         self.collision('vertical')
         self.rect.center = self.hitbox.center
-
-
+    
     def collision(self, direction):
         if direction == 'horizontal':
             self.colliding = False
@@ -46,3 +45,8 @@ class Entity(pygame.sprite.Sprite):
             return 255
         else:
             return 0
+
+    def wave_value_continuous(self):
+        value = sin(pygame.time.get_ticks() * 0.001)  # Scale time to slow down the wave
+        scaled_value = int((value + 1) * 127.5)
+        return scaled_value
