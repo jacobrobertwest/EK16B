@@ -104,7 +104,16 @@ class Sage(Entity):
                 self.move_duration = randint(4000,7500)
                 self.idle_duration = randint(10000,20000)
                 self.next_move_direction_is_left = not self.next_move_direction_is_left
-                self.current_y_direction = round(randint(-100,100)/100,2)
+                if self.rect.top < 25:
+                    range_btm = 20
+                    range_top = 90
+                elif self.rect.bottom > 275:
+                    range_btm = -90
+                    range_top = -20
+                else:
+                    range_btm = -100
+                    range_top = 100
+                self.current_y_direction = round(randint(range_btm,range_top)/100,2)
                 self.hit_boundary = False
 
     def keep_within_boundaries(self):
