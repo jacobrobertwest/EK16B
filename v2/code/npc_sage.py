@@ -14,11 +14,11 @@ class Sage(Entity):
         super().__init__(groups)
         self.starting_pos = pos
         self.obstacle_sprites = obstacle_sprites
-
+        self.animation_speed = 0.08
         # setting up surface
-        self.image = pygame.Surface((64, 80))
-        self.image.fill((137, 207, 240)) 
-        # self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha() #
+        # self.image = pygame.Surface((64, 80))
+        # self.image.fill((137, 207, 240)) 
+        self.image = pygame.image.load('graphics/sage/down_idle/0.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = self.starting_pos)
         self.hitbox = self.rect.inflate(0,-26)
         self.sprite_type = 'npc'
@@ -42,25 +42,34 @@ class Sage(Entity):
 
         self.next_move_direction_is_left = True
 
-        # Additional attributes for vertical oscillation
-        self.oscillation_speed = 0.05  # Speed of the vertical oscillation
-        self.oscillation_amplitude = 5  # Amplitude of the vertical oscillation
+        self.import_npc_assets()
 
         # Time reference for oscillation
         self.start_time = pygame.time.get_ticks()
 
+    def import_npc_assets(self):
+        character_path = 'graphics/sage/'
+        self.animations = {
+        'up': [],'down': [],'left': [],'right': [],
+        'right_idle': [],'left_idle': [],'up_idle': [],'down_idle': [],
+        'right_move': [],'left_move': [],'up_move': [],'down_move': [],
+        }
+        for animation in self.animations.keys():
+            folder_path = character_path + animation
+            self.animations[animation] = import_folder(folder_path)
+
     
     def animate(self):
-        # animation = self.animations[self.status]
+        animation = self.animations[self.status]
         # # loop over the frame index 
-        # self.frame_index += self.animation_speed
+        self.frame_index += self.animation_speed
         # # resetting the frame index once you hit the length of the list
-        # if self.frame_index >= len(animation):
-        #     self.frame_index = 0
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
         
         # # set the image
-        # self.image = animation[int(self.frame_index)]
-        # self.rect = self.image.get_rect(center = self.hitbox.center)
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center = self.hitbox.center)
 
         # # flicker
         alpha = min(self.wave_value_continuous() + 70,200)

@@ -15,7 +15,7 @@ UI_FONT = 'font/AncientModernTales.ttf'
 DESERET_FONT = 'font/AdamicBee.ttf'
 FUTURA_FONT = 'font/Futura.ttf'
 FUTURA_CONDENSED = 'font/FuturaCondensed.ttf'
-FUTURA_CONDENSED_BOLD = 'font/FuturaCondensedBold.ttf'
+FUTURA_CONDENSED_BOLD = 'font/FuturaCEB.ttf'
 UI_FONT_SIZE = 18
 
 # general colors
