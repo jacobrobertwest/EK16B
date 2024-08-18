@@ -228,6 +228,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.fog_surface.fill((224,224,224,alpha))
         self.display_surface.blit(self.fog_surface, (0,0))
 
+        self.night_surface = pygame.Surface((640,360),pygame.SRCALPHA)
+        self.night_surface.fill((19,24,98,50))
+        self.display_surface.blit(self.night_surface, (0,0))
+
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level5.tmx",
+    "activeFile": "starry night texture.tsx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -16,14 +16,18 @@
             "scale": 0.2374,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2028.2224094355515,
-                "y": 783.4877843302444
+                "x": 1375.3159224936815,
+                "y": 724.5155855096881
             }
         },
         "level5map.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 0.0968,
             "scaleInEditor": 0.67
+        },
+        "starry night texture.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 0.2782
         }
     },
     "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/code/map/level5",
@@ -37,13 +41,15 @@
     "openFiles": [
         "level5.tmx",
         "level5map.tsx",
-        "boundary.tsx"
+        "boundary.tsx",
+        "starry night texture.tsx"
     ],
     "project": "level5.tiled-project",
     "recentFiles": [
-        "boundary.tsx",
+        "level5.tmx",
         "level5map.tsx",
-        "level5.tmx"
+        "boundary.tsx",
+        "starry night texture.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

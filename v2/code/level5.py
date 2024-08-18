@@ -206,10 +206,21 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
+        self.level_start_time = pygame.time.get_ticks()
+
         # creating the floor
         self.floor_surf = pygame.image.load('graphics/tilemap/ground5.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
+        self.night_surface = pygame.Surface((640,360),pygame.SRCALPHA)
+
+    def get_night_alpha(self):
+        current_time = pygame.time.get_ticks()
+        level_duration = current_time - self.level_start_time
+        alpha_raw = max(level_duration / 300,50)
+        alpha = min(alpha_raw, 150)
+        return alpha
+        
     def custom_draw(self,player):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
@@ -231,6 +242,10 @@ class YSortCameraGroup(pygame.sprite.Group):
             if isinstance(sprite, Cloud): 
                 offset_pos = sprite.rect.topleft - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)
+
+        alpha = round(self.get_night_alpha())
+        self.night_surface.fill((19,24,98,alpha))
+        self.display_surface.blit(self.night_surface, (0,0))
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

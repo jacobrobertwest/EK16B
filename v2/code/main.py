@@ -17,8 +17,8 @@ from level7 import Level7
 from endpage import EndPage
 import asyncio
 
-VERSION = "2.2.3"
-LAST_UPDATED_DATE = "8/13/24"
+VERSION = "2.2.4"
+LAST_UPDATED_DATE = "8/18/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, EndPage]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
@@ -105,6 +105,6 @@ if __name__ == "__main__":
 # Level 1 - foresty exterior artwork, move boulders more overlapping the edge of the boundary & path
 # Level 2 - make forest exterior overlaying everything
 # Level 4 - fairy fountain unlocks if you burst open crack in wall - can use either bomb flower or snail enemy rolling, water animations
-# Level 5 - make it become night slowly, shooting enemies, make it difficult to run against the wind, easier to run with
-# Level 6 - NPC sprite artwork, dialogue box artwork
+# Level 5 - shooting enemies, make it difficult to run against the wind, easier to run with
+# Level 6 - dialogue box artwork
 

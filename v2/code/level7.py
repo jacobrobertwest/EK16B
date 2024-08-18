@@ -49,7 +49,7 @@ class Level7(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/6.ogg')
+        self.main_sound = pygame.mixer.Sound('audio/7.ogg')
         self.main_sound.set_volume(0.2)
 
     def create_map(self):
@@ -240,6 +240,7 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.floor_surf = pygame.Surface((1000, 612))
             self.floor_surf.fill((255, 140, 0)) 
             self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
+            self.night_surface = pygame.Surface((640,360),pygame.SRCALPHA)
         if granularity == 'inside_a':
             self.floor_surf = pygame.Surface((480, 300))
             self.floor_surf.fill((139, 69, 19)) 
@@ -259,6 +260,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
+
+        if hasattr(self,'night_surface'):
+            self.night_surface.fill((19,24,98,100))
+            self.display_surface.blit(self.night_surface, (0,0))
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
