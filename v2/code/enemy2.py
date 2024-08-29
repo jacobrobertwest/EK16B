@@ -59,6 +59,16 @@ class SnailEnemy(Enemy):
             if self.charge < 0:
                 self.charge = 0
 
+    def animate(self):
+        animation = self.animations[self.status]
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+        self.image = animation[int(self.frame_index)]
+        if self.direction.x > 0:
+            self.image = pygame.transform.flip(self.image,True,False)
+        self.rect = self.image.get_rect(center=self.hitbox.center)
+
     def actions(self,player,other_enemies):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()

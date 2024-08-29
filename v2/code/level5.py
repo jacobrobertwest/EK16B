@@ -13,7 +13,7 @@ from restart import Restart
 from shield import Shield
 from cloud import Cloud
 from random import randint
-from enemy2 import SnailEnemy
+from enemy_shooting import ShootingEnemy
 from base_level_class import BaseLevel
 
 class Level5(BaseLevel):
@@ -105,9 +105,7 @@ class Level5(BaseLevel):
                                     player_level=4,
                                     in_dev_mode = self.mode_at_start)
                             else:
-                                monster_name = 'snail'
-                                SnailEnemy(
-                                    monster_name,
+                                self.shootenem = ShootingEnemy(
                                     (x,y),
                                     [self.visible_sprites, self.attackable_sprites],
                                     self.obstacle_sprites,
@@ -194,6 +192,8 @@ class Level5(BaseLevel):
             self.ui.display(self.player)
             self.continuous_cloud_spawn()
             self.cloud_sprites.update()
+            debug(self.shootenem.status,mult=2)
+            debug(pygame.time.get_ticks(),mult=3)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

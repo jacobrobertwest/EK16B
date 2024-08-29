@@ -36,7 +36,8 @@ weapon_data = {
 }
 
 monster_data = {
-	'them': {'health': 400,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 40, 'notice_radius': 1000},
+	'them': {'health': 400,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 40, 'notice_radius': 500},
     'monkey': {'health': 100,'exp':100,'damage':5,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 30, 'notice_radius': 250},
-    'snail': {'health': 200,'exp':100,'damage':30,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 1, 'resistance': 3, 'attack_radius': 30, 'notice_radius': 250}
+    'snail': {'health': 200,'exp':100,'damage':30,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 1, 'resistance': 3, 'attack_radius': 30, 'notice_radius': 250},
+    'okto': {'health': 150,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 350, 'notice_radius': 450}
 }

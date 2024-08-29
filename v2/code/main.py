@@ -17,8 +17,8 @@ from level7 import Level7
 from endpage import EndPage
 import asyncio
 
-VERSION = "2.2.4"
-LAST_UPDATED_DATE = "8/18/24"
+VERSION = "2.2.5"
+LAST_UPDATED_DATE = "8/28/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, EndPage]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
