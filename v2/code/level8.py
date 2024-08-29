@@ -55,6 +55,12 @@ class Level8(BaseLevel):
             player_level=self.player_level_code,
             in_dev_mode = self.mode_at_start
         )
+        block_surf = pygame.Surface((1200,700))
+        block_surf.fill((139, 69, 19))
+        Tile((0,180),[self.visible_sprites,self.obstacle_sprites],sprite_type='block',surface=block_surf)
+        exit_surf = pygame.Surface((128,64))
+        exit_surf.fill((0,255,0))
+        Tile((200,-64),[self.visible_sprites,self.obstacle_sprites],sprite_type='exit',surface=exit_surf)
 
     def player_attack_logic(self):
         if self.attack_sprites:

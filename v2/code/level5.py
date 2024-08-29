@@ -127,6 +127,11 @@ class Level5(BaseLevel):
                             pos = target_sprite.rect.center
                             self.animation_player.create_slash_particles(pos,[self.visible_sprites])
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
+                collision_sprites_proj = pygame.sprite.spritecollide(attack_sprite,self.current_projectiles,False)
+                if collision_sprites_proj:
+                    for target_sprite in collision_sprites_proj:
+                        if target_sprite.sprite_type == 'projectile':
+                            target_sprite.ricochet()
 
     def player_defense_logic(self):
         if self.shield_sprites:
@@ -136,6 +141,23 @@ class Level5(BaseLevel):
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == 'enemy':
                             target_sprite.get_damage(self.player, shield_sprite.sprite_type)
+                collision_sprites_proj = pygame.sprite.spritecollide(shield_sprite,self.current_projectiles,False)
+                if collision_sprites_proj:
+                    for target_sprite in collision_sprites_proj:
+                        if target_sprite.sprite_type == 'projectile':
+                            target_sprite.ricochet()
+    
+    def projectile_attack_logic(self):
+        if self.current_projectiles:
+            for projectile in self.current_projectiles:
+                collision_sprites = pygame.sprite.spritecollide(projectile,self.attackable_sprites,False)
+                if collision_sprites:
+                    for target_sprite in collision_sprites:
+                        if target_sprite.sprite_type == 'enemy':
+                            if projectile.ricocheted:
+                                target_sprite.get_damage(self.player,projectile.sprite_type)
+                                projectile.kill()
+
 
     def level_complete_update(self):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
@@ -193,6 +215,7 @@ class Level5(BaseLevel):
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
+            self.projectile_attack_logic()
             self.player_defense_logic()
             self.player_climbing_logic()
             self.level_complete_update()

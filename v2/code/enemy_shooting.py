@@ -67,6 +67,8 @@ class ShootingEnemy(Enemy):
                 self.health -= player.get_full_weapon_damage()
             elif attack_type == 'shield':
                 pass
+            elif attack_type == 'projectile':
+                self.health -= 60
             else:
                 pass
             self.hit_time = pygame.time.get_ticks()
@@ -80,11 +82,18 @@ class Projectile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = pos)
         self.direction = direction
         self.speed = 5
+        self.sprite_type = 'projectile'
         self.distance_from_player = None
         self.player = player
+        self.ricocheted = False
         self.obstacle_sprites = obstacle_sprites
         self.attack_damage = attack_damage
         self.damage_player = damage_player
+    
+    def ricochet(self):
+        self.direction.x = (-1)*(self.direction.x)
+        self.direction.y = (-1)*(self.direction.y)
+        self.ricocheted = True
 
     def update(self):
         self.rect.center += self.direction * self.speed
