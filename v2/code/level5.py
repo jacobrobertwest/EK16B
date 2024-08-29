@@ -13,7 +13,7 @@ from restart import Restart
 from shield import Shield
 from cloud import Cloud
 from random import randint
-from enemy_shooting import ShootingEnemy
+from enemy_shooting import ShootingEnemy, Projectile
 from base_level_class import BaseLevel
 
 class Level5(BaseLevel):
@@ -27,11 +27,11 @@ class Level5(BaseLevel):
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-
+        self.current_projectiles = pygame.sprite.Group()
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
         self.special_interaction_sprites = pygame.sprite.Group()
-
+        self.projectile = None
         self.cloud_sprites = pygame.sprite.Group()
         self.last_cloud_time = None
         self.cloud_cooldown = 200
@@ -110,7 +110,7 @@ class Level5(BaseLevel):
                                     [self.visible_sprites, self.attackable_sprites],
                                     self.obstacle_sprites,
                                     self.damage_player,
-                                    self.trigger_death_particles)
+                                    self.trigger_death_particles,self.create_projectile)
 
     def spawn_cloud(self):
         Cloud([self.visible_sprites, self.cloud_sprites],speed_type="rand")
@@ -152,6 +152,12 @@ class Level5(BaseLevel):
         if current_time - self.last_cloud_time >= self.cloud_cooldown + self.cloud_modifier:
             self.spawn_cloud()
 
+    def create_projectile(self, pos, direction):
+        if not self.projectile:
+            self.projectile = Projectile(pos, direction, [self.current_projectiles,self.visible_sprites], self.obstacle_sprites, self.player, self.damage_player,10)
+        else:
+            Projectile(pos, direction, [self.current_projectiles,self.visible_sprites], self.obstacle_sprites, self.player, self.damage_player,10)
+
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
         
@@ -163,8 +169,9 @@ class Level5(BaseLevel):
 
         # attack sprites
         self.current_attack = None
-        self.attack_sprites = pygame.sprite.Group()
-        self.attackable_sprites = pygame.sprite.Group()
+        self.attack_sprites.empty()
+        self.attackable_sprites.empty()
+        self.cloud_sprites.empty()
 
         # sprite setup
         self.create_map()
@@ -192,8 +199,8 @@ class Level5(BaseLevel):
             self.ui.display(self.player)
             self.continuous_cloud_spawn()
             self.cloud_sprites.update()
-            debug(self.shootenem.status,mult=2)
-            debug(pygame.time.get_ticks(),mult=3)
+            # if self.projectile:
+            #     debug(self.projectile.distance_from_player,mult=2)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
