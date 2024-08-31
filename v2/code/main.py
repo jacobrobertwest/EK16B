@@ -19,7 +19,7 @@ from endpage import EndPage
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.2.9"
+VERSION = "2.3.0"
 LAST_UPDATED_DATE = "8/31/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, EndPage]
 # MASTER_LEVEL_LIST = [Level4]

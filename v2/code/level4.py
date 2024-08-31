@@ -188,11 +188,24 @@ class Level4(BaseLevel):
         # both are sprite groups
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+        self.breaker_sprites = pygame.sprite.Group()
 
         # attack sprites
         self.current_attack = None
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
+
+        self.snail_sprites = pygame.sprite.Group()
+        self.fairy_fountain_open = False
+        # fairy fountain attributes
+        self.is_inside_fairy_fountain = False
+        self.fairy_fountain_lvl = None
+
+        # cloud sprites
+        self.cloud_sprites = pygame.sprite.Group()
+        self.last_cloud_time = None
+        self.cloud_cooldown = 1000
+        self.cloud_modifier = randint(0,4000)
 
         # sprite setup
         self.create_map()
@@ -204,6 +217,10 @@ class Level4(BaseLevel):
 
         # particles
         self.animation_player = AnimationPlayer()
+
+        self.main_sound.play()
+
+        self.spawn_cloud()
        
     def run(self):
         self.toggle_end()
