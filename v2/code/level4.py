@@ -7,6 +7,7 @@ from support import import_csv_layout, import_folder
 from random import choice
 from weapon import Weapon
 from ui import UI
+from level_fairyfountain import FairyFountain
 from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
@@ -22,6 +23,7 @@ class Level4(BaseLevel):
         
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+        self.breaker_sprites = pygame.sprite.Group()
 
         # attack sprites
         self.current_attack = None
@@ -29,6 +31,12 @@ class Level4(BaseLevel):
         self.attackable_sprites = pygame.sprite.Group()
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
+
+        self.snail_sprites = pygame.sprite.Group()
+        self.fairy_fountain_open = False
+        # fairy fountain attributes
+        self.is_inside_fairy_fountain = False
+        self.fairy_fountain_lvl = None
         
         # cloud sprites
         self.cloud_sprites = pygame.sprite.Group()
@@ -44,6 +52,7 @@ class Level4(BaseLevel):
         self.main_sound.set_volume(0.3)
 
         self.spawn_cloud()
+
 
     def create_map(self):
         layouts = {
@@ -103,12 +112,13 @@ class Level4(BaseLevel):
                                 SnailEnemy(
                                     monster_name,
                                     (x,y),
-                                    [self.visible_sprites, self.attackable_sprites],
+                                    [self.visible_sprites, self.attackable_sprites, self.snail_sprites],
                                     self.obstacle_sprites,
                                     self.damage_player,
                                     self.trigger_death_particles)
-
-
+        breaker_surface = pygame.Surface((256,64))
+        self.fairy_fountain_breaker = Tile((350,597),[self.breaker_sprites],sprite_type='breaker',surface=breaker_surface)
+        
     def spawn_cloud(self):
         Cloud([self.visible_sprites, self.cloud_sprites])
         self.last_cloud_time = pygame.time.get_ticks()
@@ -147,6 +157,29 @@ class Level4(BaseLevel):
         if current_time - self.last_cloud_time >= self.cloud_cooldown + self.cloud_modifier:
             self.spawn_cloud()
 
+    def check_for_open_fairy_fountain(self):
+        if not self.fairy_fountain_open:
+            if self.snail_sprites:
+                for snail in self.snail_sprites:
+                    if self.fairy_fountain_breaker.rect.colliderect(snail.hitbox):
+                        self.fairy_fountain_open = True
+                        fairy_fountain_door_surf = pygame.image.load('graphics/tilemap/fairyfountain_entrance.png').convert_alpha()
+                        self.fairy_fountain_door = Tile((459,597),[self.visible_sprites,self.special_interaction_sprites],sprite_type='door',surface=fairy_fountain_door_surf)
+                        self.animation_player.create_smoke_particles(self.fairy_fountain_door.rect.center,[self.visible_sprites])
+
+    def check_for_entering_fairy_fountain(self):
+        if self.player.hitbox.colliderect(self.fairy_fountain_door.hitbox):
+            self.is_inside_fairy_fountain = True
+            self.fairy_fountain_lvl = FairyFountain(self.player.health,self.player.in_dev_mode)
+            self.main_sound.stop()
+            self.fairy_fountain_lvl.main_sound.play()
+
+    def check_for_exiting_fairy_fountain(self):
+        if self.fairy_fountain_lvl.level_complete_status:
+            self.is_inside_fairy_fountain = False
+            self.player.health = self.fairy_fountain_lvl.player.health
+            self.main_sound.play()
+            
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
         
@@ -177,15 +210,24 @@ class Level4(BaseLevel):
         if self.game_over:
             self.restart.display()
         else:
-            self.visible_sprites.custom_draw(self.player,self.main_sound)
-            self.visible_sprites.update()
-            self.visible_sprites.enemy_update(self.player)
-            self.player_attack_logic()
-            self.player_defense_logic()
-            self.level_complete_update()
-            self.ui.display(self.player)
-            self.continuous_cloud_spawn()
-            self.cloud_sprites.update()
+            if not self.is_inside_fairy_fountain:
+                self.visible_sprites.custom_draw(self.player,self.main_sound)
+                self.visible_sprites.update()
+                self.visible_sprites.enemy_update(self.player)
+                self.player_attack_logic()
+                self.player_defense_logic()
+                self.level_complete_update()
+                self.ui.display(self.player)
+                self.continuous_cloud_spawn()
+                self.cloud_sprites.update()
+                if not self.fairy_fountain_open:
+                    self.check_for_open_fairy_fountain()
+                else:
+                    self.check_for_entering_fairy_fountain()
+            else:
+                self.fairy_fountain_lvl.run()
+                self.check_for_exiting_fairy_fountain()
+
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

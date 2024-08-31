@@ -16,12 +16,13 @@ from level6 import Level6
 from level7 import Level7
 from level8 import Level8
 from endpage import EndPage
+from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.2.7"
-LAST_UPDATED_DATE = "8/29/24"
+VERSION = "2.2.9"
+LAST_UPDATED_DATE = "8/31/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, EndPage]
-# MASTER_LEVEL_LIST = [Level5]
+# MASTER_LEVEL_LIST = [Level4]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
@@ -40,7 +41,6 @@ class Game:
 		self.level_num = 0
 		self.health = 100
 		self.in_dev_mode = False
-
 		self.music_start_time = None
 		self.music_delay = 750
 
@@ -109,4 +109,3 @@ if __name__ == "__main__":
 # Level 4 - fairy fountain unlocks if you burst open crack in wall - can use either bomb flower or snail enemy rolling, water animations
 # Level 5 - shooting enemies, make it difficult to run against the wind, easier to run with
 # Level 6 - dialogue box artwork
-

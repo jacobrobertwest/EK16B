@@ -25,5 +25,7 @@ class Tile(pygame.sprite.Sprite):
             self.hitbox = self.rect.inflate(-100,-150)
         elif self.sprite_type == 'door':
             self.hitbox = self.rect.inflate(-30,-30)
+        elif self.sprite_type == 'boundary_no_hb':
+            self.hitbox = self.rect
         else:
             self.hitbox = self.rect.inflate(-10,-10)

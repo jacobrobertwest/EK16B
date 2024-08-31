@@ -217,7 +217,7 @@ class Level5(BaseLevel):
             self.player_attack_logic()
             self.projectile_attack_logic()
             self.player_defense_logic()
-            self.player_climbing_logic()
+            self.player_special_interactions_logic()
             self.level_complete_update()
             self.ui.display(self.player)
             self.continuous_cloud_spawn()

@@ -48,6 +48,10 @@ class Player(Entity):
             self.image = pygame.image.load('graphics/player/right_idle/idle_right.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
             self.status = 'right'
+        elif player_level == 'fairyfountain':
+            self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'up'
         else:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
@@ -88,7 +92,8 @@ class Player(Entity):
         # special interactions
         self.is_climbing = False
         self.is_interacting_with_npc = False
-        self.special_interactions_code = 0 # 1 = climbing_ladder, 2 = talking with NPC
+        self.special_interactions_code = 0 # 1 = climbing_ladder, 2 = talking with NPC, 3 = swimming
+        self.is_swimming = False
 
         # stats
         self.stats = {'health':100,'energy':60,'attack':10,'magic':4,'stamina':100, 'sprint_drain': 0.5, 'sprint_replenish':0.25}
@@ -102,6 +107,7 @@ class Player(Entity):
         self.oversprinting_status = False
         self.oversprint_time = None
         self.oversprint_cooldown = 2500
+        self.regenerating_health = False
 
         #damage timer
         self.vulnerable = True
@@ -111,7 +117,6 @@ class Player(Entity):
         self.in_dev_mode = in_dev_mode
         self.mode_change_time = 0
         self.mode_change_duration = 500
-
 
         #is dead
         self.is_dead = False
@@ -355,9 +360,14 @@ class Player(Entity):
             self.animation_speed = 0.1
         elif self.special_interactions_code == 2: # interacting with NPC
             self.is_interacting_with_npc = True
+        elif self.special_interactions_code == 3: # swimming
+            self.is_swimming = True
+            self.speed = 2.3
+            self.animation_speed = 0.1
         else:
             self.is_climbing = False
             self.is_interacting_with_npc = False
+            self.is_swimming = False
 
     def animate(self):
         animation = self.animations[self.status]
@@ -370,6 +380,8 @@ class Player(Entity):
         # set the image
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
+        if self.is_swimming:
+            self.image = self.image.subsurface((0,0,64,58))
 
         # flicker
         if not self.vulnerable:
@@ -390,6 +402,16 @@ class Player(Entity):
             self.mask_image = self.mask.to_surface(setcolor=(200,200,200,255),unsetcolor=(0,0,0,0))
             # self.mask_image.fill((100, 100, 100, 255))  # Dark grey color with 50% transparency
 
+    def fairy_health_regen(self):
+        self.regenerating_health = True
+
+    def gain_health_if_regenerating(self):
+        if self.regenerating_health:
+            if self.health < self.max_health:
+                self.health += 1
+            else:
+                self.regenerating_health = False
+
     def update(self):
         self.enforce_player_dev_mode()
         self.check_death()
@@ -400,3 +422,4 @@ class Player(Entity):
         self.animate()
         self.move(self.speed)
         self.update_mask()
+        self.gain_health_if_regenerating()

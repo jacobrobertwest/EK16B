@@ -7,7 +7,7 @@ class AnimationPlayer:
 			# magic
 			'flame': import_folder('graphics/particles/flame/frames'),
 			'aura': import_folder('graphics/particles/aura'),
-			'heal': import_folder('graphics/particles/heal/frames'),
+			'heal': import_folder('graphics/particles/heal'),
 			
 			# attacks 
 			'claw': import_folder('graphics/particles/claw'),
@@ -17,6 +17,7 @@ class AnimationPlayer:
 			'thunder': import_folder('graphics/particles/thunder'),
 
 			# monster deaths
+            'smoke': import_folder('graphics/particles/smoke'),
 			'squid': import_folder('graphics/particles/smoke_orange'),
 			'raccoon': import_folder('graphics/particles/raccoon'),
 			'spirit': import_folder('graphics/particles/nova'),
@@ -49,9 +50,21 @@ class AnimationPlayer:
     def create_slash_particles(self,pos,groups):
         animation_frames = self.frames['slash']
         ParticleEffect(pos,animation_frames,groups)
+
+    def create_smoke_particles(self,pos,groups):
+        animation_frames = self.frames['smoke']
+        ParticleEffect(pos,animation_frames,groups)
         
     def create_ghost_particles(self,pos,groups):
         animation_frames = self.frames['sparkle']
+        ParticleEffect(pos,animation_frames,groups)
+
+    def create_heal_particles(self,pos,groups):
+        animation_frames = self.frames['heal']
+        ParticleEffect(pos,animation_frames,groups)
+
+    def create_smoke_particles(self,pos,groups):
+        animation_frames = self.frames['smoke']
         ParticleEffect(pos,animation_frames,groups)
         
     def create_particles(self,particle_type,pos,groups):

@@ -162,7 +162,7 @@ class Level6(BaseLevel):
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
             self.player_defense_logic()
-            self.player_climbing_logic()
+            self.player_special_interactions_logic()
             self.level_complete_update()
             self.ui.display(self.player)
             # debug(f"({self.player.rect.x},{self.player.rect.y}) | BMP: ({self.blood_moon_x},{self.blood_moon_y})" )

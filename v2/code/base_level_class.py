@@ -20,6 +20,7 @@ class BaseLevel:
         self.display_surface = pygame.display.get_surface()
         self.player_health = health
         self.mode_at_start = in_dev_mode
+        self.special_interaction_sprites = pygame.sprite.Group()
 
         # shield sprites
         self.current_shield = None
@@ -77,12 +78,14 @@ class BaseLevel:
     def trigger_death_particles(self,pos,particle_type):
         self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
 
-    def player_climbing_logic(self):
+    def player_special_interactions_logic(self):
         if self.special_interaction_sprites:
             ladder_collision_sprites = pygame.sprite.spritecollide(self.player,self.special_interaction_sprites,False)
             if ladder_collision_sprites:
                 for target_sprite in ladder_collision_sprites:
                     if target_sprite.sprite_type == 'ladder':
                         self.player.special_interactions_code = 1
+                    if target_sprite.sprite_type == 'water':
+                        self.player.special_interactions_code = 3
             else:
                 self.player.special_interactions_code = 0

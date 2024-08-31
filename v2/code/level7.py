@@ -206,7 +206,7 @@ class Level7(BaseLevel):
                 self.visible_sprites.enemy_update(self.player)
                 self.player_attack_logic()
                 self.player_defense_logic()
-                self.player_climbing_logic()
+                self.player_special_interactions_logic()
                 self.level_complete_update()
                 self.ui.display(self.player)
             else:
@@ -218,7 +218,7 @@ class Level7(BaseLevel):
                     self.visible_sprites.enemy_update(self.player)
                     self.player_attack_logic()
                     self.player_defense_logic()
-                    self.player_climbing_logic()
+                    self.player_special_interactions_logic()
                     self.level_complete_update()
                     self.ui.display(self.player)
                 else:
