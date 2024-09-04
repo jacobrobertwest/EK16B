@@ -21,3 +21,8 @@ def import_folder(path):
                 image_surf = pygame.image.load(full_path).convert_alpha()
                 surface_list.append(image_surf)
     return surface_list
+
+def return_2pts_distance(point1,point2):
+    x1,y1 = point1
+    x2,y2 = point2
+    return ((x2-x1)**2 + (y2-y1)**2)**0.5

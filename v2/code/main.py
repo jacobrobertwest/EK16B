@@ -16,11 +16,12 @@ from level6 import Level6
 from level7 import Level7
 from level8 import Level8
 from endpage import EndPage
+from endpage2 import EndPage2
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.0"
-LAST_UPDATED_DATE = "8/31/24"
+VERSION = "2.3.1"
+LAST_UPDATED_DATE = "9/4/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, EndPage]
 # MASTER_LEVEL_LIST = [Level4]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
@@ -104,8 +105,13 @@ if __name__ == "__main__":
 	asyncio.run(Game().main())
 
 # TODO
+# Overall - add scoring system, add pausing system, breakable grass & boxes, better collision boundaries, figure out angled boundaries
 # Level 1 - foresty exterior artwork, move boulders more overlapping the edge of the boundary & path
 # Level 2 - make forest exterior overlaying everything
-# Level 4 - fairy fountain unlocks if you burst open crack in wall - can use either bomb flower or snail enemy rolling, water animations
-# Level 5 - shooting enemies, make it difficult to run against the wind, easier to run with
-# Level 6 - dialogue box artwork
+# Level 3 - 
+# Level 4 - finish water particle effects, make enemies shake when they collide with something
+# Level 5 - make it difficult to run against the wind, easier to run with, add water particle effects
+# Level 6 - 
+# Level 7 - dialogue box artwork, add more dialogue, ruins artwork, another room?, torch mechanics
+# Level 8 - add in deku babas, add artwork, finish music
+# End Page - update to new style, add rolling credits

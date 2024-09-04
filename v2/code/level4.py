@@ -2,8 +2,9 @@ import pygame
 from settings import *
 from tile import Tile
 from player import Player
+from random import randint
 from debug import debug
-from support import import_csv_layout, import_folder
+from support import import_csv_layout, import_folder, return_2pts_distance
 from random import choice
 from weapon import Weapon
 from ui import UI
@@ -14,6 +15,7 @@ from restart import Restart
 from shield import Shield
 from cloud import Cloud
 from random import randint
+from shaders import Shaders
 from enemy2 import SnailEnemy
 from base_level_class import BaseLevel
 
@@ -31,6 +33,14 @@ class Level4(BaseLevel):
         self.attackable_sprites = pygame.sprite.Group()
         self.current_shield = None
         self.shield_sprites = pygame.sprite.Group()
+
+        self.pond_sprites = pygame.sprite.Group()
+        self.particle_generation_zones = pygame.sprite.Group()
+
+        # pond particles
+        self.max_pond_particles = 25
+        self.pond_particles = pygame.sprite.Group()
+        self.base_pond_particle_full_alpha_duration = 1000
 
         self.snail_sprites = pygame.sprite.Group()
         self.fairy_fountain_open = False
@@ -98,6 +108,7 @@ class Level4(BaseLevel):
                             if col == '394':
                                 self.player = Player(
                                     (x,y),
+                                    # (1912,1178),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.player_health,
@@ -118,7 +129,40 @@ class Level4(BaseLevel):
                                     self.trigger_death_particles)
         breaker_surface = pygame.Surface((256,64))
         self.fairy_fountain_breaker = Tile((350,597),[self.breaker_sprites],sprite_type='breaker',surface=breaker_surface)
-        
+        self.create_pond_boundaries()
+        self.spawn_shaders()
+
+    def create_pond_boundaries(self):
+        # pond block rectangles 1 thru 5 top to bottom
+        pond_block_1 = pygame.Surface((2460-2210,80)) #
+        pond_block_2 = pygame.Surface((440,134)) #
+        pond_block_3 = pygame.Surface((701,249)) #
+        pond_block_4 = pygame.Surface((2590-2077,1370-1309))
+        pond_block_5 = pygame.Surface((2457-2144,1432-1370))
+        pond_particle_gen_zone = pygame.Surface((656,460))
+        Tile((2210,933),[self.obstacle_sprites,self.pond_sprites],sprite_type='boundary_no_hb',surface=pond_block_1)
+        Tile((2082,991),[self.obstacle_sprites,self.pond_sprites],sprite_type='boundary_no_hb',surface=pond_block_2)
+        Tile((2016,1060),[self.obstacle_sprites,self.pond_sprites],sprite_type='boundary_no_hb',surface=pond_block_3)
+        Tile((2077,1309),[self.obstacle_sprites,self.pond_sprites],sprite_type='boundary_no_hb',surface=pond_block_4)
+        Tile((2144,1370),[self.obstacle_sprites,self.pond_sprites],sprite_type='boundary_no_hb',surface=pond_block_5)
+        self.pond_generation_zone = Tile((2050,950),[self.particle_generation_zones],sprite_type='particle_spawn_zone',surface=pond_particle_gen_zone)
+
+    def spawn_shaders(self):
+        self.generate_next_pond_particles()
+
+    def generate_next_pond_particles(self):
+        while len(self.pond_particles) < self.max_pond_particles:
+            random_x = randint(self.pond_generation_zone.rect.left, self.pond_generation_zone.rect.right)
+            random_y = randint(self.pond_generation_zone.rect.top, self.pond_generation_zone.rect.bottom)
+            random_point = (random_x, random_y)
+            for pond_rect in self.pond_sprites:
+                if pond_rect.rect.collidepoint(random_point):
+                    for pt in self.pond_particles:
+                        if return_2pts_distance(pt.rect.topleft,random_point) < 70:
+                            break
+                    Shaders(random_point,[self.visible_sprites,self.pond_particles],shader_type='water1',randomize=True,fade=True,full_alpha_duration=self.base_pond_particle_full_alpha_duration)
+                    break
+
     def spawn_cloud(self):
         Cloud([self.visible_sprites, self.cloud_sprites])
         self.last_cloud_time = pygame.time.get_ticks()
@@ -201,6 +245,14 @@ class Level4(BaseLevel):
         self.is_inside_fairy_fountain = False
         self.fairy_fountain_lvl = None
 
+        self.pond_sprites = pygame.sprite.Group()
+        self.particle_generation_zones = pygame.sprite.Group()
+
+        # pond particles
+        self.max_pond_particles = 25
+        self.pond_particles = pygame.sprite.Group()
+        self.base_pond_particle_full_alpha_duration = 1000
+
         # cloud sprites
         self.cloud_sprites = pygame.sprite.Group()
         self.last_cloud_time = None
@@ -237,6 +289,7 @@ class Level4(BaseLevel):
                 self.ui.display(self.player)
                 self.continuous_cloud_spawn()
                 self.cloud_sprites.update()
+                self.generate_next_pond_particles()
                 if not self.fairy_fountain_open:
                     self.check_for_open_fairy_fountain()
                 else:
@@ -244,6 +297,7 @@ class Level4(BaseLevel):
             else:
                 self.fairy_fountain_lvl.run()
                 self.check_for_exiting_fairy_fountain()
+        # debug(len(self.pond_particles))
 
 
 class YSortCameraGroup(pygame.sprite.Group):

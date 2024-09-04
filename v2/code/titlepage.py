@@ -93,6 +93,8 @@ class TitlePage(BaseLevel):
             self.chosen_level = 7
         if keys[pygame.K_8]:
             self.chosen_level = 8
+        if keys[pygame.K_9]:
+            self.chosen_level = 9
 
         if self.chosen_level > 0:
             self.hopping_levels = True
