@@ -37,12 +37,14 @@ class Level1(BaseLevel):
             'boundary': import_csv_layout('map/map_FloorBlocks.csv'),
             'grass': import_csv_layout('map/map_Grass.csv'),
             'object': import_csv_layout('map/map_Objects.csv'),
-            'entities': import_csv_layout('map/map_Entities.csv')
+            'entities': import_csv_layout('map/map_Entities.csv'),
+            'border': import_csv_layout('map/map_Border.csv')
         }
 
         graphics = {
             'grass': import_folder('graphics/grass'),
-            'objects': import_folder('graphics/objects')
+            'objects': import_folder('graphics/objects'),
+            'borders': import_folder('graphics/border_tiles/level1')
         }
 
         for style,layout in layouts.items():
@@ -92,6 +94,10 @@ class Level1(BaseLevel):
                                     self.obstacle_sprites,
                                     self.damage_player,
                                     self.trigger_death_particles)
+                        if style == 'border':
+                            surf_border = graphics['borders'][int(col)]
+                            Tile((x,y),[self.visible_sprites],'border_tile',surf_border)
+
 
     def player_attack_logic(self):
         if self.attack_sprites:
@@ -178,6 +184,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
+        # creating the top layer
+        self.top_layer_surf = pygame.image.load('graphics/tilemap/ground1_toplayer.png').convert_alpha()
+        self.top_layer_rect = self.top_layer_surf.get_rect(topleft=(0,0))
+
     
     def custom_draw(self,player):
         # getting the offset
@@ -195,6 +205,8 @@ class YSortCameraGroup(pygame.sprite.Group):
             # image actually gets rastered so that its not directly inside the rectangle
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image,offset_pos)
+
+        self.display_surface.blit(self.top_layer_surf,floor_offset_pos)
 
         self.night_surface = pygame.Surface((640,360),pygame.SRCALPHA)
         self.night_surface.fill((19,24,98,75))
