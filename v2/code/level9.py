@@ -85,6 +85,7 @@ class Level9(BaseLevel):
                             if col == '394':
                                 self.player = Player(
                                     (x,y),
+                                    # (408,780),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.player_health,
@@ -97,8 +98,7 @@ class Level9(BaseLevel):
                             elif col == '601':
                                 pando_surf = pygame.image.load('graphics/pando.png').convert_alpha()
                                 self.pando = Tile((x,y),[self.visible_sprites,self.obstacle_sprites],sprite_type='pando',surface=pando_surf)
-                                pando_hb_surf = pygame.Surface(self.pando.hitbox.size)
-                                # Tile(self.pando.hitbox.topleft,[self.visible_sprites],sprite_type='',surface=pando_hb_surf)
+        Tile((192,235),[self.obstacle_sprites],sprite_type='exit')        
 
     def player_attack_logic(self):
         if self.attack_sprites:

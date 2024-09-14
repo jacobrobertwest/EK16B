@@ -37,7 +37,7 @@ class FairyFountain(BaseLevel):
         self.player_level_code = 'fairyfountain'
 
         self.player_starting_pos = (471,932)
-
+        self.t = 0
         # sprite setup
         self.create_map()
 
@@ -59,9 +59,9 @@ class FairyFountain(BaseLevel):
             in_dev_mode = self.mode_at_start
         )
         self.establish_boundaries()
-        Fairy((480,437),[self.visible_sprites],self.player,self.obstacle_sprites,None)
-        Fairy((334,437),[self.visible_sprites],self.player,self.obstacle_sprites,None,1)
-        Fairy((579,358),[self.visible_sprites],self.player,self.obstacle_sprites,None,2)
+        Fairy((480,437),[self.visible_sprites],self.player,self.obstacle_sprites,None,1)
+        self.fairy = Fairy((334,437),[self.visible_sprites],self.player,self.obstacle_sprites,None,2)
+        Fairy((579,358),[self.visible_sprites],self.player,self.obstacle_sprites,None,3)
 
     def establish_boundaries(self):
         # exit surface
@@ -191,8 +191,7 @@ class FairyFountain(BaseLevel):
             self.ui.display(self.player)
             self.check_for_fairy_interaction()
             self.restart_particles_timer()
-            # debug(pygame.mouse.get_pos())
-            # debug(self.fairy.direction)
+            # debug(self.fairy.direction_vector)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

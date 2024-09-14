@@ -21,10 +21,10 @@ from endpage2 import EndPage2
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.4"
+VERSION = "2.3.5"
 LAST_UPDATED_DATE = "9/14/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage]
-# MASTER_LEVEL_LIST = [Level9]
+# MASTER_LEVEL_LIST = [Level4]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
@@ -36,7 +36,7 @@ class Game:
 	def __init__(self):
 		pygame.init()
 		self.screen = pygame.display.set_mode((WIDTH,HEIGTH),pygame.DOUBLEBUF)
-		pygame.display.set_caption('ELLIE KEMPER: 16-Bit Edition (v2)')
+		pygame.display.set_caption('The Legend of Ellie Kemper - v' + VERSION)
 		pygame.display.set_icon(pygame.image.load('graphics/logo_ek16b.png'))
 		
 		self.clock = pygame.time.Clock()
@@ -106,6 +106,7 @@ if __name__ == "__main__":
 	asyncio.run(Game().main())
 
 # TODO
+# technical debt / glitches - shot aiming for shooting enemy is off
 # Overall - add scoring system, add pausing system, breakable grass & boxes, better collision boundaries, figure out angled boundaries
 # Level 1 - move boulders more overlapping the edge of the boundary & path
 # Level 2 - make forest exterior overlaying everything

@@ -114,6 +114,8 @@ class Player(Entity):
         self.hurt_time = None
         self.invulnerability_duration = 500
 
+        self.is_having_special_interaction = False
+
         self.in_dev_mode = in_dev_mode
         self.mode_change_time = 0
         self.mode_change_duration = 500
@@ -223,13 +225,13 @@ class Player(Entity):
                     self.stamina = self.stats['stamina']
 
             # attack input
-            if keys[pygame.K_SPACE] and not self.attacking:
+            if keys[pygame.K_SPACE] and not self.attacking and not self.defending and not self.is_having_special_interaction:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
 
             # shield input
-            if keys[pygame.K_c] and not self.defending and not self.attacking:
+            if keys[pygame.K_c] and not self.defending and not self.attacking and not self.is_having_special_interaction:
                 self.defending = True
                 self.defend_time = pygame.time.get_ticks()
                 self.create_shield()
@@ -354,17 +356,20 @@ class Player(Entity):
             self.is_dead = True
 
     def check_special_interactions(self):
-        if self.special_interactions_code == 1: # climbing special interaction
-            self.is_climbing = True
-            self.speed = 2
-            self.animation_speed = 0.1
-        elif self.special_interactions_code == 2: # interacting with NPC
-            self.is_interacting_with_npc = True
-        elif self.special_interactions_code == 3: # swimming
-            self.is_swimming = True
-            self.speed = 2.3
-            self.animation_speed = 0.1
+        if self.special_interactions_code > 0:
+            self.is_having_special_interaction = True
+            if self.special_interactions_code == 1: # climbing special interaction
+                self.is_climbing = True
+                self.speed = 2
+                self.animation_speed = 0.1
+            elif self.special_interactions_code == 2: # interacting with NPC
+                self.is_interacting_with_npc = True
+            elif self.special_interactions_code == 3: # swimming
+                self.is_swimming = True
+                self.speed = 2.3
+                self.animation_speed = 0.1
         else:
+            self.is_having_special_interaction = False
             self.is_climbing = False
             self.is_interacting_with_npc = False
             self.is_swimming = False

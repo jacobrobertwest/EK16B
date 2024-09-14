@@ -43,6 +43,9 @@ class Level4(BaseLevel):
         self.base_pond_particle_full_alpha_duration = 1000
 
         self.snail_sprites = pygame.sprite.Group()
+        self.fairy_fountain_opening_triggered = False
+        self.fairy_fountain_opening_buffer_time = 300
+        self.fairy_fountain_opening_triggered_time = None
         self.fairy_fountain_open = False
         # fairy fountain attributes
         self.is_inside_fairy_fountain = False
@@ -202,17 +205,20 @@ class Level4(BaseLevel):
             self.spawn_cloud()
 
     def check_for_open_fairy_fountain(self):
-        if not self.fairy_fountain_open:
+        if not self.fairy_fountain_opening_triggered:
             if self.snail_sprites:
                 for snail in self.snail_sprites:
                     if self.fairy_fountain_breaker.rect.colliderect(snail.hitbox):
-                        self.fairy_fountain_open = True
+                        self.fairy_fountain_opening_triggered = True
+                        self.fairy_fountain_opening_triggered_time = pygame.time.get_ticks()
                         fairy_fountain_door_surf = pygame.image.load('graphics/tilemap/fairyfountain_entrance.png').convert_alpha()
                         self.fairy_fountain_door = Tile((459,597),[self.visible_sprites,self.special_interaction_sprites],sprite_type='door',surface=fairy_fountain_door_surf)
                         self.animation_player.create_smoke_particles(self.fairy_fountain_door.rect.center,[self.visible_sprites])
+        elif pygame.time.get_ticks() - self.fairy_fountain_opening_triggered_time >= self.fairy_fountain_opening_buffer_time:
+            self.fairy_fountain_open = True
 
     def check_for_entering_fairy_fountain(self):
-        if self.player.hitbox.colliderect(self.fairy_fountain_door.hitbox):
+        if self.player.hitbox.colliderect(self.fairy_fountain_door.hitbox) and self.fairy_fountain_open:
             self.is_inside_fairy_fountain = True
             self.fairy_fountain_lvl = FairyFountain(self.player.health,self.player.in_dev_mode)
             self.main_sound.stop()
