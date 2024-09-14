@@ -15,15 +15,16 @@ from level5 import Level5
 from level6 import Level6
 from level7 import Level7
 from level8 import Level8
+from level9 import Level9
 from endpage import EndPage
 from endpage2 import EndPage2
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.2"
-LAST_UPDATED_DATE = "9/5/24"
-MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, EndPage]
-# MASTER_LEVEL_LIST = [Level4]
+VERSION = "2.3.4"
+LAST_UPDATED_DATE = "9/14/24"
+MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage]
+# MASTER_LEVEL_LIST = [Level9]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
@@ -106,12 +107,13 @@ if __name__ == "__main__":
 
 # TODO
 # Overall - add scoring system, add pausing system, breakable grass & boxes, better collision boundaries, figure out angled boundaries
-# Level 1 - foresty exterior artwork, move boulders more overlapping the edge of the boundary & path
+# Level 1 - move boulders more overlapping the edge of the boundary & path
 # Level 2 - make forest exterior overlaying everything
 # Level 3 - 
 # Level 4 - finish water particle effects, make enemies shake when they collide with something
 # Level 5 - make it difficult to run against the wind, easier to run with, add water particle effects
 # Level 6 - 
 # Level 7 - dialogue box artwork, add more dialogue, ruins artwork, another room?, torch mechanics
-# Level 8 - add in deku babas, add artwork, finish music
-# End Page - update to new style, add rolling credits
+# Level 8 - add in deku babas, add artwork
+# Level 9 - 
+# End Page - update to new style

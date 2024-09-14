@@ -27,5 +27,7 @@ class Tile(pygame.sprite.Sprite):
             self.hitbox = self.rect.inflate(-30,-30)
         elif self.sprite_type == 'boundary_no_hb':
             self.hitbox = self.rect
+        elif self.sprite_type == 'pando':
+            self.hitbox = self.rect.inflate(-1000,-500)
         else:
             self.hitbox = self.rect.inflate(-10,-10)

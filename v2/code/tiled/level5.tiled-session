@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "starry night texture.tsx",
+    "activeFile": "boundary.tsx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -16,8 +16,8 @@
             "scale": 0.2374,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1375.3159224936815,
-                "y": 724.5155855096881
+                "x": 1531.1710193765796,
+                "y": 1019.3765796124683
             }
         },
         "level5map.tsx": {
@@ -41,8 +41,7 @@
     "openFiles": [
         "level5.tmx",
         "level5map.tsx",
-        "boundary.tsx",
-        "starry night texture.tsx"
+        "boundary.tsx"
     ],
     "project": "level5.tiled-project",
     "recentFiles": [
