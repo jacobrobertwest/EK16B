@@ -80,7 +80,7 @@ class Projectile(pygame.sprite.Sprite):
         self.image = pygame.Surface((10,10))
         self.image.fill((255,0,0))
         self.rect = self.image.get_rect(center = pos)
-        self.direction = direction.rotate(10)
+        self.direction = direction.rotate(7)
         self.speed = 5
         self.sprite_type = 'projectile'
         self.distance_from_player = None
