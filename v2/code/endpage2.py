@@ -119,7 +119,7 @@ class EndPage2(BaseLevel):
         mission_statement_font = 'notes'
         mission_statement_y = 180
         mission_statement_buffer = 20
-        self.display_line_of_text('My MO for art projects has historically consisted of "binging" in shorts bursts of', mission_statement_font,mission_statement_y)
+        self.display_line_of_text('My MO for art projects has historically consisted of "binging" in short bursts of', mission_statement_font,mission_statement_y)
         self.display_line_of_text("creativity that begin & end quickly. While I've thoroughly enjoyed and become very", mission_statement_font,mission_statement_y+(mission_statement_buffer*1))
         self.display_line_of_text("comfortable in this legacy approach, I've always wanted to learn how to not become", mission_statement_font,mission_statement_y+(mission_statement_buffer*2))
         self.display_line_of_text("so hastily bored of the process. Development of this game thus began as an attempt to", mission_statement_font,mission_statement_y+(mission_statement_buffer*3))
