@@ -17,7 +17,7 @@ FUTURA_FONT = 'font/Futura.ttf'
 FUTURA_CONDENSED = 'font/FuturaCondensed.ttf'
 FUTURA_CONDENSED_BOLD = 'font/FuturaCEB.ttf'
 FUTURA_HEAVY_FONT = 'font/Futura Heavy.otf'
-SHERWOOD_FONT = 'font/SHERWOOD.ttf'
+SHERWOOD_FONT = 'font/Sherwood.ttf'
 UI_FONT_SIZE = 18
 
 # general colors

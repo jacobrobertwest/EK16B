@@ -115,7 +115,7 @@ if __name__ == "__main__":
 # Level 3 - 
 # Level 4 - finish water particle effects, make enemies shake when they collide with something
 # Level 5 - make it difficult to run against the wind, easier to run with, add water particle effects
-# Level 6 - 
+# Level 6 - make moon actually waning
 # Level 7 - dialogue box artwork, add more dialogue, ruins artwork, another room?, torch mechanics
 # Level 8 - add in deku babas, add artwork
 # Level 9 - 

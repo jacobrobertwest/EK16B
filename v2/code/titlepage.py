@@ -95,9 +95,17 @@ class TitlePage(BaseLevel):
             self.chosen_level = 8
         if keys[pygame.K_9]:
             self.chosen_level = 9
+        if self.chosen_level == 1:
+            if keys[pygame.K_0]:
+                self.chosen_level = 10
+
+        if keys[pygame.K_BACKSPACE]:
+            self.chosen_level = 0
 
         if self.chosen_level > 0:
             self.hopping_levels = True
+        else:
+            self.hopping_levels = False
 
     def display(self):
         self.crossfade()

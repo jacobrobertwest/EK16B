@@ -365,6 +365,8 @@ class Player(Entity):
             if self.special_interactions_code == 1: # climbing special interaction
                 self.is_climbing = True
                 self.speed = 2
+                if self.in_dev_mode:
+                    self.speed = 6
                 self.animation_speed = 0.1
             elif self.special_interactions_code == 2: # interacting with NPC
                 self.is_interacting_with_npc = True

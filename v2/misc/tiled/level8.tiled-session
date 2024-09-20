@@ -1,0 +1,66 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "ground8.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "Objects.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "boundary.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "ground8.tmx": {
+            "scale": 0.2003,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 716.4253619570643,
+                "y": 1068.3974038941587
+            }
+        },
+        "ground8.tsx": {
+            "scaleInDock": 0.0438,
+            "scaleInEditor": 1
+        },
+        "object_tiles.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/Users/jacob/Documents/EK16B/v2/code/map/level9",
+    "last.imagePath": "/Users/jacob/Documents/EK16B/v2/code/graphics/tilemap",
+    "map.height": 48,
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 32,
+    "openFiles": [
+        "ground8.tmx",
+        "ground8.tsx",
+        "boundary.tsx",
+        "Objects.tsx",
+        "object_tiles.tsx"
+    ],
+    "project": "level8.tiled-project",
+    "recentFiles": [
+        "object_tiles.tsx",
+        "Objects.tsx",
+        "boundary.tsx",
+        "ground8.tsx",
+        "ground8.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}
