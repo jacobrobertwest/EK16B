@@ -21,15 +21,16 @@ from endpage2 import EndPage2
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.5"
-LAST_UPDATED_DATE = "9/14/24"
-MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage]
-# MASTER_LEVEL_LIST = [Level4]
+VERSION = "2.3.6"
+LAST_UPDATED_DATE = "9/20/24"
+MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage2]
+# MASTER_LEVEL_LIST = [EndPage2]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
 	"updated":LAST_UPDATED_DATE,
-	"lvls":PLAYABLE_LEVELS
+	"lvls":PLAYABLE_LEVELS,
+	"finderCount":0
 }
 
 class Game:
@@ -47,13 +48,13 @@ class Game:
 		self.music_delay = 750
 
 	def create_level(self, level_num):
-        # Dynamically create level based on level number
 		levels = MASTER_LEVEL_LIST
-		# levels = [Level7]
 		if level_num < len(levels):
 			level_class = levels[level_num]
 			if level_class == TitlePage:
 				return level_class(self.health, self.in_dev_mode, METADATA)
+			elif level_class == EndPage2:
+				return level_class(self.health, self.in_dev_mode, METADATA["finderCount"])
 			else:
 				return level_class(self.health, self.in_dev_mode)
 		return None
@@ -108,6 +109,7 @@ if __name__ == "__main__":
 # TODO
 # technical debt / glitches - shot aiming for shooting enemy is off
 # Overall - add scoring system, add pausing system, breakable grass & boxes, better collision boundaries, figure out angled boundaries
+#           make it so that if player goes too far away from starting point, it moves them back to starting point
 # Level 1 - move boulders more overlapping the edge of the boundary & path
 # Level 2 - make forest exterior overlaying everything
 # Level 3 - 
@@ -117,4 +119,4 @@ if __name__ == "__main__":
 # Level 7 - dialogue box artwork, add more dialogue, ruins artwork, another room?, torch mechanics
 # Level 8 - add in deku babas, add artwork
 # Level 9 - 
-# End Page - update to new style
+# End Page - 

@@ -39,6 +39,8 @@ class Level5(BaseLevel):
         self.cloud_mod_cieling = 1000
         self.cloud_modifier = randint(0,self.cloud_mod_max)
 
+        self.projectile_list = []
+
         # sprite setup
         self.create_map()
 
@@ -178,7 +180,7 @@ class Level5(BaseLevel):
         if not self.projectile:
             self.projectile = Projectile(pos, direction, [self.current_projectiles,self.visible_sprites], self.obstacle_sprites, self.player, self.damage_player,10)
         else:
-            Projectile(pos, direction, [self.current_projectiles,self.visible_sprites], self.obstacle_sprites, self.player, self.damage_player,10)
+            self.projectile = Projectile(pos, direction, [self.current_projectiles,self.visible_sprites], self.obstacle_sprites, self.player, self.damage_player,10)
 
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
@@ -223,7 +225,8 @@ class Level5(BaseLevel):
             self.continuous_cloud_spawn()
             self.cloud_sprites.update()
             # if self.projectile:
-            #     debug(self.projectile.distance_from_player,mult=2)
+            #     debug(self.projectile.direction,mult=1)
+            #     debug(self.player.rect.center,mult=2)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

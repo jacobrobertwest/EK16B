@@ -48,6 +48,10 @@ class Player(Entity):
             self.image = pygame.image.load('graphics/player/right_idle/idle_right.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
             self.status = 'right'
+        elif player_level == 9:
+            self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
+            rect_offset = pygame.math.Vector2(0,0)
+            self.status = 'up'
         elif player_level == 'fairyfountain':
             self.image = pygame.image.load('graphics/player/up_idle/idle_up.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
