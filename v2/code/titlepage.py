@@ -15,7 +15,9 @@ class TitlePage(BaseLevel):
         self.bg_img_3 = pygame.image.load('graphics/titlepage/bg3.png')
         self.bg_img_list = [self.bg_img_1, self.bg_img_2, self.bg_img_3]
 
-        self.logo_img = pygame.image.load('graphics/titlepage/logo_overlay.png')
+        # self.logo_img = pygame.image.load('graphics/titlepage/logo_overlay.png')
+        self.logo_img_text = pygame.image.load('graphics/titlepage/logo_overlay_text.png')
+        self.logo_img_fractal = pygame.image.load('graphics/titlepage/logo_overlay_fractal.png')
         # self.bg_img_list = [1,2,3]
         self.current_bg = choice(self.bg_img_list)
         self.next_bg = self.get_next_bg()
@@ -23,6 +25,7 @@ class TitlePage(BaseLevel):
         # Alpha values for crossfading
         self.current_alpha = 255
         self.next_alpha = 0
+        self.rotation = 0
 
         # Crossfade duration and timer
         self.static_duration = 1500
@@ -31,7 +34,7 @@ class TitlePage(BaseLevel):
         self.crossfade_start_time = None
         self.bg_changing = False
 
-        self.main_sound = pygame.mixer.Sound('audio/4.ogg')
+        self.main_sound = pygame.mixer.Sound('audio/title.ogg')
         self.main_sound.set_volume(0.3)
         self.game_over = False
         self.chosen_level = 0
@@ -44,6 +47,8 @@ class TitlePage(BaseLevel):
         self.brought_font = pygame.font.Font(FUTURA_FONT,16)
         self.enter_font = pygame.font.Font(FUTURA_CONDENSED_BOLD,22)
         self.hopping_levels = False
+        self.rotation_delay = 5000
+        self.start_time = pygame.time.get_ticks()
 
 
     def get_next_bg(self):
@@ -117,9 +122,17 @@ class TitlePage(BaseLevel):
         current_bg_surf.set_alpha(self.current_alpha)
         self.display_surface.blit(current_bg_surf, (0, 0))
 
-        self.display_surface.blit(self.logo_img, (0, -30))
+        logo_img_fractal_rotated = pygame.transform.rotate(self.logo_img_fractal, self.rotation % 360)
+        rotated_rect = logo_img_fractal_rotated.get_rect(center=(159, 142))
+        
+        self.display_surface.blit(self.logo_img_text, (254, -30))
+        self.display_surface.blit(logo_img_fractal_rotated, rotated_rect)
+        # self.display_surface.blit(self.logo_img_fractal, (65, 48))
+        # print(self.logo_img_fractal.get_rect().center)
 
-        updated_surf = self.notes_font.render(f"v{self.metadata['version']} - LAST UPDATED: {self.metadata['updated']}  |  PLAYABLE LEVELS: {self.metadata['lvls']} | WORKS BEST ON FIREFOX (NO SAFARI SUPPORT)", True, "white",True)
+        # self.display_surface.blit(self.logo_img, (0, -30))
+
+        updated_surf = self.notes_font.render(f"v{self.metadata['version']} - LAST UPDATED: {self.metadata['updated']}  |  PLAYABLE LEVELS: {self.metadata['lvls']}  |  WORKS BEST ON FIREFOX (NO SAFARI SUPPORT)", True, "white",True)
         updated_rect = updated_surf.get_rect(midleft=(10,20))
         bg_rect = updated_surf.get_rect(midleft = (10,20))
         pygame.draw.rect(self.display_surface,'Black',bg_rect)
@@ -150,12 +163,15 @@ class TitlePage(BaseLevel):
         if sin(pygame.time.get_ticks()/350) > 0:
             self.display_surface.blit(enter_surf,enter_rect)
 
-
+        if pygame.time.get_ticks() - self.start_time > self.rotation_delay:
+            self.rotation -= 0.25
+            if self.rotation <= -36000:
+                self.rotation = 0
 
     def run(self):
         self.input()
         self.display()
-        # debug(self.current_alpha,x=10,y=300)
+        # debug(self.rotation,x=10,y=300)
         if self.hopping_levels:
             debug(f'LVL:{self.chosen_level}',x=410,y=330,font_size=20)
 

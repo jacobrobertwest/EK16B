@@ -17,13 +17,12 @@ from level7 import Level7
 from level8 import Level8
 from level9 import Level9
 from endpage import EndPage
-from endpage2 import EndPage2
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.6"
-LAST_UPDATED_DATE = "9/20/24"
-MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage2]
+VERSION = "2.3.7"
+LAST_UPDATED_DATE = "9/21/24"
+MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage]
 # MASTER_LEVEL_LIST = [EndPage2]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
@@ -53,7 +52,7 @@ class Game:
 			level_class = levels[level_num]
 			if level_class == TitlePage:
 				return level_class(self.health, self.in_dev_mode, METADATA)
-			elif level_class == EndPage2:
+			elif level_class == EndPage:
 				return level_class(self.health, self.in_dev_mode, METADATA["finderCount"])
 			else:
 				return level_class(self.health, self.in_dev_mode)
