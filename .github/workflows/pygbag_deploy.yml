@@ -20,8 +20,12 @@ jobs:
             echo "Attempting to build the game"
             python -m pygbag --build $GITHUB_WORKSPACE/v2/code/main.py
             echo "Successfully build the game and complied to WebAssembly"
+            
+    - name: replace default favicon
+      run: |
+            cp $GITHUB_WORKSPACE/v2/favicon.png $GITHUB_WORKSPACE/v2/code/build/web/favicon.png
 
-    - name : "Upload to GitHub pages branch gh-pages"
+    - name: "Upload to GitHub pages branch gh-pages"
       uses: JamesIves/github-pages-deploy-action@4.1.7
       with:
         branch: gh-pages
