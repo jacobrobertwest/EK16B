@@ -8,7 +8,7 @@ from debug import debug
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
 class Player(Entity):
-    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0,in_dev_mode=False):
+    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0,in_flying_mode=False,in_dev_mode=False):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
         if player_level == 0:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
@@ -121,7 +121,7 @@ class Player(Entity):
         self.in_dev_mode = in_dev_mode
         self.mode_change_time = 0
         self.mode_change_duration = 500
-
+        self.is_flying = in_flying_mode
         #is dead
         self.is_dead = False
 
@@ -132,7 +132,8 @@ class Player(Entity):
         'right_idle': [],'left_idle': [],'up_idle': [],'down_idle': [],
         'right_attack': [],'left_attack': [],'up_attack': [],'down_attack': [],
         'right_defend': [],'left_defend': [],'up_defend': [],'down_defend': [],
-        'right_climbing': [],'left_climbing': [],'up_climbing': [],'down_climbing': []
+        'right_climbing': [],'left_climbing': [],'up_climbing': [],'down_climbing': [], 'up_flying': [],
+        'down_flying': [],'left_flying': [],'right_flying': [], 'idle_flying': []
         }
         for animation in self.animations.keys():
             folder_path = character_path + animation
@@ -143,6 +144,8 @@ class Player(Entity):
             if self.health < self.max_health:
                 self.health += 1
             debug("DEV",x=10,y=335)
+
+    
 
     def input(self):
         if not self.attacking and not self.defending:
@@ -178,68 +181,73 @@ class Player(Entity):
                 self.in_dev_mode = False
                 self.mode_change_time = pygame.time.get_ticks()
             
-            # BASE SPEED LEVELS
-            self.base_speed = 4
-            self.sprint_buff = 0.5
-            self.sprint_speed = self.base_speed * (1 + self.sprint_buff)
-            self.tired_speed = self.base_speed * (1 - self.sprint_buff)
+            if not self.is_flying:
+                # BASE SPEED LEVELS
+                self.base_speed = 4
+                self.sprint_buff = 0.5
+                self.sprint_speed = self.base_speed * (1 + self.sprint_buff)
+                self.tired_speed = self.base_speed * (1 - self.sprint_buff)
 
-            self.base_animation_speed = 0.15
-            self.sprint_animation_buff = 0.33
-            self.sprint_animation_speed = self.base_animation_speed * (1 + self.sprint_animation_buff)
-            self.tired_animation_speed = self.base_animation_speed * (1 - self.sprint_animation_buff)
+                self.base_animation_speed = 0.15
+                self.sprint_animation_buff = 0.33
+                self.sprint_animation_speed = self.base_animation_speed * (1 + self.sprint_animation_buff)
+                self.tired_animation_speed = self.base_animation_speed * (1 - self.sprint_animation_buff)
 
-            if self.in_dev_mode:
-                self.base_speed *= 3
-                self.sprint_buff *= 3
-                self.base_animation_speed *= 3
-                self.sprint_animation_buff *= 3
-            # run input
-            if keys[pygame.K_LSHIFT] and (keys[pygame.K_UP] or keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]): # if shift is being held
-                if self.stamina > 0: 
+                if self.in_dev_mode:
+                    self.base_speed *= 3
+                    self.sprint_buff *= 3
+                    self.base_animation_speed *= 3
+                    self.sprint_animation_buff *= 3
+                # run input
+                if keys[pygame.K_LSHIFT] and (keys[pygame.K_UP] or keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]): # if shift is being held
+                    if self.stamina > 0: 
+                        if not self.oversprinting_status:
+                            self.speed = self.sprint_speed
+                            self.animation_speed = self.sprint_animation_speed
+                            self.stamina -= self.sprint_drain
+                        else:
+                            self.speed = self.tired_speed
+                            self.animation_speed = self.tired_animation_speed
+                            if self.stamina < self.stats['stamina']:
+                                self.stamina += self.sprint_replenish
+                            else:
+                                self.stamina = self.stats['stamina']
+                    else:
+                        self.oversprinting_status = True
+                        self.oversprint_time = pygame.time.get_ticks()
+                        self.speed = self.tired_speed
+                        self.animation_speed = self.tired_animation_speed
+
+                else:
                     if not self.oversprinting_status:
-                        self.speed = self.sprint_speed
-                        self.animation_speed = self.sprint_animation_speed
-                        self.stamina -= self.sprint_drain
+                        self.speed = self.base_speed
+                        self.animation_speed = self.base_animation_speed
                     else:
                         self.speed = self.tired_speed
                         self.animation_speed = self.tired_animation_speed
-                        if self.stamina < self.stats['stamina']:
-                            self.stamina += self.sprint_replenish
-                        else:
-                            self.stamina = self.stats['stamina']
-                else:
-                    self.oversprinting_status = True
-                    self.oversprint_time = pygame.time.get_ticks()
-                    self.speed = self.tired_speed
-                    self.animation_speed = self.tired_animation_speed
+                    if self.stamina < self.stats['stamina']:
+                        self.stamina += self.sprint_replenish
+                    else:
+                        self.stamina = self.stats['stamina']
 
+                # attack input
+                if keys[pygame.K_SPACE] and not self.attacking and not self.defending and not self.is_having_special_interaction:
+                    self.attacking = True
+                    self.attack_time = pygame.time.get_ticks()
+                    self.create_attack()
+
+                # shield input
+                if keys[pygame.K_c] and not self.defending and not self.attacking and not self.is_having_special_interaction:
+                    self.defending = True
+                    self.defend_time = pygame.time.get_ticks()
+                    self.create_shield()
+            elif self.is_flying:
+                self.speed = 5
+                self.animation_speed = 0.1
+                pass
             else:
-                if not self.oversprinting_status:
-                    self.speed = self.base_speed
-                    self.animation_speed = self.base_animation_speed
-                else:
-                    self.speed = self.tired_speed
-                    self.animation_speed = self.tired_animation_speed
-                if self.stamina < self.stats['stamina']:
-                    self.stamina += self.sprint_replenish
-                else:
-                    self.stamina = self.stats['stamina']
-
-            # attack input
-            if keys[pygame.K_SPACE] and not self.attacking and not self.defending and not self.is_having_special_interaction:
-                self.attacking = True
-                self.attack_time = pygame.time.get_ticks()
-                self.create_attack()
-
-            # shield input
-            if keys[pygame.K_c] and not self.defending and not self.attacking and not self.is_having_special_interaction:
-                self.defending = True
-                self.defend_time = pygame.time.get_ticks()
-                self.create_shield()
-        else:
-            self.direction.x = 0
-            self.direction.y = 0
+                self.direction.x = 0
+                self.direction.y = 0
     
     def get_status(self):
         if self.is_climbing:
@@ -249,6 +257,11 @@ class Player(Entity):
                 self.status = self.status.replace('_idle','_climbing')
             elif not '_climbing' in self.status:
                 self.status = self.status + '_climbing'
+        elif self.is_flying:
+            if self.direction.x == 0 and self.direction.y == 0:
+                self.status = 'idle_flying'
+            else:
+                self.status = self.status + '_flying'
         else:
             if '_climbing' in self.status:
                 self.status = self.status.replace('_climbing','')

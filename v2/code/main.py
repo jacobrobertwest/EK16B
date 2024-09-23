@@ -16,14 +16,15 @@ from level6 import Level6
 from level7 import Level7
 from level8 import Level8
 from level9 import Level9
+from level10 import Level10
 from endpage import EndPage
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.7"
-LAST_UPDATED_DATE = "9/21/24"
-MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, EndPage]
-# MASTER_LEVEL_LIST = [EndPage2]
+VERSION = "2.3.8"
+LAST_UPDATED_DATE = "9/22/24"
+MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10, EndPage]
+# MASTER_LEVEL_LIST = [Level10]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
