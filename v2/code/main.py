@@ -21,8 +21,8 @@ from endpage import EndPage
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.3.8"
-LAST_UPDATED_DATE = "9/22/24"
+VERSION = "2.3.9"
+LAST_UPDATED_DATE = "9/23/24"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10, EndPage]
 # MASTER_LEVEL_LIST = [Level10]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2

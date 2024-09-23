@@ -107,12 +107,10 @@ class Level10(BaseLevel):
             self.player_special_interactions_logic()
             self.level_complete_update()
             self.ui.display(self.player)
-            # debug(self.player.status)
+            # debug(self.loftwing.status)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
-        # general setup of all the stuff we need
-        # initialize parent class
         super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_size()[0] // 2
