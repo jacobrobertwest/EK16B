@@ -19,7 +19,7 @@ from base_level_class import BaseLevel
 class Level10(BaseLevel):
     def __init__(self,health,in_dev_mode):
         super().__init__(health,in_dev_mode)
-        
+        self.level_complete_tile_count = 35
         # A level has 2 attributes for visible sprites and obstacle sprites
         # both are sprite groups
         self.visible_sprites = YSortCameraGroup()
@@ -65,7 +65,8 @@ class Level10(BaseLevel):
         pass
 
     def level_complete_update(self):
-        if self.visible_sprites.counter > 20:
+        # if self.visible_sprites.counter < -1:
+        if self.visible_sprites.counter > self.level_complete_tile_count:
             self.main_sound.stop()
             self.level_complete_status = True
 
@@ -119,7 +120,9 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.ground_tile_height = 360
         self.ground_images = [pygame.image.load(f'graphics/tilemap/ground10/{i}.png').convert() for i in range(0, 4)]
         self.tile_index=0
+        self.tile_flip = False
         self.on_deck_tile_index=1
+        self.on_deck_tile_flip = False
         self.counter = 0
 
         self.floor_surf = self.ground_images[self.tile_index]
@@ -137,19 +140,34 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.floor_rect.y = 0
             self.next_floor_rect.y = -self.ground_tile_height
             self.tile_index = self.on_deck_tile_index
-            self.on_deck_tile_index = (self.on_deck_tile_index + 1) % len(self.ground_images)
+            self.tile_flip = self.on_deck_tile_flip
+            available_indices = [i for i in range(len(self.ground_images)) if i != self.tile_index]
+            self.on_deck_tile_index = choice(available_indices)
+            self.on_deck_tile_flip = choice([True,False])
             self.floor_surf = self.ground_images[self.tile_index]
             self.next_floor_surf = self.ground_images[self.on_deck_tile_index]
 
     def custom_draw(self,player):
         # # drawing the floor
         player.hitbox.clamp_ip(self.boundary_rect)
-        self.display_surface.blit(self.floor_surf,self.floor_rect)
-        self.display_surface.blit(self.next_floor_surf,self.next_floor_rect)
+        if self.tile_flip:
+            blitted_floor = pygame.transform.flip(self.floor_surf.copy(),flip_x=True,flip_y=False) 
+        else:
+            blitted_floor = self.floor_surf.copy()
+        if self.on_deck_tile_flip:
+            blitted_next_floor = pygame.transform.flip(self.next_floor_surf.copy(),flip_x=True,flip_y=False)
+        else:
+            blitted_next_floor = self.next_floor_surf.copy()
+        self.display_surface.blit(blitted_floor,self.floor_rect)
+        self.display_surface.blit(blitted_next_floor,self.next_floor_rect)
         self.move_floor()
         self.loftwing_sprites = [sprite for sprite in self.sprites() if isinstance(sprite, Loftwing)]
         if self.loftwing_sprites:
             self.loftwing_sprite = self.loftwing_sprites[0]
+
+        self.night_surface = pygame.Surface((640,360),pygame.SRCALPHA)
+        self.night_surface.fill((19,24,98,75))
+        self.display_surface.blit(self.night_surface, (0,0))
         
         # that way the sprites are drawn in from the top of the screen to the bottom
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
@@ -160,6 +178,10 @@ class YSortCameraGroup(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, sprite.rect.topleft)
                 else:
                     self.display_surface.blit(sprite.image, sprite.rect.topleft)
+
+        self.night_surface2 = pygame.Surface((640,360),pygame.SRCALPHA)
+        self.night_surface2.fill((19,24,98,75))
+        self.display_surface.blit(self.night_surface2, (0,0))
 
     def enemy_update(self,player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']

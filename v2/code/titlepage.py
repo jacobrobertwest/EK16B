@@ -15,6 +15,9 @@ class TitlePage(BaseLevel):
         self.bg_img_3 = pygame.image.load('graphics/titlepage/bg3.png')
         self.bg_img_list = [self.bg_img_1, self.bg_img_2, self.bg_img_3]
 
+        self.button_press_buffer = 200
+        self.most_recent_button_press_time = pygame.time.get_ticks()
+
         # self.logo_img = pygame.image.load('graphics/titlepage/logo_overlay.png')
         self.logo_img_text = pygame.image.load('graphics/titlepage/logo_overlay_text.png')
         self.logo_img_fractal = pygame.image.load('graphics/titlepage/logo_overlay_fractal.png')
@@ -82,27 +85,42 @@ class TitlePage(BaseLevel):
         if keys[pygame.K_RETURN]:
             self.level_complete_status = True
             self.main_sound.stop()
-        if keys[pygame.K_1]:
-            self.chosen_level = 1
-        if keys[pygame.K_2]:
-            self.chosen_level = 2
-        if keys[pygame.K_3]:
-            self.chosen_level = 3
-        if keys[pygame.K_4]:
-            self.chosen_level = 4
-        if keys[pygame.K_5]:
-            self.chosen_level = 5
-        if keys[pygame.K_6]:
-            self.chosen_level = 6
-        if keys[pygame.K_7]:
-            self.chosen_level = 7
-        if keys[pygame.K_8]:
-            self.chosen_level = 8
-        if keys[pygame.K_9]:
-            self.chosen_level = 9
-        if self.chosen_level == 1:
-            if keys[pygame.K_0]:
-                self.chosen_level = 10
+        if pygame.time.get_ticks() - self.most_recent_button_press_time > self.button_press_buffer:
+            if self.chosen_level in (0,2,3,4,5,6,7,8,9):
+                if keys[pygame.K_1]:
+                    self.chosen_level = 1
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_2]:
+                    self.chosen_level = 2
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_3]:
+                    self.chosen_level = 3
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_4]:
+                    self.chosen_level = 4
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_5]:
+                    self.chosen_level = 5
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_6]:
+                    self.chosen_level = 6
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_7]:
+                    self.chosen_level = 7
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_8]:
+                    self.chosen_level = 8
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_9]:
+                    self.chosen_level = 9
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+            elif self.chosen_level == 1:
+                if keys[pygame.K_0]:
+                    self.chosen_level = 10
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
+                if keys[pygame.K_1]:
+                    self.chosen_level = 11
+                    self.most_recent_button_press_time = pygame.time.get_ticks()
 
         if keys[pygame.K_BACKSPACE]:
             self.chosen_level = 0
