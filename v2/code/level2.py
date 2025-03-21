@@ -19,6 +19,7 @@ class Level2(BaseLevel):
         
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+        self.object_sprites = pygame.sprite.Group()
 
         # attack sprites
         self.current_attack = None
@@ -76,7 +77,7 @@ class Level2(BaseLevel):
                             else:
                                 sp_type = 'object'
                             surf = graphics['objects'][int(col)]
-                            Tile((x,y),[self.visible_sprites, self.obstacle_sprites],sp_type,surf)
+                            Tile((x,y),[self.visible_sprites, self.obstacle_sprites, self.object_sprites],sp_type,surf)
                         if style == 'entities':
                             if col == '394':
                                 self.player = Player(
@@ -121,6 +122,12 @@ class Level2(BaseLevel):
                         if target_sprite.sprite_type == 'enemy':
                             target_sprite.get_damage(self.player, shield_sprite.sprite_type)
 
+    def update_in_screen(self):
+        for obspr in self.object_sprites:
+            if pygame.math.Vector2(self.player.rect.centerx, self.player.rect.centery).distance_to(obspr.rect.center) < 400:
+                obspr.in_screen = True
+            else:
+                obspr.in_screen = False
 
     def level_complete_update(self):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
@@ -165,6 +172,7 @@ class Level2(BaseLevel):
             self.visible_sprites.enemy_update(self.player)
             self.player_attack_logic()
             self.player_defense_logic()
+            self.update_in_screen()
             self.level_complete_update()
             self.ui.display(self.player)
             self.toggle_end()
@@ -211,7 +219,8 @@ class YSortCameraGroup(pygame.sprite.Group):
 
         # all we are effectively doing here is sorting the sprites in order of their rectangles center y value
         # that way the sprites are drawn in from the top of the screen to the bottom
-        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+        filtered_sprites = [sprite for sprite in self.sprites() if ((hasattr(sprite,'in_screen') and sprite.in_screen) or (not hasattr(sprite,'in_screen')))]
+        for sprite in sorted(filtered_sprites,key = lambda sprite: sprite.rect.centery):
             # in order to create an illusion of depth we can offset where the
             # image actually gets rastered so that its not directly inside the rectangle
             offset_pos = sprite.rect.topleft - self.offset
