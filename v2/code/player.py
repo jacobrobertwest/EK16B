@@ -323,7 +323,7 @@ class Player(Entity):
             # looping through every sprite in the obstacle sprite group
             # and checking to see if there is a collission
             for sprite in self.obstacle_sprites:
-                if sprite.sprite_type == 'exit':
+                if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'exit':
                     pass
                 else:
                     if sprite.hitbox.colliderect(self.hitbox):

@@ -1,0 +1,191 @@
+{
+    "data": [
+        {
+            "topleft": [
+                884,
+                675
+            ],
+            "bottomright": [
+                1137,
+                722
+            ],
+            "size": [
+                253,
+                47
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 5
+        },
+        {
+            "topleft": [
+                1120,
+                718
+            ],
+            "bottomright": [
+                1136,
+                767
+            ],
+            "size": [
+                16,
+                49
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 6
+        },
+        {
+            "topleft": [
+                881,
+                622
+            ],
+            "bottomright": [
+                891,
+                722
+            ],
+            "size": [
+                10,
+                100
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 7
+        },
+        {
+            "topleft": [
+                756,
+                614
+            ],
+            "bottomright": [
+                889,
+                657
+            ],
+            "size": [
+                133,
+                43
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 8
+        },
+        {
+            "topleft": [
+                751,
+                3
+            ],
+            "bottomright": [
+                758,
+                657
+            ],
+            "size": [
+                7,
+                654
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 9
+        },
+        {
+            "topleft": [
+                1616,
+                676
+            ],
+            "bottomright": [
+                1806,
+                722
+            ],
+            "size": [
+                190,
+                46
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 10
+        },
+        {
+            "topleft": [
+                1802,
+                617
+            ],
+            "bottomright": [
+                1808,
+                720
+            ],
+            "size": [
+                6,
+                103
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 11
+        },
+        {
+            "topleft": [
+                1806,
+                611
+            ],
+            "bottomright": [
+                1996,
+                654
+            ],
+            "size": [
+                190,
+                43
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 12
+        },
+        {
+            "topleft": [
+                1617,
+                707
+            ],
+            "bottomright": [
+                1631,
+                766
+            ],
+            "size": [
+                14,
+                59
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 13
+        },
+        {
+            "topleft": [
+                1993,
+                2
+            ],
+            "bottomright": [
+                2000,
+                653
+            ],
+            "size": [
+                7,
+                651
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 14
+        },
+        {
+            "topleft": [
+                752,
+                -41
+            ],
+            "bottomright": [
+                1998,
+                0
+            ],
+            "size": [
+                1246,
+                41
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 15
+        }
+    ]
+}

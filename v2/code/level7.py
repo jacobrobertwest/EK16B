@@ -11,6 +11,9 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from restart import Restart
 from shield import Shield
+import os
+from obs_obj import ObstacleObject
+from json import loads
 from random import randint
 from base_level_class import BaseLevel
 from npc_sage import Sage
@@ -40,7 +43,7 @@ class Level7(BaseLevel):
 
         self.latest_interaction_start_timestamp = None
 
-        self.player_starting_pos_outside = (0, 540)
+        self.player_starting_pos_outside = (326, 1254)
         self.player_starting_pos_building_a = (0, 236)
 
         self.player_level_code = 7
@@ -52,16 +55,36 @@ class Level7(BaseLevel):
         self.main_sound = pygame.mixer.Sound('audio/7.ogg')
         self.main_sound.set_volume(0.2)
 
+    def load_obstacles(self):
+        fp = f'lvl{str(self.player_level_code)[0]}_obstacles.json'
+        if os.path.exists(fp):
+            try:
+                print('Found existing level obstacle file. Attempting to read...')
+                with open(fp) as f:
+                    self.persist = loads(f.read())['data']
+                print('Loaded successfully.')
+            except Exception as e:
+                print(f'ERROR: {e}')
+                pass
+        else:
+            print('Did not find existing level obstacle file. Proceeding...')
+        for obj in self.persist:
+            Tile((obj['topleft'][0],obj['topleft'][1]),[self.obstacle_sprites],sprite_type='boundary_no_hb',surface=pygame.Surface((obj['size'][0],obj['size'][1])))
+
     def create_map(self):
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
         self.special_interaction_sprites = pygame.sprite.Group()
         self.npc_sage = None
 
+        self.load_obstacles()
+
         if hasattr(self,'player'):
             mode = self.player.in_dev_mode
         else:
             mode = self.mode_at_start
+
+        
 
         self.player = Player(
             self.player_starting_pos_outside,
@@ -77,10 +100,10 @@ class Level7(BaseLevel):
         )
         door_surf = pygame.Surface((64,64))
         door_surf.fill((139, 69, 19))
-        Tile((300,300),[self.visible_sprites,self.special_interaction_sprites],sprite_type='door',surface=door_surf)
+        Tile((384,681),[self.visible_sprites,self.special_interaction_sprites],sprite_type='door',surface=door_surf)
         exit_surf = pygame.Surface((64,64))
         exit_surf.fill((0,255,0))
-        Tile((1000,548),[self.visible_sprites,self.obstacle_sprites],sprite_type='exit',surface=exit_surf)
+        Tile((2050,1083),[self.visible_sprites,self.obstacle_sprites],sprite_type='exit',surface=exit_surf)
 
     def create_building_a(self):
         self.visible_sprites = YSortCameraGroup('inside_a')
@@ -147,7 +170,7 @@ class Level7(BaseLevel):
                 if self.player.hitbox.colliderect(target_sprite.hitbox):
                     self.is_inside_building_a = not self.is_inside_building_a
                     self.player_level_code = '7o'
-                    self.player_starting_pos_outside = (300,350)
+                    self.player_starting_pos_outside = (384,735)
                     self.create_map()
 
     def check_for_npc_interaction(self):
@@ -209,6 +232,7 @@ class Level7(BaseLevel):
                 self.player_special_interactions_logic()
                 self.level_complete_update()
                 self.ui.display(self.player)
+                debug(self.player.rect.topleft)
             else:
                 if not self.showing_dialogue:
                     self.check_for_npc_interaction()
@@ -237,9 +261,8 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         if granularity == 'outside':
-            self.floor_surf = pygame.Surface((1000, 612))
-            self.floor_surf.fill((255, 140, 0)) 
-            self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
+            self.floor_surf = pygame.image.load('graphics/tilemap/ground7-new.png').convert()
+            self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
             self.night_surface = pygame.Surface((640,360),pygame.SRCALPHA)
         if granularity == 'inside_a':
             self.floor_surf = pygame.Surface((480, 300))

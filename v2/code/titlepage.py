@@ -150,7 +150,7 @@ class TitlePage(BaseLevel):
 
         # self.display_surface.blit(self.logo_img, (0, -30))
 
-        updated_surf = self.notes_font.render(f"v{self.metadata['version']} - LAST UPDATED: {self.metadata['updated']}  |  PLAYABLE LEVELS: {self.metadata['lvls']}  |  WORKS BEST ON FIREFOX (NO SAFARI SUPPORT)", True, "white",True)
+        updated_surf = self.notes_font.render(f"v{self.metadata['version']} - LAST UPDATED: {self.metadata['updated']}  |  PLAYABLE LEVELS: {self.metadata['lvls']} ", True, "white",True)
         updated_rect = updated_surf.get_rect(midleft=(10,20))
         bg_rect = updated_surf.get_rect(midleft = (10,20))
         pygame.draw.rect(self.display_surface,'Black',bg_rect)

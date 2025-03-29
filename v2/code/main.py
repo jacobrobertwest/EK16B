@@ -21,8 +21,8 @@ from endpage import EndPage
 from level_fairyfountain import FairyFountain
 import asyncio
 
-VERSION = "2.4.1"
-LAST_UPDATED_DATE = "3/20/25"
+VERSION = "2.4.2"
+LAST_UPDATED_DATE = "3/29/25"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10, EndPage]
 # MASTER_LEVEL_LIST = [Level10]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
@@ -70,7 +70,7 @@ class Game:
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE: # restarting 
-						self.level.main_sound.stop()
+						self.level.main_sound.stop()   
 						if hasattr(self.level,'top_sound'):
 							self.level.top_sound.stop()
 						Game().main()
