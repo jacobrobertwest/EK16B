@@ -232,7 +232,7 @@ class Level7(BaseLevel):
                 self.player_special_interactions_logic()
                 self.level_complete_update()
                 self.ui.display(self.player)
-                debug(self.player.rect.topleft)
+                # debug(self.player.rect.topleft)
             else:
                 if not self.showing_dialogue:
                     self.check_for_npc_interaction()

@@ -155,37 +155,105 @@
         },
         {
             "topleft": [
-                1993,
-                2
+                -1,
+                -37
             ],
             "bottomright": [
-                2000,
-                653
+                759,
+                16
             ],
             "size": [
-                7,
-                651
+                760,
+                53
             ],
             "type": "standard",
             "color": "red",
-            "id": 14
+            "id": 12
         },
         {
             "topleft": [
-                752,
-                -41
+                -1,
+                -34
             ],
             "bottomright": [
-                1998,
-                0
+                81,
+                1280
             ],
             "size": [
-                1246,
-                41
+                82,
+                1314
             ],
             "type": "standard",
             "color": "red",
-            "id": 15
+            "id": 13
+        },
+        {
+            "topleft": [
+                2023,
+                3
+            ],
+            "bottomright": [
+                2052,
+                1014
+            ],
+            "size": [
+                29,
+                1011
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 16
+        },
+        {
+            "topleft": [
+                2027,
+                1224
+            ],
+            "bottomright": [
+                2051,
+                1285
+            ],
+            "size": [
+                24,
+                61
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 17
+        },
+        {
+            "topleft": [
+                81,
+                1269
+            ],
+            "bottomright": [
+                294,
+                1302
+            ],
+            "size": [
+                213,
+                33
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 18
+        },
+        {
+            "topleft": [
+                416,
+                1269
+            ],
+            "bottomright": [
+                2049,
+                1301
+            ],
+            "size": [
+                1633,
+                32
+            ],
+            "type": "standard",
+            "color": "red",
+            "id": 19
         }
     ]
 }
