@@ -16,11 +16,12 @@ from random import randint
 
 
 class BaseLevel:
-    def __init__(self,health,in_dev_mode,bgcolor='black'):
+    def __init__(self,health,in_dev_mode,audio_manager,bgcolor='black'):
         self.display_surface = pygame.display.get_surface()
         self.player_health = health
         self.mode_at_start = in_dev_mode
         self.special_interaction_sprites = pygame.sprite.Group()
+        self.audio_manager = audio_manager
 
         # shield sprites
         self.current_shield = None
@@ -62,6 +63,7 @@ class BaseLevel:
 
     def damage_player(self,amount,attack_type):
         if self.player.vulnerable:
+            self.audio_manager.play_sound('pain',0)
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
@@ -70,7 +72,8 @@ class BaseLevel:
 
     def toggle_end(self):
         if self.player.is_dead:
-            self.main_sound.stop()
+            # self.main_sound.stop()
+            pygame.mixer.music.stop()
             if hasattr(self, 'top_sound') and self.top_sound:  # Check if top_sound exists and is not None
                 self.top_sound.stop()
             self.game_over = True

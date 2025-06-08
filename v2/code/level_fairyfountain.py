@@ -17,8 +17,8 @@ from base_level_class import BaseLevel
 
 
 class FairyFountain(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager)
 
         # outside
         self.visible_sprites = YSortCameraGroup()
@@ -42,8 +42,8 @@ class FairyFountain(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/fairyfountain.ogg')
-        self.main_sound.set_volume(0.2)
+        # self.main_sound = pygame.mixer.Sound('audio/fairyfountain.ogg')
+        # self.main_sound.set_volume(0.2)
 
     def create_map(self):
         self.player = Player(
@@ -55,6 +55,7 @@ class FairyFountain(BaseLevel):
             self.destroy_attack,
             self.create_shield,
             self.destroy_shield,
+            self.audio_manager,
             player_level=self.player_level_code,
             in_dev_mode = self.mode_at_start
         )
@@ -137,7 +138,8 @@ class FairyFountain(BaseLevel):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
-                self.main_sound.stop()
+                # self.main_sound.stop()
+                pygame.mixer.music.stop()
                 self.level_complete_status = True
 
     def check_for_fairy_interaction(self):

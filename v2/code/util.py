@@ -1,4 +1,6 @@
 import importlib
+import os
+import pygame
 
 def install_package(package):
     """Install the specified package using pip."""

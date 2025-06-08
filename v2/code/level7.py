@@ -19,8 +19,8 @@ from base_level_class import BaseLevel
 from npc_sage import Sage
 
 class Level7(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager)
 
         # outside
         self.visible_sprites = YSortCameraGroup()
@@ -52,22 +52,25 @@ class Level7(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/7.ogg')
-        self.main_sound.set_volume(0.2)
+        # self.main_sound = pygame.mixer.Sound('audio/7.ogg')
+        # self.main_sound.set_volume(0.2)
+        pygame.mixer.music.load('audio/7.ogg')
+        pygame.mixer.music.set_volume(0.2)
 
     def load_obstacles(self):
         fp = f'lvl{str(self.player_level_code)[0]}_obstacles.json'
         if os.path.exists(fp):
             try:
-                print('Found existing level obstacle file. Attempting to read...')
+                # print('Found existing level obstacle file. Attempting to read...')
                 with open(fp) as f:
                     self.persist = loads(f.read())['data']
-                print('Loaded successfully.')
+                # print('Loaded successfully.')
             except Exception as e:
                 print(f'ERROR: {e}')
                 pass
         else:
-            print('Did not find existing level obstacle file. Proceeding...')
+            pass
+            # print('Did not find existing level obstacle file. Proceeding...')
         for obj in self.persist:
             Tile((obj['topleft'][0],obj['topleft'][1]),[self.obstacle_sprites],sprite_type='boundary_no_hb',surface=pygame.Surface((obj['size'][0],obj['size'][1])))
 
@@ -95,6 +98,7 @@ class Level7(BaseLevel):
             self.destroy_attack,
             self.create_shield,
             self.destroy_shield,
+            self.audio_manager,
             player_level=self.player_level_code,
             in_dev_mode = mode
         )
@@ -119,6 +123,7 @@ class Level7(BaseLevel):
             self.destroy_attack,
             self.create_shield,
             self.destroy_shield,
+            self.audio_manager,
             player_level=self.player_level_code,
             in_dev_mode = self.player.in_dev_mode
         )
@@ -151,7 +156,7 @@ class Level7(BaseLevel):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
-                self.main_sound.stop()
+                pygame.mixer.music.stop()
                 self.level_complete_status = True
 
     def door_handler_outside(self):

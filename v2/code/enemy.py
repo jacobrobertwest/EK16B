@@ -3,13 +3,15 @@ from settings import *
 from entity import Entity
 from support import *
 from math import sqrt
+from random import choice
 
 class Enemy(Entity):
-    def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles):
+    def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,audio_manager):
 
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
+        self.audio_manager = audio_manager
 
         # graphics setup
         self.import_graphics(monster_name)
@@ -131,9 +133,14 @@ class Enemy(Entity):
         if self.vulnerable:
             self.direction = self.get_player_distance_direction(player)[1]
             if attack_type == 'weapon':
+                self.audio_manager.play_sound('sword',choice([1,2,3]))
+                if self.monster_name == 'them':
+                    self.audio_manager.play_sound('pain',1)
+                elif self.monster_name == 'monkey':
+                    self.audio_manager.play_sound('pain',2)
                 self.health -= player.get_full_weapon_damage()
             elif attack_type == 'shield':
-                pass
+                self.audio_manager.play_sound('shield',0)
             else:
                 pass
             self.hit_time = pygame.time.get_ticks()

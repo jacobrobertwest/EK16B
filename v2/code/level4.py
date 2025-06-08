@@ -20,8 +20,8 @@ from enemy2 import SnailEnemy
 from base_level_class import BaseLevel
 
 class Level4(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager)
         
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
@@ -61,8 +61,10 @@ class Level4(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/4.ogg')
-        self.main_sound.set_volume(0.3)
+        # self.main_sound = pygame.mixer.Sound('audio/4.ogg')
+        # self.main_sound.set_volume(0.3)
+        pygame.mixer.music.load('audio/4.ogg')
+        pygame.mixer.music.set_volume(0.3)
 
         self.spawn_cloud()
 
@@ -119,6 +121,7 @@ class Level4(BaseLevel):
                                     self.destroy_attack,
                                     self.create_shield,
                                     self.destroy_shield,
+                                    self.audio_manager,
                                     player_level=4,
                                     in_dev_mode = self.mode_at_start)
                             else:
@@ -129,7 +132,8 @@ class Level4(BaseLevel):
                                     [self.visible_sprites, self.attackable_sprites, self.snail_sprites],
                                     self.obstacle_sprites,
                                     self.damage_player,
-                                    self.trigger_death_particles)
+                                    self.trigger_death_particles,
+                                    self.audio_manager)
         breaker_surface = pygame.Surface((256,64))
         self.fairy_fountain_breaker = Tile((350,597),[self.breaker_sprites],sprite_type='breaker',surface=breaker_surface)
         self.create_pond_boundaries()
@@ -196,7 +200,8 @@ class Level4(BaseLevel):
         for exit_sprite in exit_sprites:
             # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
-                self.main_sound.stop()
+                # self.main_sound.stop()
+                pygame.mixer.music.stop()
                 self.level_complete_status = True
 
     def continuous_cloud_spawn(self):
@@ -220,15 +225,22 @@ class Level4(BaseLevel):
     def check_for_entering_fairy_fountain(self):
         if self.player.hitbox.colliderect(self.fairy_fountain_door.hitbox) and self.fairy_fountain_open:
             self.is_inside_fairy_fountain = True
-            self.fairy_fountain_lvl = FairyFountain(self.player.health,self.player.in_dev_mode)
-            self.main_sound.stop()
-            self.fairy_fountain_lvl.main_sound.play()
+            self.fairy_fountain_lvl = FairyFountain(self.player.health,self.player.in_dev_mode,self.audio_manager)
+            # self.main_sound.stop()
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('audio/fairyfountain.ogg')
+            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.play(loops=-1)
+            # self.fairy_fountain_lvl.main_sound.play()
 
     def check_for_exiting_fairy_fountain(self):
         if self.fairy_fountain_lvl.level_complete_status:
             self.is_inside_fairy_fountain = False
             self.player.health = self.fairy_fountain_lvl.player.health
-            self.main_sound.play()
+            # self.main_sound.play()
+            pygame.mixer.music.load('audio/4.ogg')
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play(loops=-1)
             
     def restart_level(self):
         self.display_surface = pygame.display.get_surface()
@@ -276,7 +288,9 @@ class Level4(BaseLevel):
         # particles
         self.animation_player = AnimationPlayer()
 
-        self.main_sound.play()
+        pygame.mixer.music.load('audio/4.ogg')
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(loops=-1)
 
         self.spawn_cloud()
        
@@ -286,7 +300,7 @@ class Level4(BaseLevel):
             self.restart.display()
         else:
             if not self.is_inside_fairy_fountain:
-                self.visible_sprites.custom_draw(self.player,self.main_sound)
+                self.visible_sprites.custom_draw(self.player)
                 self.visible_sprites.update()
                 self.visible_sprites.enemy_update(self.player)
                 self.player_attack_logic()
@@ -321,7 +335,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground4.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
-    def custom_draw(self,player,sound):
+    def custom_draw(self,player):
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height

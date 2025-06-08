@@ -3,11 +3,13 @@ from settings import *
 from debug import debug
 from random import choice
 from math import sin
+import os
+from time import sleep
 from base_level_class import BaseLevel
 
 class TitlePage(BaseLevel):
-    def __init__(self,health,in_dev_mode,metadata):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager,metadata):
+        super().__init__(health,in_dev_mode,audio_manager)
         self.metadata = metadata
         # self.title_image = pygame.image.load('graphics/title.png') 
         self.bg_img_1 = pygame.image.load('graphics/titlepage/bg1.png')
@@ -37,8 +39,8 @@ class TitlePage(BaseLevel):
         self.crossfade_start_time = None
         self.bg_changing = False
 
-        self.main_sound = pygame.mixer.Sound('audio/title.ogg')
-        self.main_sound.set_volume(0.3)
+        self.preload_music()
+
         self.game_over = False
         self.chosen_level = 0
         self.level_complete_status = False
@@ -53,6 +55,17 @@ class TitlePage(BaseLevel):
         self.rotation_delay = 5000
         self.start_time = pygame.time.get_ticks()
 
+    def preload_music(self):
+        # for _, _, filenames in os.walk('audio/'):
+        #     for filename in filenames:
+        #         if filename != '.DS_Store':
+        #             temp_fp = f'audio/{filename}'
+        #             temp_sound = pygame.mixer.Sound(temp_fp)
+        #             temp_song = pygame.mixer.music.load(temp_fp)
+        # sleep(0.5)
+        self.main_sound = pygame.mixer.music.load('audio/title.ogg')
+        # self.main_soundset_volume(0.3)
+        pygame.mixer.music.set_volume(0.3)
 
     def get_next_bg(self):
         remaining_bgs = [bg for bg in self.bg_img_list if bg != self.current_bg]
@@ -84,7 +97,8 @@ class TitlePage(BaseLevel):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             self.level_complete_status = True
-            self.main_sound.stop()
+            # self.main_sound.stop()
+            pygame.mixer.music.stop()
         if pygame.time.get_ticks() - self.most_recent_button_press_time > self.button_press_buffer:
             if self.chosen_level in (0,2,3,4,5,6,7,8,9):
                 if keys[pygame.K_1]:

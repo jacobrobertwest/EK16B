@@ -19,12 +19,13 @@ from level9 import Level9
 from level10 import Level10
 from endpage import EndPage
 from level_fairyfountain import FairyFountain
+from audio_manager import AudioManager
 import asyncio
 
-VERSION = "2.4.2"
-LAST_UPDATED_DATE = "3/29/25"
+VERSION = "2.5.0"
+LAST_UPDATED_DATE = "5/25/2025"
 MASTER_LEVEL_LIST = [TitlePage, Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10, EndPage]
-# MASTER_LEVEL_LIST = [Level10]
+# MASTER_LEVEL_LIST = [EndPage]
 PLAYABLE_LEVELS = len(MASTER_LEVEL_LIST) - 2
 METADATA = {
 	"version":VERSION,
@@ -37,7 +38,7 @@ class Game:
 	def __init__(self):
 		pygame.init()
 		self.screen = pygame.display.set_mode((WIDTH,HEIGTH),pygame.DOUBLEBUF)
-		pygame.display.set_caption('The Legend of Ellie Kemper - v' + VERSION)
+		pygame.display.set_caption('The Legend of Ellie Kemper (DEMO)')
 		pygame.display.set_icon(pygame.image.load('graphics/logo_ek16b.png'))
 		
 		self.clock = pygame.time.Clock()
@@ -46,35 +47,30 @@ class Game:
 		self.in_dev_mode = False
 		self.music_start_time = None
 		self.music_delay = 750
+		self.audio_manager = AudioManager()
 
 	def create_level(self, level_num):
 		levels = MASTER_LEVEL_LIST
 		if level_num < len(levels):
 			level_class = levels[level_num]
 			if level_class == TitlePage:
-				return level_class(self.health, self.in_dev_mode, METADATA)
+				return level_class(self.health, self.in_dev_mode, self.audio_manager, METADATA)
 			elif level_class == EndPage:
-				return level_class(self.health, self.in_dev_mode, METADATA["finderCount"])
+				return level_class(self.health, self.in_dev_mode, self.audio_manager, METADATA["finderCount"])
 			else:
-				return level_class(self.health, self.in_dev_mode)
+				return level_class(self.health, self.in_dev_mode, self.audio_manager)
 		return None
 	 
 	# this is the ultimate run "event loop" that consists of the actual game
 	async def main(self):
 		self.level = self.create_level(self.level_num)
-		self.level.main_sound.play(loops=-1)
+		pygame.mixer.music.play(loops=-1)
 		while True:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_ESCAPE: # restarting 
-						self.level.main_sound.stop()   
-						if hasattr(self.level,'top_sound'):
-							self.level.top_sound.stop()
-						Game().main()
-						self.level.main_sound.play(loops=-1)
 					if self.level.game_over:
 						if event.key == pygame.K_r:
 							self.level.restart_level()
@@ -95,7 +91,8 @@ class Game:
 				self.music_start_time = pygame.time.get_ticks()
 				self.waiting_to_start = True
 			if self.level_num > 0 and pygame.time.get_ticks() - self.music_start_time > self.music_delay and self.waiting_to_start:
-				self.level.main_sound.play(loops=-1)
+				# self.level.main_sound.play(loops=-1)
+				pygame.mixer.music.play(loops=-1)
 				if self.level_num == 2:
 					self.level.top_sound.play(loops=-1)
 				self.waiting_to_start = False

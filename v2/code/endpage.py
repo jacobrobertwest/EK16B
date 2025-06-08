@@ -14,8 +14,8 @@ from restart import Restart
 from base_level_class import BaseLevel
 
 class EndPage(BaseLevel):
-    def __init__(self, health, in_dev_mode, num_of_people_who_found_arg):
-        super().__init__(health, in_dev_mode)
+    def __init__(self, health, in_dev_mode, audio_manager, num_of_people_who_found_arg):
+        super().__init__(health, in_dev_mode, audio_manager)
 
         self.num_of_people_whove_found_this = num_of_people_who_found_arg
 
@@ -23,8 +23,10 @@ class EndPage(BaseLevel):
         self.bg_img_2 = pygame.image.load('graphics/titlepage/bg2.png')
         self.bg_img_3 = pygame.image.load('graphics/titlepage/bg3.png')
         self.bg_img_list = [self.bg_img_1, self.bg_img_2, self.bg_img_3]
-        self.main_sound = pygame.mixer.Sound('audio/4.ogg')
-        self.main_sound.set_volume(0.3)
+        # self.main_sound = pygame.mixer.Sound('audio/4.ogg')
+        pygame.mixer.music.load('audio/4.ogg')
+        pygame.mixer.music.set_volume(0.3)
+        # self.main_sound.set_volume(0.3)
         self.game_over = False
         self.level_complete_status = False
         self.background = 'black'

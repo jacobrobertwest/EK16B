@@ -34,7 +34,7 @@ STAMINA_COLOR_OVERSPRINT = 'red'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
 weapon_data = {
-    'sword': {'cooldown': 100, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'}
+    'sword': {'cooldown': 15, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'}
 }
 
 monster_data = {

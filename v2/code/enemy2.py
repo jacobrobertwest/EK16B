@@ -4,10 +4,11 @@ from enemy import Enemy
 from support import *
 from math import sqrt
 from debug import debug
+from random import choice
 
 class SnailEnemy(Enemy):
-    def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles):
-        super().__init__(monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles)
+    def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,audio_manager):
+        super().__init__(monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,audio_manager)
         self.roll_time = None
         self.roll_startup = 120
         self.roll_length = 2000
@@ -53,7 +54,7 @@ class SnailEnemy(Enemy):
             self.status = 'roll'
             self.rolling = True
             self.speed = 6
-        else: 
+        else:
             self.status = 'idle'
             self.charge -= 5
             if self.charge < 0:
@@ -78,8 +79,10 @@ class SnailEnemy(Enemy):
             self.avoid_collisions(other_enemies)
         elif self.status == 'roll':
             if self.colliding and pygame.time.get_ticks() - self.roll_time >= self.roll_startup:
+                self.audio_manager.play_sound('crash',0)
                 self.dizzy_time = pygame.time.get_ticks()
                 self.status = 'dizzy'
+                self.audio_manager.play_sound('dizzy',0)
                 self.is_dizzy = True
                 self.rolling = False
                 self.direction = pygame.math.Vector2()
@@ -116,9 +119,12 @@ class SnailEnemy(Enemy):
         if self.vulnerable:
             self.direction = self.get_player_distance_direction(player)[1]
             if attack_type == 'weapon' and self.status == 'dizzy':
+                self.audio_manager.play_sound('sword',choice([1,2,3]))
                 self.health -= player.get_full_weapon_damage()
             elif attack_type == 'shield':
+                self.audio_manager.play_sound('shield',0)
                 self.status = 'dizzy'
+                self.audio_manager.play_sound('dizzy',0)
                 self.rolling = False
                 self.is_dizzy = True
                 self.dizzy_time = pygame.time.get_ticks()

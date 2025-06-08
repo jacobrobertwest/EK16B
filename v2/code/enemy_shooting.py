@@ -5,8 +5,8 @@ from support import *
 from math import sqrt
 
 class ShootingEnemy(Enemy):
-    def __init__(self,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,create_projectile,monster_name='okto'):
-        super().__init__(monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles)
+    def __init__(self,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,create_projectile,audio_manager,monster_name='okto'):
+        super().__init__(monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,audio_manager)
         self.attack_duration = 1000
         self.attack_cooldown_time = 4000
         self.is_shooting = False

@@ -16,8 +16,8 @@ from random import randint
 from base_level_class import BaseLevel
 
 class Level6(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager)
         
         # sprite group setup
          #blood moon
@@ -45,8 +45,10 @@ class Level6(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/6.ogg')
-        self.main_sound.set_volume(0.1)
+        # self.main_sound = pygame.mixer.Sound('audio/6.ogg')
+        # self.main_sound.set_volume(0.1)
+        pygame.mixer.music.load('audio/6.ogg')
+        pygame.mixer.music.set_volume(0.1)
 
     def create_map(self):
         graphics = {
@@ -65,6 +67,7 @@ class Level6(BaseLevel):
             self.destroy_attack,
             self.create_shield,
             self.destroy_shield,
+            self.audio_manager,
             player_level=6,
             in_dev_mode = self.mode_at_start
         )
@@ -122,7 +125,7 @@ class Level6(BaseLevel):
 
     def level_complete_update(self):
         if (self.blood_moon_pos[0] - 32) <= self.player.rect.center[0] <= (self.blood_moon_pos[0] + 32) and (self.blood_moon_pos[1] - 32) <= self.player.rect.center[1] <= (self.blood_moon_pos[1] + 32):
-            self.main_sound.stop()
+            pygame.mixer.music.stop()
             self.level_complete_status = True
 
     def restart_level(self):
@@ -149,6 +152,9 @@ class Level6(BaseLevel):
 
         # particles
         self.animation_player = AnimationPlayer()
+        pygame.mixer.music.load('audio/6.ogg')
+        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.play(loops=-1)
        
     def run(self):
         self.toggle_end()
@@ -166,6 +172,7 @@ class Level6(BaseLevel):
             self.level_complete_update()
             self.ui.display(self.player)
             # debug(f"({self.player.rect.x},{self.player.rect.y}) | BMP: ({self.blood_moon_x},{self.blood_moon_y})" )
+            # debug(self.visible_sprites.dist)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self,bmp):
@@ -181,7 +188,8 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_surf = pygame.image.load('graphics/tilemap/ground6/1.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0,0))
 
-        self.fog_surface = pygame.Surface((640,360),pygame.SRCALPHA) 
+        self.fog_surface = pygame.Surface((640,360),pygame.SRCALPHA)
+        self.dark_surface = pygame.Surface((640,360),pygame.SRCALPHA)
 
     def calculate_alpha(self,distance):
         base_alpha = 230
@@ -193,6 +201,23 @@ class YSortCameraGroup(pygame.sprite.Group):
         
         alpha = round(base_alpha * (1 - (distance / max_distance)) ** 4)
         return min(max(alpha, min_alpha), base_alpha)
+    
+    def calculate_alpha_dark(self, distance):
+        base_alpha = 230
+        min_distance = 6000
+        max_distance = 10000
+
+        if distance <= min_distance:
+            return 0
+        elif distance >= max_distance:
+            return base_alpha
+        else:
+            # Normalize distance to a 0–1 scale between min and max
+            norm = (distance - min_distance) / (max_distance - min_distance)
+            # Apply exponential ease-in curve
+            alpha = base_alpha * (1 - (1 - norm) ** 4)
+            return round(alpha)
+
 
     def custom_draw(self,player):
         # getting the offset
@@ -224,10 +249,16 @@ class YSortCameraGroup(pygame.sprite.Group):
         player_vec = pygame.math.Vector2(player.rect.center)
         end_vec = pygame.math.Vector2(self.blood_moon_pos)
         distance = (player_vec - end_vec).magnitude()
+        # self.dist = distance
 
         alpha = self.calculate_alpha(distance)
         self.fog_surface.fill((255,0,0,alpha))
         self.display_surface.blit(self.fog_surface, (0,0))
+
+        dark_alpha = self.calculate_alpha_dark(distance)
+        self.dark_surface.fill((0,0,0,dark_alpha))
+        self.display_surface.blit(self.dark_surface, (0,0))
+
         # debug(f'A: {alpha} | Dist: {round(distance)}',x = 10, y = 320)
 
     def enemy_update(self,player):

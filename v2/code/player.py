@@ -8,8 +8,9 @@ from debug import debug
 # this Player class inherits everything from Sprite class
 # in essence, a Player is also a sprite
 class Player(Entity):
-    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,player_level=0,in_flying_mode=False,in_dev_mode=False):
+    def __init__(self,pos,groups,obstacle_sprites,player_health,create_attack,destroy_attack,create_shield,destroy_shield,audio_manager,player_level=0,in_flying_mode=False,in_dev_mode=False):
         super().__init__(groups) # we gotta use this to initialize our base/parent class!
+        self.audio_manager = audio_manager
         if player_level == 0:
             self.image = pygame.image.load('graphics/player/down_idle/idle_down.png').convert_alpha()
             rect_offset = pygame.math.Vector2(0,0)
@@ -233,6 +234,7 @@ class Player(Entity):
                 # attack input
                 if keys[pygame.K_SPACE] and not self.attacking and not self.defending and not self.is_having_special_interaction:
                     self.attacking = True
+                    self.audio_manager.play_sound('sword',0)
                     self.attack_time = pygame.time.get_ticks()
                     self.create_attack()
 

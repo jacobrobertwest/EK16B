@@ -14,8 +14,8 @@ from shield import Shield
 from base_level_class import BaseLevel
 
 class Level3(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode,bgcolor='white')
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager,bgcolor='white')
         
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
@@ -31,8 +31,10 @@ class Level3(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/2.ogg')
-        self.main_sound.set_volume(0.3)
+        # self.main_sound = pygame.mixer.Sound('audio/2.ogg')
+        # self.main_sound.set_volume(0.3)
+        pygame.mixer.music.load('audio/2.ogg')
+        pygame.mixer.music.set_volume(0.3)
 
     def create_map(self):
         layouts = {
@@ -85,6 +87,7 @@ class Level3(BaseLevel):
                                     self.destroy_attack,
                                     self.create_shield,
                                     self.destroy_shield,
+                                    self.audio_manager,
                                     player_level=2,
                                     in_dev_mode = self.mode_at_start)
                             else:
@@ -122,7 +125,7 @@ class Level3(BaseLevel):
         for exit_sprite in exit_sprites:
             # if self.player.hitbox.left == exit_sprite.hitbox.right and self.player.hitbox.top == exit_sprite.hitbox.top:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
-                self.main_sound.stop()
+                pygame.mixer.music.stop()
                 self.level_complete_status = True
 
     def restart_level(self):
@@ -149,6 +152,9 @@ class Level3(BaseLevel):
 
         # particles
         self.animation_player = AnimationPlayer()
+        pygame.mixer.music.load('audio/2.ogg')
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(loops=-1)
        
     def run(self):
         self.toggle_end()

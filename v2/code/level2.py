@@ -14,8 +14,8 @@ from shield import Shield
 from base_level_class import BaseLevel
 
 class Level2(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager)
         
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
@@ -32,8 +32,10 @@ class Level2(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/1b.ogg')
-        self.main_sound.set_volume(0.3)
+        # self.main_sound = pygame.mixer.Sound('audio/1b.ogg')
+        pygame.mixer.music.load('audio/1b.ogg')
+        # self.main_sound.set_volume(0.3)
+        pygame.mixer.music.set_volume(0.3)
         self.top_sound = pygame.mixer.Sound('audio/1t.ogg')
         self.top_sound.set_volume(0.05)
         # self.main_sound.play(loops = -1)
@@ -89,6 +91,7 @@ class Level2(BaseLevel):
                                     self.destroy_attack,
                                     self.create_shield,
                                     self.destroy_shield,
+                                    self.audio_manager,
                                     player_level=1,
                                     in_dev_mode=self.mode_at_start)
                             else:
@@ -100,7 +103,8 @@ class Level2(BaseLevel):
                                         [self.visible_sprites, self.attackable_sprites],
                                         self.obstacle_sprites,
                                         self.damage_player,
-                                        self.trigger_death_particles)
+                                        self.trigger_death_particles,
+                                        self.audio_manager)
 
     def player_attack_logic(self):
         if self.attack_sprites:
@@ -133,7 +137,8 @@ class Level2(BaseLevel):
         exit_sprites = [sprite for sprite in self.obstacle_sprites if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'exit']
         for exit_sprite in exit_sprites:
             if self.player.hitbox.colliderect(exit_sprite.hitbox):
-                self.main_sound.stop()
+                # self.main_sound.stop()
+                pygame.mixer.music.stop()
                 self.top_sound.stop()
                 self.level_complete_status = True
 
@@ -161,6 +166,12 @@ class Level2(BaseLevel):
 
         # particles
         self.animation_player = AnimationPlayer()
+        pygame.mixer.music.load('audio/1b.ogg')
+        pygame.mixer.music.set_volume(0.3)
+        self.top_sound = pygame.mixer.Sound('audio/1t.ogg')
+        self.top_sound.set_volume(0.05)
+        pygame.mixer.music.play(loops=-1)
+        self.top_sound.play(loops=-1)
        
     def run(self):
         self.toggle_end()

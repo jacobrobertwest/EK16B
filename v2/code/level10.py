@@ -17,8 +17,8 @@ from random import randint
 from base_level_class import BaseLevel
 
 class Level10(BaseLevel):
-    def __init__(self,health,in_dev_mode):
-        super().__init__(health,in_dev_mode)
+    def __init__(self,health,in_dev_mode,audio_manager):
+        super().__init__(health,in_dev_mode,audio_manager)
         self.level_complete_tile_count = 35
         # A level has 2 attributes for visible sprites and obstacle sprites
         # both are sprite groups
@@ -38,8 +38,10 @@ class Level10(BaseLevel):
         self.create_map()
 
         # music
-        self.main_sound = pygame.mixer.Sound('audio/6.ogg')
-        self.main_sound.set_volume(0.1)
+        # self.main_sound = pygame.mixer.Sound('audio/6.ogg')
+        # self.main_sound.set_volume(0.1)
+        pygame.mixer.music.load('audio/6.ogg')
+        pygame.mixer.music.set_volume(0.1)
 
     def create_map(self):
         player_start_pos = (WIDTH // 2, HEIGTH - 64)
@@ -52,6 +54,7 @@ class Level10(BaseLevel):
             self.destroy_attack,
             self.create_shield,
             self.destroy_shield,
+            self.audio_manager,
             player_level=6,
             in_flying_mode=True,
             in_dev_mode = self.mode_at_start
@@ -67,7 +70,7 @@ class Level10(BaseLevel):
     def level_complete_update(self):
         # if self.visible_sprites.counter < -1:
         if self.visible_sprites.counter > self.level_complete_tile_count:
-            self.main_sound.stop()
+            pygame.mixer.music.stop()
             self.level_complete_status = True
 
     def restart_level(self):
